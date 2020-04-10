@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:quiver/async.dart';
 import 'room.dart';
-import 'selectRoom.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-int current=10;
-int start=10;
-class Time_denner extends StatefulWidget {
-  @override
-  _Time_dennerState createState() => _Time_dennerState();
-}
+int current=90;
+int start=90;
+class Time extends StatefulWidget {
 
-class _Time_dennerState extends State<Time_denner> {
+  @override
+  _TimeState createState() => _TimeState();
+}
+class _TimeState extends State<Time> {
+  var sub;
   @override
   void initState(){
     startTimer();
     super.initState();
+  }
+  @override
+  void dispose(){
+    sub.cancel();
+    super.dispose();
   }
 
   @override
@@ -36,61 +40,35 @@ class _Time_dennerState extends State<Time_denner> {
 
   sub.onDone(() {
     print("Done");    
-      changeDen();
+    //  changeDen();
     sub.cancel();
     
   });
 }
  
 }
-Future<void> changeDen()async{
-   int s= players.indexOf(denner);
-   if(s==players.length-1){s=0;}
-    else s=s+1;
-   await Firestore.instance.collection('rooms').document(documentid).updateData({'den':players[s],
-   'xpos':{},'ypos':{},'word':' ','length':0,'wordChosen': false,
-   });
-   //startTimer();
- }
 
 
-class Time_gusser extends StatefulWidget {
+class WordHint extends StatefulWidget {
   @override
-  _Time_gusserState createState() => _Time_gusserState();
+  _WordHintState createState() => _WordHintState();
 }
 
-class _Time_gusserState extends State<Time_gusser> {
-@override
-  void initState(){
-    startTimer();
-    super.initState();
-  }
+class _WordHintState extends State<WordHint> {
+  int c=90,s=90;
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text('$current'),
+     // height: 50.0,
+      width: 100.0,
+      child: ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        itemCount: word.length,
+        itemBuilder: (_,int h){
+          return Text('_ ',style: TextStyle(fontSize: 25.0),);
+        }),
+      
     );
-
   }
-  void startTimer() {
-  CountdownTimer countDownTimer = new CountdownTimer(
-    new Duration(seconds: start),
-    new Duration(seconds: 1),
-  );
-
-  var sub = countDownTimer.listen(null);
-  sub.onData((duration) {
-    setState(() { current = start - duration.elapsed.inSeconds; });
-  });
-
-  sub.onDone(() {
-    print("Done");
-    // current=10;
-    // start=10;
-    sub.cancel();
-    
-  });
 }
-}
-
-

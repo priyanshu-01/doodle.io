@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scribbl/pages/roomCreatingScreen.dart';
-import 'package:scribbl/pages/timer.dart';
+import 'package:scribbl/pages/painterView.dart';
 import 'selectRoom.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'gameScreen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'dart:math';
 bool game;
 String host;
 int flag=0;
@@ -15,24 +16,32 @@ List players= new List();
 int roomID;
 String denner;
 String word;
+int hostId;
+int denId;
+List playersId = new List();
 var a;
-var chat;
+var chat = new List();
 
 String documentid;
+
+void getUserId(){
+  
+      Random random = Random();
+       double randomNumber;  
+       randomNumber = random.nextDouble();
+      double d= randomNumber*1000000;
+      identity= d.toInt();
+}
           
 class CreateRoom extends StatelessWidget {
           int id;
           int count;
           List play = new List();
+          List playId= new List();
           CreateRoom({Key key, this.id}):super(key:key);
-          // @override
-          // void dispose(){
-          //   removeMe(players, counter);
-          //   super.dispose();
-          // }
-
          @override
         Widget build(BuildContext context) {
+           getUserId();
           flag=0;
           roomID = id;
         return  WillPopScope(
@@ -58,15 +67,31 @@ class CreateRoom extends StatelessWidget {
               word= snapshot.data.documents[0]['word'];
               a= snapshot.data.documents[0].data;
               chat= snapshot.data.documents[0]['chat'];
+              playersId= snapshot.data.documents[0]['users_id'];
+              hostId= snapshot.data.documents[0]['host_id'];
+              denId= snapshot.data.documents[0]['den_id'];
+
              if(flag==0)
               { 
-                print(players);
                 play = players+[userNam];
-                print(play);
                 count = counter+1;
-                print(count);
-                Firestore.instance.collection('rooms').document(documentid).updateData({'users':play});
-                Firestore.instance.collection('rooms').document(documentid).updateData({'counter':(count)});
+                playId= playersId+[identity];
+
+                if(players.length==0){
+                    Firestore.instance.collection('rooms')
+                .document(documentid)
+                .updateData({
+                  'host_id': identity,
+                  'den_id': identity,
+                  });
+                }
+
+                Firestore.instance.collection('rooms')
+                .document(documentid)
+                .updateData({'users':play,
+                 'counter':(count),
+                  'users_id':playId,
+                  });
                 flag=1;
                 //return RoomCreatingScreen();
               }
@@ -194,7 +219,6 @@ class CreateRoom extends StatelessWidget {
               );
 
               else return GameScreen();
-              
               }
               
 
@@ -289,12 +313,11 @@ class CreateRoom extends StatelessWidget {
           onPressed: () {
 
             Navigator.pop(context);
-            
-            if(host!=userNam){
+            if(hostId!=identity){
               Navigator.pop(context);
             }
             Navigator.pop(context);
-            removeMe(players, counter);
+            removeMe(players, counter, playersId);
           },
           color: Colors.white,
         ),
@@ -309,18 +332,18 @@ class CreateRoom extends StatelessWidget {
       ],
     ).show();
   }
-  Future<void> removeMe(List a, int b) async{
-  
+  Future<void> removeMe(List a, int b, List c) async{
     List playerRemoved = new List();
+    List identityRemoved= new List();
+     playerRemoved =a;
+     identityRemoved=c;
     int count= b-1;
-    playerRemoved =a;
-    playerRemoved.remove(userNam);
-    print(playerRemoved);
-
+    int plInd= c.indexOf(identity);
+    playerRemoved.removeAt(plInd);
+    identityRemoved.removeAt(plInd);
 
        await Firestore.instance.collection('rooms').document(documentid).updateData({'users':playerRemoved,
-       'counter':count});
-
+       'counter':count, 'users_id': identityRemoved});
        if(playerRemoved.length==0){
         // del doc
          await Firestore.instance.collection('rooms').document(documentid).delete().catchError((e){
@@ -329,12 +352,14 @@ class CreateRoom extends StatelessWidget {
          });
        }
        else{
-         if(host==userNam){
-                  await Firestore.instance.collection('rooms').document(documentid).updateData({'host':(playerRemoved.length==0?'':playerRemoved[0])  });
-                }
-                if(denner==userNam){
+         if(hostId==identity)
+         {
+                  await Firestore.instance.collection('rooms').document(documentid).updateData({'host':playerRemoved[0], 'host_id':identityRemoved[0] });
+         }
+        if(denId==identity)
+        {
                   changeDen();
-                }
+        }
 
        }
        flag=0;

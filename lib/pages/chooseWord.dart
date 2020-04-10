@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'room.dart';
-import 'gameScreen.dart';
 import 'dart:math';
+import 'painterScreen.dart';
   var displayWords = [' ',' ',' '];
-class ChooseWordDialog extends StatelessWidget {
+bool  wc= false;
+class ChooseWordDialog extends StatefulWidget {
+  @override
+  _ChooseWordDialogState createState() => _ChooseWordDialogState(); 
+}
+class _ChooseWordDialogState extends State<ChooseWordDialog> {
   @override
   Widget build(BuildContext context) {
+    if(wc==false)
     getWords();
               return   Center(
       child: Dialog(
@@ -25,16 +31,29 @@ class ChooseWordDialog extends StatelessWidget {
               Container(
                 height: 200.0,
                 //color: Colors.red,
-                child: ListView.builder(
-                itemCount: 3,
-                itemBuilder: (_,a){
-                  return  FlatButton(child: Text(displayWords[a]),
+                child:Column(children: <Widget>[
+                  FlatButton(child: Text(displayWords[0]),
               onPressed: (){
-                choosenWord= displayWords[a];
+                choosenWord= displayWords[0];
                 updateWord();
+                wc=false;
               },
-              );
-                })
+              ),
+              FlatButton(child: Text(displayWords[1]),
+              onPressed: (){
+                choosenWord= displayWords[1];
+                updateWord();
+                wc=false;
+              },
+              ),
+              FlatButton(child: Text(displayWords[2]),
+              onPressed: (){
+                choosenWord= displayWords[2];
+                updateWord();
+                wc=false;
+              },
+              ),
+                ],)
               )
             ],
           ),
@@ -45,11 +64,7 @@ class ChooseWordDialog extends StatelessWidget {
          
     // 
   }
-
-
-}
-
-Future<void> getWords() async{
+  Future<void> getWords() async{
   
   var words;
   int length;
@@ -61,12 +76,18 @@ double randomNumber;
 int index;
 //displayWords=[];
   for (int i=0;i<3;i++){
-   randomNumber = random.nextDouble() * (length-1);
+  randomNumber = random.nextDouble() * (length-1);
   index = randomNumber.toInt();
    displayWords[i]=(word[index]);
   }
-  await  Firestore.instance.collection('rooms').document(documentid).updateData({'wordChosen':true});
+  setState(() {
+    wc=true;
+  });
+  //await  Firestore.instance.collection('rooms').document(documentid).updateData({'wordChosen':true});
 }
+}
+
+
 
 Future<void> updateWord() async{
   await Firestore.instance.collection('rooms').document(documentid).updateData({'word':choosenWord});

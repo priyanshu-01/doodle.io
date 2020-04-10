@@ -99,6 +99,7 @@ class _EnterRoomIdState extends State<EnterRoomId> {
 
                   RaisedButton(onPressed: () {
                             val = int.parse(enteredId);
+                            print(val);
 
                             getDetails(context);    
                             

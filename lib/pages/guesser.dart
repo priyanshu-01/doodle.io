@@ -55,9 +55,14 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
            builder: (BuildContext context, Widget child){
              return new CustomPaint(  
                 child: Container(
-                  constraints: BoxConstraints.expand(),
-                  color: Colors.blue,
-                ),  
+                   height: 350.0,
+                    width: 400.0,
+                    //constraints: BoxConstraints.expand(),
+                    //color: Colors.blue,
+                    decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black)
+                    ),
+                  ),  
                 //size: Size(200,200),
                 //size: Size.infinite,
           foregroundPainter: Signature(

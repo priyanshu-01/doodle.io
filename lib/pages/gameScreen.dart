@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:scribbl/pages/chooseWord.dart';
 import 'package:scribbl/pages/selectRoom.dart';
 import 'room.dart';
-import 'painterScreen.dart';
-import 'guesserScreen.dart';
+import 'painterView.dart';
+import 'guesserView.dart';
 import 'WaitScreen.dart';
-
-String choosenWord;
 //List player = new List();
 class GameScreen extends StatefulWidget {
   @override
@@ -32,7 +30,7 @@ class _GameScreenState extends State<GameScreen> {
           if(word!=' ')
             {
               //startTimer();
-              return PainterScreen();
+              return PainterView();
             }
           
           else
@@ -42,7 +40,7 @@ class _GameScreenState extends State<GameScreen> {
       else
       {
         if(word!=' ')
-        return GuesserScreen();
+        return GuesserView();
         else
         return WaitScreen();
       }

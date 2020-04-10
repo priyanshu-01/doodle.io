@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'room.dart';
 class WaitScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class WaitScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(40.0),
                     child: Column(
                       children: <Widget>[
-                        Text('denner is choosing a word',
+                        Text('$denner is choosing a word',
                         textAlign: TextAlign.center,
                         style: GoogleFonts.quicksand(fontSize: 30.0,
                         color: Colors.white

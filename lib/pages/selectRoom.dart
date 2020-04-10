@@ -8,6 +8,7 @@ import 'dart:math';
 import 'roomCreatingScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 String userNam;
+int identity;
 class SelectRoom extends StatefulWidget {
   String userName;
   SelectRoom({Key key, this.userName}):super(key:key);
@@ -128,13 +129,13 @@ Widget showDrawer(){
                              print(id);
                             Firestore.instance.runTransaction((transaction) async{
                             CollectionReference rooms= Firestore.instance.collection('rooms');
-                            await rooms.add({'id': id,'users': [],
+                            await rooms.add({'id': id,'users': [], 'users_id': [],
                             'counter':0, 'host':userNam, 'game':false,
                             'den':userNam,
                             'length':0,'xpos':{},'ypos':{},
                             'word':' ',
                             'wordChosen':false,
-                            'chat':{}
+                            'chat':[], 'den_id':0, 'host_id':0
                             });
 
                               }).whenComplete(()  
