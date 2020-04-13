@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:quiver/async.dart';
 import 'room.dart';
-int current=90;
-int start=90;
-class Time extends StatefulWidget {
 
+class Time extends StatefulWidget {
   @override
   _TimeState createState() => _TimeState();
 }
 class _TimeState extends State<Time> {
+  int current=15;
+int start=15;
   var sub;
   @override
   void initState(){
@@ -33,13 +33,13 @@ class _TimeState extends State<Time> {
     new Duration(seconds: 1),
   );
 
-  var sub = countDownTimer.listen(null);
+  sub = countDownTimer.listen(null);
   sub.onData((duration) {
     setState(() { current = start - duration.elapsed.inSeconds; });
   });
 
   sub.onDone(() {
-    print("Done");    
+    print("Done_timer");    
     //  changeDen();
     sub.cancel();
     

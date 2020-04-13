@@ -4,7 +4,7 @@ import 'pages/WaitScreen.dart';
 import 'pages/signIn.dart';
 void main() => runApp(new MaterialApp(
       // home: new RoomCreatingScreen(),
-      home: new MyHomePage(),
+      home: new AuthHandler(),
       //home: SignIn(),
       debugShowCheckedModeBanner: false,
      theme: ThemeData(primarySwatch: Colors.red),

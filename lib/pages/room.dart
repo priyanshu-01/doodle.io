@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scribbl/pages/roomCreatingScreen.dart';
-import 'package:scribbl/pages/painterView.dart';
+import 'package:scribbl/pages/painterScreen.dart';
 import 'selectRoom.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'gameScreen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:math';
 bool game;
+bool wordChosen;
 String host;
 int flag=0;
 int counter ;
@@ -19,6 +20,7 @@ String word;
 int hostId;
 int denId;
 List playersId = new List();
+
 var a;
 var chat = new List();
 
@@ -53,7 +55,7 @@ class CreateRoom extends StatelessWidget {
             builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot )
             {              
 
-              if(snapshot.data.documents==[])
+              if(snapshot.data.documents.length==0)
               {
                 return Text('Please enter a Valid Room ID');
               }
@@ -70,6 +72,7 @@ class CreateRoom extends StatelessWidget {
               playersId= snapshot.data.documents[0]['users_id'];
               hostId= snapshot.data.documents[0]['host_id'];
               denId= snapshot.data.documents[0]['den_id'];
+              wordChosen=snapshot.data.documents[0]['wordChosen'];
 
              if(flag==0)
               { 

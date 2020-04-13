@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'room.dart';
 import 'dart:math';
+import 'painterScreen.dart';
 import 'painterScreen.dart';
   var displayWords = [' ',' ',' '];
 bool  wc= false;
@@ -14,53 +16,65 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
   Widget build(BuildContext context) {
     if(wc==false)
     getWords();
-              return   Center(
-      child: Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: Colors.blue[50]
+              return   Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 3.0, color: Colors.black),
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.orange[600]
+                  ),
+                    height: 300.0,
+                    child: Container(
+                      constraints: BoxConstraints.expand(),
+                      child: Column(
+                        
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                Text('Choose a word',style: GoogleFonts.quicksand(color: Colors.white, fontSize: 25.0), ),
+                Container(
+                  height: 200.0,
+                  //color: Colors.red,
+                  child:Column(children: <Widget>[
+                      FlatButton(
+                        color: Colors.white,
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                        child: Text(displayWords[0]),
+                onPressed: (){
+                  //PainterScreen().startTimer();
+                  choosenWord= displayWords[0];
+                  updateWord();
+                  wc=false;
+                },
                 ),
-          
-          height: 300.0,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('choose a word'),
-              Container(
-                height: 200.0,
-                //color: Colors.red,
-                child:Column(children: <Widget>[
-                  FlatButton(child: Text(displayWords[0]),
-              onPressed: (){
-                choosenWord= displayWords[0];
-                updateWord();
-                wc=false;
-              },
-              ),
-              FlatButton(child: Text(displayWords[1]),
-              onPressed: (){
-                choosenWord= displayWords[1];
-                updateWord();
-                wc=false;
-              },
-              ),
-              FlatButton(child: Text(displayWords[2]),
-              onPressed: (){
-                choosenWord= displayWords[2];
-                updateWord();
-                wc=false;
-              },
-              ),
-                ],)
-              )
-            ],
-          ),
-        ),
-      )
-      
-    );
+                FlatButton(
+                  color: Colors.white,
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                  child: Text(displayWords[1]),
+                onPressed: (){
+                  choosenWord= displayWords[1];
+                  updateWord();
+                  wc=false;
+                },
+                ),
+                FlatButton(
+                  color: Colors.white,
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                  
+                  child: Text(displayWords[2]),
+                onPressed: (){
+                  choosenWord= displayWords[2];
+                  updateWord();
+                  wc=false;
+                },
+                ),
+                  ],)
+                )
+                        ],
+                      ),
+                    ),
+                  ),
+              );
          
     // 
   }
@@ -90,5 +104,5 @@ int index;
 
 
 Future<void> updateWord() async{
-  await Firestore.instance.collection('rooms').document(documentid).updateData({'word':choosenWord});
+  await Firestore.instance.collection('rooms').document(documentid).updateData({'word':choosenWord,'wordChosen':true});
 }

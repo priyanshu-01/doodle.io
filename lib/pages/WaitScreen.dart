@@ -5,10 +5,10 @@ import 'room.dart';
 class WaitScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-          body: Center(
+    return  Center(
             child: Container(
               color: Colors.orange[800],
+              height: 400.0,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -52,7 +52,7 @@ class WaitScreen extends StatelessWidget {
               ),
         
       ),
-          ),
-    );
+          );
+    
   }
 }

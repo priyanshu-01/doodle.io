@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'room.dart';
+import 'timer.dart';
 int ind1=0,ind2=0;
+  List<Offset> pointsG = <Offset>[];
 // Future<void> getDetail() async{
 //   a= await Firestore.instance.collection('rooms').document(documentid).get();
 // }
@@ -10,10 +12,9 @@ class Guesser extends StatefulWidget {
 }
 class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
   AnimationController controller;
-  List<Offset> _points = <Offset>[];
-
   @override
   void initState(){
+    pointsG=[];
     super.initState();
     controller= AnimationController(
       vsync: this,
@@ -29,7 +30,7 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
         //var a = snapshot.data.documents[0];
       if(a['length']==0){
-        _points=[];
+        pointsG=[];
       }
       ind1=ind2;
       if(a['length']!=0)
@@ -39,46 +40,58 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
       for(int i=ind1;i<ind2;i++){
             if(a['xpos'][i]==null)
             {
-             _points = _points + [null];
+             pointsG = pointsG + [null];
               continue;
             }
-            _points = _points+ [Offset(a['xpos'][i],
+            pointsG = pointsG+ [Offset(a['xpos'][i],
               a['ypos'][i])];
              }
             //  ind1= ind2;
       //print(a['length']);
+      print('from guesser.dart');
       print(ind1);
       print(ind2);
       controller.forward(from: 0.0);
-      print('hel');
-          return AnimatedBuilder(animation: controller,
-           builder: (BuildContext context, Widget child){
-             return new CustomPaint(  
-                child: Container(
-                   height: 350.0,
-                    width: 400.0,
-                    //constraints: BoxConstraints.expand(),
-                    //color: Colors.blue,
-                    decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black)
-                    ),
-                  ),  
-                //size: Size(200,200),
-                //size: Size.infinite,
-          foregroundPainter: Signature(
-            points: _points,
-               animation: controller,
-               ),
-          // size: Size.infinite,
+          return Column(
+            children: <Widget>[
+              AnimatedBuilder(animation: controller,
+               builder: (BuildContext context, Widget child){
+                 return new CustomPaint(  
+                    child: Container(
+                       height: 350.0,
+                        width: 400.0,
+                        //constraints: BoxConstraints.expand(),
+                        //color: Colors.blue,
+                        decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black)
+                        ),
+                      ),  
+                    //size: Size(200,200),
+                    //size: Size.infinite,
+              foregroundPainter: Signature(
+                points: pointsG,
+                   animation: controller,
+                   ),
+              // size: Size.infinite,
+              );
+               }),
+                Container(
+                           height: 50.0,
+                           child: Row(
+                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                             children: <Widget>[
+                               Time(),
+                               WordHint(),
+                             ], 
+                           ),
+                         ),
+            ],
           );
-           });
   }
 
 }
 class Signature extends CustomPainter {
   List<Offset> points;
-
-
   Signature({this.points, this.animation}) : super(repaint: animation);
   Animation<double> animation;
   @override

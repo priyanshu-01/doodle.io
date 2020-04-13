@@ -2,85 +2,111 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'room.dart';
 import 'chooseWord.dart';
-  var list_x = new List();
-  var list_y = new List();
-   int temp_ind =0;
+import 'timer.dart';
+  
+    List<Offset> pointsD = <Offset>[];
 class Painter extends StatefulWidget {
   @override
   PainterState createState() => new PainterState();
 }
-
 class PainterState extends State<Painter> {
-  List<Offset> _points = <Offset>[];
+  var listX = new List();
+  var listY = new List();
+   int tempInd =0;
   void clearPoints(){
     setState(() {
-      _points.clear();
+      pointsD.clear();
     });
   }
-
+  @override
+  void initState(){
+    pointsD=[];
+    listX=[];
+    listY=[];
+    tempInd=0;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    
-        return new GestureDetector(
-            onPanUpdate: (DragUpdateDetails details) {
-              setState(() {
-                RenderBox object = context.findRenderObject();
-                Offset _localPosition =
-        object.globalToLocal(details.globalPosition);
-                _points = new List.from(_points)..add(_localPosition);
-                list_y.add(_localPosition.dy);
-                list_x.add(_localPosition.dx);
-                temp_ind++;
-                
-              });
-            },
-            onPanEnd: (DragEndDetails details) {
-              _points.add(null);
-              list_y.add(null);
-                list_x.add(null);
-                temp_ind++;
-                Firestore.instance
-                .collection('rooms')
-                  .document(documentid)
-        .updateData({
-          'xpos': list_x,
-          'ypos': list_y,
-          'length' : temp_ind
-        });
-            } ,
-            child: new CustomPaint(
-              child: Container(
-                child: IconButton(
-                  
-                  icon: Icon(Icons.delete, size: 30.0,),
-                  alignment: Alignment.bottomRight,
-                  onPressed: (){
-                          clearPoints();
-                          list_x=[];
-                          list_y=[];
-                          temp_ind=0;
-                          Firestore.instance
-                                       .collection('rooms')
-                                       .document(documentid)
-                                       .updateData({
-                                'xpos': list_x,
-                                'ypos': list_y,
-                                'length' : temp_ind
-                              });
-                          
-                        },
+        return Column(
+          children: <Widget>[
+            new GestureDetector(
+                onPanUpdate: (DragUpdateDetails details) {
+                  setState(() {
+                    RenderBox object = context.findRenderObject();
+                    Offset _localPosition =
+            object.globalToLocal(details.globalPosition);
+                    pointsD = new List.from(pointsD)..add(_localPosition);
+                    listY.add(_localPosition.dy);
+                    listX.add(_localPosition.dx);
+                    tempInd++;
+                    
+                  });
+                },
+                onPanEnd: (DragEndDetails details) {
+                  pointsD.add(null);
+                  listY.add(null);
+                    listX.add(null);
+                    tempInd++;
+                    Firestore.instance
+                    .collection('rooms')
+                      .document(documentid)
+            .updateData({
+              'xpos': listX,
+              'ypos': listY,
+              'length' : tempInd
+            });
+                } ,
+                child: new CustomPaint(
+                  child: Container(
+                    child: Container(color: Colors.white,),
+                    
+                    height: 350.0,
+                    width: 400.0,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black,width: 4.0)
+                        ),
+                  ),
+                foregroundPainter: new Signature(points: pointsD),
+                 size: Size.infinite,
+                // size: Size.fromHeight(400.0)
                 ),
-                height: 350.0,
-                width: 400.0,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black)
-                    ),
               ),
-            foregroundPainter: new Signature(points: _points),
-             size: Size.infinite,
-            // size: Size.fromHeight(400.0)
-            ),
-          );
+              Container(
+                      height: 50.0,
+                      color: Colors.orange[600],
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                        Time(),
+                        Text('$word'),   
+                        IconButton(
+                      
+                      icon: Icon(Icons.delete, size: 30.0,color: Colors.white,),
+                     // alignment: Alignment.bottomRight,
+                      onPressed: (){
+                              clearPoints();
+                              listX=[];
+                              listY=[];
+                              tempInd=0;
+                              Firestore.instance
+                                           .collection('rooms')
+                                           .document(documentid)
+                                           .updateData({
+                                    'xpos': listX,
+                                    'ypos': listY,
+                                    'length' : tempInd
+                                  });
+                              
+                            },
+                    ),
+                    // IconButton(icon: Icon(Icons.refre),)
+                        
+                  // Text('67'),
+                      ],),
+                    ),
+          ],
+        );
 
   }
 }
