@@ -52,40 +52,52 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
       print(ind1);
       print(ind2);
       controller.forward(from: 0.0);
-          return Column(
-            children: <Widget>[
-              AnimatedBuilder(animation: controller,
-               builder: (BuildContext context, Widget child){
-                 return new CustomPaint(  
-                    child: Container(
-                       height: 350.0,
-                        width: 400.0,
-                        //constraints: BoxConstraints.expand(),
-                        //color: Colors.blue,
-                        decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black)
-                        ),
-                      ),  
-                    //size: Size(200,200),
-                    //size: Size.infinite,
-              foregroundPainter: Signature(
-                points: pointsG,
-                   animation: controller,
-                   ),
-              // size: Size.infinite,
-              );
-               }),
-                Container(
-                           height: 50.0,
-                           child: Row(
-                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                             children: <Widget>[
-                               Time(),
-                               WordHint(),
-                             ], 
-                           ),
-                         ),
-            ],
+          return FractionallySizedBox(
+            heightFactor: 1.0,
+                      child: Container(
+                        color: Colors.blue,
+                        child: Column(
+              children: <Widget>[
+                AnimatedBuilder(animation: controller,
+                 builder: (BuildContext context, Widget child){
+                   return Flexible(
+                     flex: 7,
+                     child: new CustomPaint(
+                       foregroundPainter: Signature(
+                  points: pointsG,
+                       animation: controller,
+                       ),
+                       child: Container(
+                            //  height: 350.0,
+                            //   width: 400.0,
+                              //constraints: BoxConstraints.expand(),
+                              //color: Colors.blue,
+                              decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black,width: 3.0)
+                              ),
+                            ),
+                     ),
+                   );
+                 }),
+                  Flexible(
+                    flex: 1,
+                             child: Container(
+                    //  color: Colors.orange[100],
+                                // height: 40.0,
+                                 color: Colors.white,
+                                 child: Row(
+                                   crossAxisAlignment: CrossAxisAlignment.center,
+                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                   children: <Widget>[
+                                     Time(),
+                                     WordHint(),
+                                   ], 
+                                 ),
+                               ),
+                  ),
+              ],
+            ),
+                      ),
           );
   }
 

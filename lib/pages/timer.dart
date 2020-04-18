@@ -58,17 +58,32 @@ class _WordHintState extends State<WordHint> {
   int c=90,s=90;
   @override
   Widget build(BuildContext context) {
-    return Container(
-     // height: 50.0,
-      width: 100.0,
-      child: ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        itemCount: word.length,
-        itemBuilder: (_,int h){
-          return Text('_ ',style: TextStyle(fontSize: 25.0),);
-        }),
-      
+    return Flexible(
+            child: FractionallySizedBox(
+              widthFactor: word.length/14,
+              child: Container(
+                //alignment: Alignment.bottomCenter,
+                //color: Colors.orange[50],
+                child: ListView.builder(
+
+          physics: NeverScrollableScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          itemCount: word.length,
+          itemBuilder: (_,int h){
+              if(word.indexOf(' ')==h){
+                return Container(
+             // alignment: Alignment.bottomCenter,
+              
+              child: Text('  ',style: TextStyle(fontSize: 25.0),));
+              }
+              else
+            return Container(
+             // alignment: Alignment.bottomCenter,
+              
+              child: Text('_ ',style: TextStyle(fontSize: 25.0),));
+          }),
+              ),
+      ),
     );
   }
 }

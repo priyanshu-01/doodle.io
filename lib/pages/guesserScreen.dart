@@ -22,6 +22,7 @@ int currentG =20;
 var subG;
   @override
   Widget build(BuildContext context) {
+    recentChat= chat;
     return Scaffold(
           body: SafeArea(
             child: Center(
@@ -29,85 +30,71 @@ var subG;
                   color: Colors.white,
                      constraints: BoxConstraints.expand(),
                    child: Padding(
-                       padding: const EdgeInsets.all(8.0),
-                       child: ListView(
-                         shrinkWrap: true,
+                       padding: const EdgeInsets.fromLTRB(8.0,8.0,8.0,0.0),
+                       child: Column(
+                        // shrinkWrap: true,
                         // reverse: true,
                          //physics: ScrollPhysics()
-                        primary: false,
+                        //primary: false,
                         // mainAxisAlignment: MainAxisAlignment.start,
                          //crossAxisAlignment: CrossAxisAlignment.center,
                          children: <Widget>[
                          //Time_gusser(),
-                         guessWaitShow(),
-                         Container(
+                         Flexible(
+                           flex: 7,
+                           child: guessWaitShow()),
+                         Flexible(
+                           flex: 4,
+                         child: FractionallySizedBox(
+                           heightFactor: 1.0,
+                                                    child: Container(
                    // constraints: BoxConstraints.expand(),
-                    height: 150.0,
+                   // height: 250.0,
                    // width: 150.0,
-                    color: Colors.grey[100],
+                    color: Colors.white,
                      child : Padding(
                        padding: const EdgeInsets.all(8.0),
-                       child: ListView.builder(
-                             //shrinkWrap: true,
-                             reverse: true,                  
-                             itemCount: chat.length,
-                             itemBuilder: (BuildContext context, int index) {
-                                   //print('got new message');
-                                   String both = chat[chat.length-1-index];
-                                   String n = both.substring(0, both.indexOf(']') );
-                                   String m = both.substring( both.indexOf(']')+1 );
-
-                                    if(m=='doodle123'){
-                                      return Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Text('$n Guessed', style: TextStyle(color: Colors.green,
-                                        fontSize: 14.0
-                                        
-                                        ),),
-                                      );
-
-                                    }
-
-                                  else return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text('$n', style: GoogleFonts.roboto(color: Colors.red[800])),
-                                  ),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                       child: Container(
-                                      
-                                      color: Colors.white,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text('$m', style: TextStyle(fontSize: 12.0)),
-                                      )),
-                                  )
-                                   ],);
-                        },
-                       ),
+                       child: chatList(),
                      ),
 
                    ),
+                         ),
+                         ),
                    Container(
-                      color: Colors.white,
-                      height: 60.0,
-                      child: Row(
-                        children: <Widget>[
-                          Flexible(
-                            flex: 6,
-                                                      child: Container(
-                              color: Colors.white,
-                            //  width: 290.0,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-              
-                                  
+                     color: Colors.white,
+                        height: 70.0,
+                   child: Padding(
+                     padding: const EdgeInsets.only(left:12.0, right: 12.0, bottom: 8.0),
+                     child: TextField(
+            
+                       decoration: InputDecoration(
+                         border: OutlineInputBorder(
 
-                                  controller: messageHolder,
+                           borderRadius: BorderRadius.circular(25.0),
+                           borderSide: BorderSide(color: Colors.black)
+                         ),
+
+                         suffix: IconButton(icon: Container(
+                           child: Icon(
+                             Icons.send, color: Colors.red[800],
+                             size: 30.0,),
+                         ),
+                     onPressed: (){
+                   message =' $message ';
+                   messageHolder.clear();
+                   messageHolder.clearComposing();
+                   if(message.indexOf(word)!=-1){
+                     message = 'd123';
+                   }
+                    String newMessage = '$identity[$userNam]$message';                     
+                    recentChat.add(newMessage);
+                    //Navigator.pop(context);
+                   sendMessage();
+                     },
+                     ),
+                         focusColor: Colors.white
+                       ),
+                       controller: messageHolder,
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.newline,
                 
@@ -115,33 +102,11 @@ var subG;
                  message=mess;
                },
                onEditingComplete: () {
-
+                  
                 },
-                                ),
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            flex: 1,
-                             child: IconButton(icon: Icon(Icons.send, color: Colors.red[800],),
-                            onPressed: (){
-                              message =' $message ';
-                              messageHolder.clear();
-                              messageHolder.clearComposing();
-                              if(message.indexOf(word)!=-1){
-                                message = 'doodle123';
-                              }
-
-                               String newMessage = '$userNam]$message';                     
-                               recentChat.add(newMessage);
-                               //Navigator.pop(context);
-                              sendMessage();
-                            },
-                            ),
-                          )
-                        ],
-                      ),
-                       )
+                     ),
+                   ),
+                    )
                        ],),
                      )
         
@@ -156,13 +121,13 @@ var subG;
   }
 
   Widget guessWaitShow(){
-    if(word!=' ')
+    if(word!='*')
       {
         if(currentG>4)
           {
             if(!timerRunning)
             {
-              startTimer();
+             startTimer();
               timerRunning=true;
             }
             
@@ -194,7 +159,7 @@ var subG;
     timerRunning=false;
     currentG=20;
     print("Done");   
-    word=' ';
+    word='*';
     pointsG=[]; 
     subG.cancel();
   });
@@ -207,4 +172,82 @@ void dispose()
   currentG=20;
   super.dispose();
 }
+}
+Widget chatList(){
+  return ListView.builder(
+                             //shrinkWrap: true,
+                            reverse: true,                  
+                             itemCount: chat.length,
+                             itemBuilder: (BuildContext context, int index) {
+                                   //print('error below');
+                                   String both = chat[chat.length-1-index];
+                                   String i= both.substring(0,both.indexOf('['));
+                                   String n = both.substring(both.indexOf('[')+1, both.indexOf(']') );
+                                   String m = both.substring( both.indexOf(']')+1 );
+                                    if(m=='d123'){
+                                      return Center(
+                                        child: Padding(
+                                          
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Text('$n Guessed', style: TextStyle(color: Colors.green,
+                                          fontSize: 14.0
+                                          
+                                          ),),
+                                        ),
+                                      );
+
+                                    }
+
+                                  else return Column(
+                                    
+                                crossAxisAlignment: (identity.toString()==i)?CrossAxisAlignment.end:CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  nameOfOthers(i,n),
+                                  (i==identity.toString())?
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: ClipRRect(
+
+                                      borderRadius: BorderRadius.circular(20.0),
+                                         child: Container(
+                                        
+                                        color: Colors.grey[200],
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(15.0,8.0,15.0,8.0),
+                                          child: Text('$m', style: TextStyle(fontSize: 12.0)),
+                                        )),
+                                    ),
+                                  ):
+                                   Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                     border: Border.all(
+                                      width: 1.0,
+                                      color: Colors.grey[300]
+                        
+                        ),
+                        borderRadius: BorderRadius.circular(25.0),
+                        color: Colors.white
+                      ),
+                                        
+                                       // color: Colors.grey[200],
+                                        child: Padding(
+                                     padding: const EdgeInsets.fromLTRB(15.0,8.0,15.0,8.0),
+                                     child: Text('$m', style: TextStyle(fontSize: 12.0)),
+                                        )),
+                                  )
+                                   ],);
+                        },
+                       );
+}
+Widget nameOfOthers(String iden, String nam){
+  if(iden==identity.toString())
+  return Container();
+  else
+  return Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Text('$nam', style: GoogleFonts.roboto(color: Colors.black)),
+                                  );
+
 }

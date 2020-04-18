@@ -3,13 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'room.dart';
 import 'chooseWord.dart';
 import 'timer.dart';
-  
-    List<Offset> pointsD = <Offset>[];
+
+   
 class Painter extends StatefulWidget {
   @override
   PainterState createState() => new PainterState();
 }
 class PainterState extends State<Painter> {
+   List<Offset> pointsD = <Offset>[];
   var listX = new List();
   var listY = new List();
    int tempInd =0;

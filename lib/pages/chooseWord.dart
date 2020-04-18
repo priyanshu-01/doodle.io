@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'room.dart';
 import 'dart:math';
 import 'painterScreen.dart';
-import 'painterScreen.dart';
   var displayWords = [' ',' ',' '];
 bool  wc= false;
 class ChooseWordDialog extends StatefulWidget {

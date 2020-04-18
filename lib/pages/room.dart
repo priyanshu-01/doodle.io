@@ -8,6 +8,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'gameScreen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:math';
+import 'package:share/share.dart';
 bool game;
 bool wordChosen;
 String host;
@@ -73,7 +74,6 @@ class CreateRoom extends StatelessWidget {
               hostId= snapshot.data.documents[0]['host_id'];
               denId= snapshot.data.documents[0]['den_id'];
               wordChosen=snapshot.data.documents[0]['wordChosen'];
-
              if(flag==0)
               { 
                 play = players+[userNam];
@@ -88,7 +88,6 @@ class CreateRoom extends StatelessWidget {
                   'den_id': identity,
                   });
                 }
-
                 Firestore.instance.collection('rooms')
                 .document(documentid)
                 .updateData({'users':play,
@@ -116,24 +115,41 @@ class CreateRoom extends StatelessWidget {
                               child: Container(child: Column(
                                 children: <Widget>[
                                   Padding(
-                                    padding: const EdgeInsets.all(4.0),
+                                    padding: const EdgeInsets.only(left:12.0, right: 12.0),
                                     child: Text('Room id : $id',style: GoogleFonts.quicksand(fontSize: 25.0,
                                     color: Colors.white
                                     ),
                                     
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left:8.0,right: 8.0),
-                                    child: Text('Share this with your firends',
-                                    style: GoogleFonts.quicksand(color:Colors.white,
-                                    ),
+                                 Padding(
+                                   padding: const EdgeInsets.only(left:8.0, right: 8.0),
+                                   child: Row(
                                     
-                                    ),
-                                  ),
-                                  Text(' and ask them to join!',
-                                  style: GoogleFonts.quicksand(color:Colors.white,
-                                  ))
+                                     children: <Widget>[
+                                       Column(
+                                         children: <Widget>[
+                                            Text('Share this with your firends',
+                                        style: GoogleFonts.quicksand(color:Colors.white,
+                                        ),
+                                        
+                                        ),
+                                        Text(' and ask them to join!',
+                                        style: GoogleFonts.quicksand(color:Colors.white,
+                                        )),
+                                         ],
+                                       ),
+                                       IconButton(icon: Icon(Icons.share, color: Colors.white,size: 30.0,),
+                                    onPressed: (){
+                                      Share.share('Room id $roomID');
+                                    },
+                                    )
+                                     ],
+                                     mainAxisAlignment: MainAxisAlignment.center,
+                                     mainAxisSize: MainAxisSize.min,
+                                   ),
+                                 ),
+                                  
                                 ],
                               ),
                               decoration: BoxDecoration(
@@ -147,7 +163,7 @@ class CreateRoom extends StatelessWidget {
                             ),
                           ),
                           Flexible(
-                            flex:3,
+                            flex:4,
                                                   child: Padding(
                               padding: const EdgeInsets.all(18.0),
                               child: ClipRRect(

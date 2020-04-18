@@ -8,31 +8,35 @@ class WaitScreen extends StatelessWidget {
     return  Center(
             child: Container(
               color: Colors.orange[800],
-              height: 400.0,
+             // height: 400.0,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  SpinKitPouringHourglass(color: Colors.white,
+                  Flexible(
+                    flex:5,
+                                      child: SpinKitPouringHourglass(color: Colors.white,
                  size: 150.0,),
-                  Padding(
-                    padding: const EdgeInsets.all(40.0),
-                    child: Column(
-                      children: <Widget>[
-                        Text('$denner is choosing a word',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.quicksand(fontSize: 30.0,
-                        color: Colors.white
-                        ),
-                        ),
-                        SizedBox(height: 20.0,),
-                        Divider(color: Colors.white,
-                  endIndent: 40.0,
-                  indent: 40.0,
-                  thickness: 2.0,
                   ),
-                      ],
+                  Flexible(
+                    flex: 5,
+                       child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text('$denner is choosing a word',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.quicksand(fontSize: 30.0,
+                      color: Colors.white
+                      ),
+                      ),
                     ),
+
                   ),
+                  Flexible( 
+                    flex:1,
+                     child:Divider(color: Colors.white,
+                    endIndent: 40.0,
+                    indent: 40.0,
+                    thickness: 2.0,
+                    ),)
                   
                   
                   // SpinKitPulse(

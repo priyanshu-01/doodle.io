@@ -133,7 +133,7 @@ Widget showDrawer(){
                             'counter':0, 'host':userNam, 'game':false,
                             'den':userNam,
                             'length':0,'xpos':{},'ypos':{},
-                            'word':' ',
+                            'word':'*',
                             'wordChosen':false,
                             'chat':[], 'den_id':0, 'host_id':0
                             });

@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'chooseWord.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiver/async.dart';
+import 'guesserScreen.dart';
 String choosenWord;
 bool timerRunning2= false;
 class PainterScreen extends StatefulWidget {
@@ -37,47 +38,7 @@ int star= 20;
                     color: Colors.white,
                      child: Padding(
                        padding: const EdgeInsets.all(8.0),
-                       child: ListView.builder(
-                             //shrinkWrap: true,
-                             reverse: true,                  
-                             itemCount: chat.length,
-                             itemBuilder: (BuildContext context, int index) {
-                                   //print('got new message');
-                                   String both = chat[chat.length-1-index];
-                                   String n = both.substring(0, both.indexOf(']') );
-                                   String m = both.substring( both.indexOf(']')+1 );
-
-                                    if(m==' doodle123 '){
-                                      return Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Text('$n Guessed', style: TextStyle(color: Colors.green,
-                                        fontSize: 14.0
-                                        
-                                        ),),
-                                      );
-
-                                    }
-
-                                  else return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text('$n', style: GoogleFonts.roboto(color: Colors.red[800])),
-                                  ),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                       child: Container(
-                                      
-                                      color: Colors.white,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text('$m', style: TextStyle(fontSize: 12.0)),
-                                      )),
-                                  )
-                                   ],);
-                        },
-                       ),
+                       child: chatList(),
                      ),
                    ),
 
@@ -96,7 +57,7 @@ int star= 20;
   Widget chooseOrDraw(){
     if(curr>4)
     {
-                           if(word!=' ')
+                           if(word!='*')
                               {
                                 if(!timerRunning2)
                                 {
@@ -128,7 +89,6 @@ int star= 20;
     curr = star - duration.elapsed.inSeconds;
   });
   subs.onDone(() {
-    pointsD=[];
     curr=20;
     timerRunning2=false;
     print("Done_painterView");    
@@ -151,7 +111,7 @@ Future<void> changeDen()async{
     else s=s+1;
    await Firestore.instance.collection('rooms').document(documentid).updateData({'den':players[s],
    'den_id':playersId[s],
-   'xpos':{},'ypos':{},'word':' ','length':0,'wordChosen': false,
+   'xpos':{},'ypos':{},'word':'*','length':0,'wordChosen': false,
    });
    //startTimer();
  }  

@@ -30,7 +30,7 @@ class _NamePageState extends State<NamePage> {
                 Flexible(
                   fit: FlexFit.tight,
                   //flex: 3,
-                                    child: Image(image: AssetImage('assets/images/sm.png'),
+                                 child: Image(image: AssetImage('assets/images/sm.png'),
                   height: 200.0,),
                 ),
                 Flexible(child: Text('Scribble',
