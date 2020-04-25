@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:quiver/async.dart';
 import 'room.dart';
-
+import 'package:google_fonts/google_fonts.dart';
+import 'dart:math';
 class Time extends StatefulWidget {
   @override
   _TimeState createState() => _TimeState();
 }
 class _TimeState extends State<Time> {
-  int current=15;
-int start=15;
+  int current=90;
+int start=90;
   var sub;
   @override
   void initState(){
@@ -20,11 +21,10 @@ int start=15;
     sub.cancel();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text('$current'),
+      child: Text('$current', style: GoogleFonts.lexendGiga(),),
     );
   }
   void startTimer() {
@@ -47,25 +47,85 @@ int start=15;
 }
  
 }
-
-
-class WordHint extends StatefulWidget {
+class TimeAndWord extends StatefulWidget {
   @override
-  _WordHintState createState() => _WordHintState();
+  _TimeAndWordState createState() => _TimeAndWordState();
 }
 
-class _WordHintState extends State<WordHint> {
-  int c=90,s=90;
+class _TimeAndWordState extends State<TimeAndWord> {
+int current=90;
+int start=90;
+List<int> places =new List();
+List<int> revealed = List();
+int counter=0;
+int q=0,w=0,e=0,r=0;
+  var sub;
+  @override
+  void initState(){
+    places= getClues();
+    initialiseTime();
+    startTimer();
+    super.initState();
+  }
+  @override
+  void dispose(){
+    sub.cancel();
+    super.dispose();
+  }
+    void startTimer() {
+  CountdownTimer countDownTimer = new CountdownTimer(
+    new Duration(seconds: start),
+    new Duration(seconds: 1),
+  );
+  sub = countDownTimer.listen(null);
+  sub.onData((duration) {
+    setState(() { current = start - duration.elapsed.inSeconds; });
+    if(current ==q){
+      revealed.add(places[counter++]);
+    }
+    else if(current ==w){
+      if(places.length>1){
+        revealed.add(places[counter++]);
+      }
+    }
+        else if(current ==e){
+      if(places.length>2){
+        revealed.add(places[counter++]);
+      }
+    }
+        else if(current ==r){
+      if(places.length>3){
+        revealed.add(places[counter++]);
+      }
+    }
+  });
+
+  sub.onDone(() {
+    print("Done_timer");    
+    //  changeDen();
+    sub.cancel();
+    
+  });
+}
   @override
   Widget build(BuildContext context) {
-    return Flexible(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+      Text('$current', style: GoogleFonts.lexendGiga(),),
+      wordHint()
+    ],);
+  }
+
+  Widget wordHint(){
+    
+          return Flexible(
             child: FractionallySizedBox(
               widthFactor: word.length/14,
               child: Container(
                 //alignment: Alignment.bottomCenter,
                 //color: Colors.orange[50],
                 child: ListView.builder(
-
           physics: NeverScrollableScrollPhysics(),
           scrollDirection: Axis.horizontal,
           itemCount: word.length,
@@ -73,17 +133,77 @@ class _WordHintState extends State<WordHint> {
               if(word.indexOf(' ')==h){
                 return Container(
              // alignment: Alignment.bottomCenter,
-              
               child: Text('  ',style: TextStyle(fontSize: 25.0),));
               }
               else
-            return Container(
+                {
+                  if(revealed.indexOf(h)==-1){
+                        return Container(
              // alignment: Alignment.bottomCenter,
-              
               child: Text('_ ',style: TextStyle(fontSize: 25.0),));
+                  }
+                  else
+                  {
+                    String rev= word[h];
+                    return Container(
+             // alignment: Alignment.bottomCenter,
+              child: Text('$rev ',style: TextStyle(fontSize: 25.0),));
+                  }
+                }
           }),
               ),
       ),
     );
+  }
+
+  List<int> getClues(){
+    List<int> place = List();
+    int l= word.length;
+    int div= l~/4;
+    int i;
+    double r;
+    int k;
+    for(i=0;i<div;i++){
+      r= Random().nextDouble();
+      r=(r*4) ;
+      k=r.toInt();
+      if(word[(i*4)+k]!=' ')
+      place.add( (i*4)+k);
+      else
+      place.add( (i*4)+k+1);
+      }
+      if(l%4!=0){
+        int rem;
+        rem= l%4;
+      r= Random().nextDouble();
+      r=(r*rem) ;
+      k=r.toInt();
+      if(word[(div*4)+k]!=' ')
+      place.add( (div*4)+k);
+      else
+       place.add( (div*4)+k+1);
+      }
+      return place;
+  }
+  void initialiseTime(){
+    int len= word.length;
+      if(len<=4){
+        q=60;
+      }
+      else if(len<=8){
+        q=70;
+        w=45;
+      }
+      else if(len<=12){
+        q=75;
+        w=50;
+        e=30;
+      }
+      else{
+        q=85;
+        w=65;
+        e=35;
+        r=15;
+      }
   }
 }

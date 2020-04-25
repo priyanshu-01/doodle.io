@@ -15,19 +15,23 @@ class PainterScreen extends StatefulWidget {
 }
 class _PainterScreenState extends State<PainterScreen> {
    var subs;
-  int curr = 20;
-int star= 20;
+  int curr = 95;
+int star= 95;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
           body: SafeArea(
-                      child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Container(
               //constraints: BoxConstraints.expand(),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                chooseOrDraw(),
+                Flexible(child: chooseOrDraw(),
+                flex: 7,),
                Flexible(
+                 flex: 5,
                     child: FractionallySizedBox(
                     heightFactor: 1.0,
                      // constraints: BoxConstraints.expand(),
@@ -35,10 +39,21 @@ int star= 20;
                      // width: 150.0,
                // color: Colors.orange[100],
                    child : Container(
-                    color: Colors.white,
+
+                    decoration: BoxDecoration(
+                                       border: Border.all(
+                                        width: 1.0,
+                                       // color: Colors.grey[300]
+                          
+                          ),
+                          borderRadius: BorderRadius.circular(25.0),
+                          //color: Colors.white
+                           color: Color(0xFF4BCFFA),
+                          // color: Colors.blueAccent[100]
+                        ),
                      child: Padding(
-                       padding: const EdgeInsets.all(8.0),
-                       child: chatList(),
+                         padding: const EdgeInsets.all(8.0),
+                         child: chatList(),
                      ),
                    ),
 
@@ -50,6 +65,7 @@ int star= 20;
               ],),
         
       ),
+                      ),
           ),
     );
   }
@@ -62,7 +78,7 @@ int star= 20;
                                 if(!timerRunning2)
                                 {
                                   print('bloc executed');
-                                  startTimer();
+                                 // startTimer();
                                   timerRunning2=true;
                                 }
                                 
@@ -105,13 +121,14 @@ void dispose()
 }
 }
 Future<void> changeDen()async{
-  word=' ';
+  word='*';
    int s= playersId.indexOf(denId);
    if(s==players.length-1){s=0;}
     else s=s+1;
    await Firestore.instance.collection('rooms').document(documentid).updateData({'den':players[s],
    'den_id':playersId[s],
    'xpos':{},'ypos':{},'word':'*','length':0,'wordChosen': false,
+   'indices': [0], 'pointer': 0
    });
    //startTimer();
  }  

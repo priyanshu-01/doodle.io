@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'wordWas.dart';
 import 'WaitScreen.dart';
 import 'package:quiver/async.dart';
+import 'package:bubble/bubble.dart';
 bool timerRunning= false;
  final messageHolder= TextEditingController();
   List recentChat= chat;
@@ -17,8 +18,8 @@ class GuesserScreen extends StatefulWidget {
   _GuesserScreenState createState() => _GuesserScreenState();
 }
 class _GuesserScreenState extends State<GuesserScreen> {
-  int startG=20;
-int currentG =20;
+  int startG=95;
+int currentG =95;
 var subG;
   @override
   Widget build(BuildContext context) {
@@ -43,23 +44,34 @@ var subG;
                          Flexible(
                            flex: 7,
                            child: guessWaitShow()),
+                           SizedBox(height: 5.0,),
                          Flexible(
                            flex: 4,
                          child: FractionallySizedBox(
                            heightFactor: 1.0,
-                                                    child: Container(
+                        child: Container(
+                          decoration: BoxDecoration(
+                                     border: Border.all(
+                                      width: 1.0,
+                                     // color: Colors.grey[300]
+                        
+                        ),
+                        borderRadius: BorderRadius.circular(25.0),
+                        //color: Colors.white
+                         color: Color(0xFF4BCFFA),
+                        // color: Colors.blueAccent[100]
+                      ),
                    // constraints: BoxConstraints.expand(),
                    // height: 250.0,
                    // width: 150.0,
-                    color: Colors.white,
                      child : Padding(
                        padding: const EdgeInsets.all(8.0),
                        child: chatList(),
                      ),
-
                    ),
                          ),
                          ),
+                         SizedBox(height: 5.0,),
                    Container(
                      color: Colors.white,
                         height: 70.0,
@@ -73,15 +85,26 @@ var subG;
                            borderRadius: BorderRadius.circular(25.0),
                            borderSide: BorderSide(color: Colors.black)
                          ),
+                         focusedBorder: OutlineInputBorder(
+                        borderRadius: new BorderRadius.circular(25.0),
+                        borderSide: new BorderSide(
+                          color: Colors.black,
+                          // width: 16.0,style: BorderStyle.solid
+                        ),
 
-                         suffix: IconButton(icon: Container(
-                           child: Icon(
-                             Icons.send, color: Colors.red[800],
+                      ),
+
+                         suffix: IconButton(
+                          //  backgroundColor: Colors.black,
+                          //   mini: true,
+                          //  color: Colors.blue,
+                           icon: Icon(
+                             Icons.send, color: Colors.black,
                              size: 30.0,),
-                         ),
                      onPressed: (){
                    message =' $message ';
-                   messageHolder.clear();
+                   if(message!='  '){
+                     messageHolder.clear();
                    messageHolder.clearComposing();
                    if(message.indexOf(word)!=-1){
                      message = 'd123';
@@ -90,8 +113,12 @@ var subG;
                     recentChat.add(newMessage);
                     //Navigator.pop(context);
                    sendMessage();
+                    }
+                    message='';
+                   
                      },
                      ),
+                     prefix: SizedBox(width: 15.0,),
                          focusColor: Colors.white
                        ),
                        controller: messageHolder,
@@ -127,10 +154,9 @@ var subG;
           {
             if(!timerRunning)
             {
-             startTimer();
+          //  startTimer();
               timerRunning=true;
             }
-            
               return Guesser();
           }
           
@@ -188,16 +214,29 @@ Widget chatList(){
                                       return Center(
                                         child: Padding(
                                           
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: Text('$n Guessed', style: TextStyle(color: Colors.green,
-                                          fontSize: 14.0
-                                          
-                                          ),),
+                                          padding: const EdgeInsets.all(1.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                     border: Border.all(
+                                      width: 1.0,
+                                      color: Colors.black
+                        
+                        ),
+                        borderRadius: BorderRadius.circular(15.0),
+                        color: Colors.white
+                      ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.fromLTRB(15.0,7.0,15.0,7.0),
+                                              child: Text('$n Guessed', style: TextStyle(color: Colors.black,
+                                              fontSize: 14.0
+                                              
+                                              ),),
+                                            ),
+                                          ),
                                         ),
                                       );
 
                                     }
-
                                   else return Column(
                                     
                                 crossAxisAlignment: (identity.toString()==i)?CrossAxisAlignment.end:CrossAxisAlignment.start,
@@ -206,36 +245,39 @@ Widget chatList(){
                                   (i==identity.toString())?
                                   Padding(
                                     padding: const EdgeInsets.all(4.0),
-                                    child: ClipRRect(
+                                    child: Bubble(
+                                      nip: BubbleNip.rightTop,
+                                      color: Colors.white,
+                                      shadowColor: Colors.black,
+                                      elevation: 5.0,
 
-                                      borderRadius: BorderRadius.circular(20.0),
-                                         child: Container(
-                                        
-                                        color: Colors.grey[200],
+                      //                 decoration: BoxDecoration(
+                      //                border: Border.all(
+                      //                 width: 1.0,
+                      //                 color: Colors.black
+                      //                // color: Colors.grey[300]
+                      //   ),
+                      //   borderRadius: BorderRadius.circular(25.0),
+                      //   color: Colors.white
+                      // ),
                                         child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(15.0,8.0,15.0,8.0),
-                                          child: Text('$m', style: TextStyle(fontSize: 12.0)),
+                                     padding: const EdgeInsets.fromLTRB(6.0,4.0,6.0,4.0),
+                                     child: Text('$m', style: GoogleFonts.ubuntu(fontSize: 12.0)),
                                         )),
-                                    ),
                                   ):
                                    Padding(
                                     padding: const EdgeInsets.all(4.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                     border: Border.all(
-                                      width: 1.0,
-                                      color: Colors.grey[300]
-                        
-                        ),
-                        borderRadius: BorderRadius.circular(25.0),
-                        color: Colors.white
-                      ),
-                                        
-                                       // color: Colors.grey[200],
-                                        child: Padding(
-                                     padding: const EdgeInsets.fromLTRB(15.0,8.0,15.0,8.0),
-                                     child: Text('$m', style: TextStyle(fontSize: 12.0)),
-                                        )),
+                                    child: Bubble(
+                                      nip: BubbleNip.leftTop,
+                                      color: Colors.white,
+                                      shadowColor: Colors.black,
+                                      elevation: 5.0,
+
+                                                                          child: Padding(
+                                       padding: const EdgeInsets.fromLTRB(6.0,4.0,6.0,4.0),
+                                       child: Text('$m', style: GoogleFonts.ubuntu(fontSize: 12.0)),
+                                      ),
+                                    ),
                                   )
                                    ],);
                         },
@@ -247,7 +289,7 @@ Widget nameOfOthers(String iden, String nam){
   else
   return Padding(
                                     padding: const EdgeInsets.all(4.0),
-                                    child: Text('$nam', style: GoogleFonts.roboto(color: Colors.black)),
+                                    child: Text('$nam', style: GoogleFonts.quicksand(color: Colors.black)),
                                   );
 
 }

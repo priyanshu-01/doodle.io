@@ -13,7 +13,7 @@ class AuthHandler extends StatelessWidget {
         stream: FirebaseAuth.instance.onAuthStateChanged,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return SignIn();
+            return SignIn();//loading page
           else if (snapshot.hasData && snapshot.data != null) {
             name = snapshot.data.displayName;
             email = snapshot.data.email;

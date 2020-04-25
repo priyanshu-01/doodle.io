@@ -135,7 +135,8 @@ Widget showDrawer(){
                             'length':0,'xpos':{},'ypos':{},
                             'word':'*',
                             'wordChosen':false,
-                            'chat':[], 'den_id':0, 'host_id':0
+                            'chat':[], 'den_id':0, 'host_id':0,
+                            'indices': [0], 'pointer': 0
                             });
 
                               }).whenComplete(()  

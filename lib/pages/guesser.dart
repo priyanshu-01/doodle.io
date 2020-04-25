@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'room.dart';
 import 'timer.dart';
+import 'dart:developer' as dev;
+//hey
 int ind1=0,ind2=0;
   List<Offset> pointsG = <Offset>[];
-// Future<void> getDetail() async{
-//   a= await Firestore.instance.collection('rooms').document(documentid).get();
-// }
+  int indStore;
 class Guesser extends StatefulWidget {
   @override
   _GuesserState createState() => _GuesserState();
 }
 class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
+  int pStore;
+  int pointerVal=0;
   AnimationController controller;
   @override
   void initState(){
@@ -25,37 +27,48 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
     );
     //controller.reverse(from: 1.1);
   }
-  
   @override
   Widget build(BuildContext context) {
-        //var a = snapshot.data.documents[0];
+    // dev.debugger();
+     pointsG=[];
       if(a['length']==0){
         pointsG=[];
+        ind1=0;
+        ind2=0;
       }
-      ind1=ind2;
-      if(a['length']!=0)
-      ind2= a['length'];
+      pStore=pointerVal;
+      List dex= a['indices'];
+      if(a['pointer']==0)
+      ind1=0;
       else
-      ind2=0;
-      for(int i=ind1;i<ind2;i++){
+      ind1= dex[a['pointer']-1];
+      // ind2= a['length'];
+        ind2= dex[a['pointer']];
+        pointerVal= a['pointer'];
+        //check below
+        //  if(ind2!=0 && indStore==ind2)
+        //  indStore=indStore-1;
+      for(int i=0;i<a['length'];i++){
             if(a['xpos'][i]==null)
             {
              pointsG = pointsG + [null];
               continue;
             }
-            pointsG = pointsG+ [Offset(a['xpos'][i],
-              a['ypos'][i])];
+            pointsG = pointsG+ [Offset(a['xpos'][i],a['ypos'][i])];
              }
-            //  ind1= ind2;
-      //print(a['length']);
-      print('from guesser.dart');
-      print(ind1);
-      print(ind2);
+
+             
+      if(pStore>pointerVal && a['length']!=0){
+        ind1=dex[a['pointer']];
+        ind2=dex[a['pointer']+1];
+        controller.reverse(from:1.0);
+      }
+      else
       controller.forward(from: 0.0);
           return FractionallySizedBox(
             heightFactor: 1.0,
                       child: Container(
-                        color: Colors.blue,
+                        color: Colors.white,
                         child: Column(
               children: <Widget>[
                 AnimatedBuilder(animation: controller,
@@ -68,13 +81,13 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
                        animation: controller,
                        ),
                        child: Container(
-                            //  height: 350.0,
-                            //   width: 400.0,
-                              //constraints: BoxConstraints.expand(),
-                              //color: Colors.blue,
                               decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black,width: 3.0)
-                              ),
+                              border: Border.all(color: Colors.black,width: 3.0) ,
+                              image: new DecorationImage(
+              fit: BoxFit.fitWidth,
+              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.10), BlendMode.dstATop),
+              image: new AssetImage('assets/images/scibb.jpg')
+            ),)
                             ),
                      ),
                    );
@@ -85,14 +98,7 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
                     //  color: Colors.orange[100],
                                 // height: 40.0,
                                  color: Colors.white,
-                                 child: Row(
-                                   crossAxisAlignment: CrossAxisAlignment.center,
-                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                   children: <Widget>[
-                                     Time(),
-                                     WordHint(),
-                                   ], 
-                                 ),
+                                 child: TimeAndWord(),
                                ),
                   ),
               ],
@@ -111,32 +117,30 @@ class Signature extends CustomPainter {
     Paint paint = new Paint()
       ..color = Colors.black
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = 05.0;
-    
+      ..strokeWidth = 04.0;
     int diff= ind2-ind1;
-    
     double v= animation.value * diff;
     int val = v.toInt();
     int ind = ind1+ val;
           for (int i = 0; i < ind1; i++) {
-
-     if (points[i] != null && points[i + 1] != null) {
-
+     if ((points[i] != null && points[i]!=Offset(-1,-1)) &&( points[i + 1] != null && points[i+1]!=Offset(-1,-1))) {
           canvas.drawLine(points[i], points[i + 1], paint);
-      } 
-      
+      }
+       else if( points[i]==Offset(-1,-1) && points[i+1]!=null)
+                        {
+                          canvas.drawCircle(points[i+1], 2.5, paint);
+                        } 
     }
-
-          
-          for(int i=ind1;i<ind;i++)
+          for(int i=ind1;i<ind-1;i++)
           {
-            if (points[i] != null && points[i + 1] != null) {
+            if ((points[i] != null && points[i]!=Offset(-1,-1)) &&( points[i + 1] != null && points[i+1]!=Offset(-1,-1))) {
             canvas.drawLine(points[i], points[i+1], paint);
              }
+                   else if( points[i]==Offset(-1,-1) && points[i+1]!=null)
+                        {
+                          canvas.drawCircle(points[i+1], 2.5, paint);
+                        }
           }
-    
-      
-
   }
 
   @override

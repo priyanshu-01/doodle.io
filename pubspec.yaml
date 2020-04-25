@@ -22,6 +22,7 @@ dependencies:
   loading_animations: ^2.1.0
   flutter_spinkit: ^4.1.2+1
   share: ^0.6.3+6
+  bubble: ^1.1.9+1
 
 dev_dependencies:
   flutter_test:
