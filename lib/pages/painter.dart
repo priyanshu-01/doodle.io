@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:scribbl/pages/selectRoom.dart';
 import 'room.dart';
 import 'chooseWord.dart';
 import 'timer.dart';
@@ -90,59 +91,62 @@ class PainterState extends State<Painter> {
                 'pointer': p
               });
                   } ,
-             onTapUp: (TapUpDetails details){
-                print('point drawn');
-                    setState(() {
-                      RenderBox obj = context.findRenderObject();
-                      Offset _localP =
-              obj.globalToLocal(details.globalPosition);
-                           if(indices[p]!=tempInd){
-                  listX= truncate3(listX,indices[p]);
-                  listY= truncate3(listY,indices[p]);
-                  pointsD= truncate2(pointsD,indices[p]);
-                   indices=truncate(indices, p);
-              }
-                      pointsD.add(Offset(-1.0,-1.0));
-                      listY.add(-1.0);
-                      listX.add(-1.0);
-                      tempInd=indices[p]+1;
-                      pointsD = new List.from(pointsD)..add(_localP);
-                      listY.add(_localP.dy);
-                      listX.add(_localP.dx);
-                      tempInd++;
-                      pointsD.add(null);
-                    listY.add(null);
-                      listX.add(null);
-                      tempInd++;
-                      indices.add(tempInd);
-                      p=p+1;
-                      indices[p]= tempInd;
-                      Firestore.instance
-                      .collection('rooms')
-                        .document(documentid)
-              .updateData({
-                'xpos': listX,
-                'ypos': listY,
-                'length' : tempInd,
-                'indices':indices,
-                'pointer': p
-              });
-                    });
-                  },
+            //  onTapUp: (TapUpDetails details){
+            //     print('point drawn');
+            //         setState(() {
+            //           RenderBox obj = context.findRenderObject();
+            //           Offset _localP =
+            //   obj.globalToLocal(details.globalPosition);
+            //                if(indices[p]!=tempInd){
+            //       listX= truncate3(listX,indices[p]);
+            //       listY= truncate3(listY,indices[p]);
+            //       pointsD= truncate2(pointsD,indices[p]);
+            //        indices=truncate(indices, p);
+            //   }
+            //           pointsD.add(Offset(-1.0,-1.0));
+            //           listY.add(-1.0);
+            //           listX.add(-1.0);
+            //           tempInd=indices[p]+1;
+            //           pointsD = new List.from(pointsD)..add(_localP);
+            //           listY.add(_localP.dy);
+            //           listX.add(_localP.dx);
+            //           tempInd++;
+            //           pointsD.add(null);
+            //         listY.add(null);
+            //           listX.add(null);
+            //           tempInd++;
+            //           indices.add(tempInd);
+            //           p=p+1;
+            //           indices[p]= tempInd;
+            //           Firestore.instance
+            //           .collection('rooms')
+            //             .document(documentid)
+            //   .updateData({
+            //     'xpos': listX,
+            //     'ypos': listY,
+            //     'length' : tempInd,
+            //     'indices':indices,
+            //     'pointer': p
+            //   });
+            //         });
+            //       },
                   child: new CustomPaint(
-                    child: Container(
-                     // child: Container(color: Colors.white,),
-                      // height: 350.0,
-                      // width: 400.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                          border: Border.all(color: Colors.black,width: 4.0),
-                          image: new DecorationImage(
-                fit: BoxFit.fitWidth,
-                colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.10), BlendMode.dstATop),
-                image: new AssetImage('assets/images/scibb.jpg')
-              )
-                          ),
+                    child: Card(
+                      elevation: 10.0,
+                                          child: Container(
+                       // child: Container(color: Colors.white,),
+                        // height: 350.0,
+                        // width: 400.0,
+              //         decoration: BoxDecoration(
+              //           color: Colors.white,
+              //             border: Border.all(color: Colors.black,width: 4.0),
+              //             image: new DecorationImage(
+              //   fit: BoxFit.fitWidth,
+              //   colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.10), BlendMode.dstATop),
+              //   image: new AssetImage('assets/images/scibb.jpg')
+              // )
+              //             ),
+                      ),
                     ),
                   foregroundPainter: new Signature(points: pointsD,indices: indices,p: p),
                    size: Size.infinite,
@@ -158,9 +162,10 @@ class PainterState extends State<Painter> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
+                            Text('$word', style: GoogleFonts.lexendGiga(),),
                           Time(),
-                          Text('$word', style: GoogleFonts.lexendGiga(),),   
-                          IconButton(icon: Icon(Icons.settings_backup_restore,),
+                             Row(children: [
+                                   IconButton(icon: Icon(Icons.settings_backup_restore,),
                           onPressed: (){
                             if(p!=0)
                             {
@@ -216,6 +221,9 @@ class PainterState extends State<Painter> {
                                 
                               },
                       ),
+                      
+                             ],)
+                      
                       // IconButton(icon: Icon(Icons.refre),)
                           
                     // Text('67'),

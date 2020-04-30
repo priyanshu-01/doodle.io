@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'room.dart';
 import 'timer.dart';
-import 'dart:developer' as dev;
+import 'guesserScreen.dart';
+
 //hey
 int ind1=0,ind2=0;
   List<Offset> pointsG = <Offset>[];
@@ -48,27 +49,26 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
         //check below
         //  if(ind2!=0 && indStore==ind2)
         //  indStore=indStore-1;
-      for(int i=0;i<a['length'];i++){
-            if(a['xpos'][i]==null)
+        if(keyboardState)
+         refactor2();
+         else
+         refactor();
+          if(pStore!=pointerVal)//undertesting if
+          {
+            if(pStore>pointerVal && a['length']!=0)
             {
-             pointsG = pointsG + [null];
-              continue;
+              ind1=dex[a['pointer']];
+              ind2=dex[a['pointer']+1];
+              controller.reverse(from:1.0);
             }
-            pointsG = pointsG+ [Offset(a['xpos'][i],a['ypos'][i])];
-             }
-
-             
-      if(pStore>pointerVal && a['length']!=0){
-        ind1=dex[a['pointer']];
-        ind2=dex[a['pointer']+1];
-        controller.reverse(from:1.0);
-      }
-      else
-      controller.forward(from: 0.0);
+            else
+               controller.forward(from: 0.0);
+            }
           return FractionallySizedBox(
             heightFactor: 1.0,
                       child: Container(
                         color: Colors.white,
+                        //color: textAndChat,
                         child: Column(
               children: <Widget>[
                 AnimatedBuilder(animation: controller,
@@ -80,15 +80,19 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
                   points: pointsG,
                        animation: controller,
                        ),
-                       child: Container(
-                              decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black,width: 3.0) ,
-                              image: new DecorationImage(
-              fit: BoxFit.fitWidth,
-              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.10), BlendMode.dstATop),
-              image: new AssetImage('assets/images/scibb.jpg')
-            ),)
-                            ),
+                       child: Card(
+                         shadowColor: Colors.white,
+                         elevation: 20.0,
+                                                child: Container(
+            //                     decoration: BoxDecoration(
+            //                     border: Border.all(color: Colors.black,width: 3.0) ,
+            //                     image: new DecorationImage(
+            //   fit: BoxFit.fitWidth,
+            //   colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.10), BlendMode.dstATop),
+            //   image: new AssetImage('assets/images/scibb.jpg')
+            // ),)
+                                                ),
+                       ),
                      ),
                    );
                  }),
@@ -147,4 +151,42 @@ class Signature extends CustomPainter {
   bool shouldRepaint(Signature oldDelegate) =>   animation.value != oldDelegate.animation.value
   || oldDelegate.points != points
    ;
+}
+
+void refactor(){
+        for(int i=0;i<a['length'];i++){
+            if(a['xpos'][i]==null)
+            {
+             pointsG = pointsG + [null];
+              continue;
+            }
+            pointsG = pointsG+ [Offset( alterValue(a['xpos'][i]),alterValue(a['ypos'][i]))];
+             }
+}
+double alterValue(double x){
+  if(x==-1)
+  return x;
+  else{
+     double v= (x/denCanvasLength)*guessCanvasLength;
+      return v;
+  }
+}
+void refactor2(){
+     for(int i=0;i<a['length'];i++){
+            if(a['xpos'][i]==null)
+            {
+             pointsG = pointsG + [null];
+              continue;
+            }
+            pointsG = pointsG+ [Offset( alterValue2(a['xpos'][i]),alterValue(a['ypos'][i]))];
+             }
+}
+double alterValue2(double x){
+    if(x==-1)
+  return x;
+  else{
+     double v= (x/denCanvasLength)*guessCanvasLength;
+    v= v+ ((denCanvasLength-guessCanvasLength)/2);
+      return v;
+  }
 }

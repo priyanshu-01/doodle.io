@@ -6,19 +6,17 @@ class RoomCreatingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.red[800],
+        color: Colors.orange[200],
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-
-            
             SpinKitChasingDots(
-              color: Colors.white,
+              color: Color(0xFF00008B),
               size: 150.0,
             ),
-            Text('Just a Second...',
+            Text('Just a Second...!',
             style: GoogleFonts.quicksand(
-              color: Colors.white,
+              color: Color(0xFF00008B),
               fontSize: 30.0
 
             ),

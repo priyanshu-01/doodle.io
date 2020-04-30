@@ -4,8 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'room.dart';
 import 'dart:math';
 import 'painterScreen.dart';
+import 'guesserScreen.dart';
   var displayWords = [' ',' ',' '];
 bool  wc= false;
+Color wordBack;
+Color wordText;
 class ChooseWordDialog extends StatefulWidget {
   @override
   _ChooseWordDialogState createState() => _ChooseWordDialogState(); 
@@ -13,66 +16,68 @@ class ChooseWordDialog extends StatefulWidget {
 class _ChooseWordDialogState extends State<ChooseWordDialog> {
   @override
   Widget build(BuildContext context) {
+    //wordBack= Color(0xFFFFE5B4);
+    wordBack=null;
+   // wordText=Color(0xFF1A2F77);
+   wordText=Colors.black;
     if(wc==false)
     getWords();
-              return   Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 3.0, color: Colors.black),
-                    borderRadius: BorderRadius.circular(20.0),
-                    color: Colors.orange[600]
-                  ),
-                    height: 300.0,
-                    child: Container(
-                      constraints: BoxConstraints.expand(),
-                      child: Column(
-                        
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                Text('Choose a word',style: GoogleFonts.quicksand(color: Colors.white, fontSize: 25.0), ),
-                Container(
-                  height: 200.0,
-                  //color: Colors.red,
-                  child:Column(children: <Widget>[
-                      FlatButton(
-                        color: Colors.white,
-                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                        child: Text(displayWords[0]),
-                onPressed: (){
-                  //PainterScreen().startTimer();
-                  choosenWord= displayWords[0];
-                  updateWord();
-                  wc=false;
-                },
-                ),
-                FlatButton(
-                  color: Colors.white,
-                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                  child: Text(displayWords[1]),
-                onPressed: (){
-                  choosenWord= displayWords[1];
-                  updateWord();
-                  wc=false;
-                },
-                ),
-                FlatButton(
-                  color: Colors.white,
-                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+              return   Container(
+                decoration: BoxDecoration(
                   
-                  child: Text(displayWords[2]),
-                onPressed: (){
-                  choosenWord= displayWords[2];
-                  updateWord();
-                  wc=false;
-                },
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.dstATop),
+                    image: AssetImage('assets/images/pencil.jpg')
+                  )
                 ),
-                  ],)
-                )
-                        ],
-                      ),
-                    ),
-                  ),
+                // color: Colors.white,
+                constraints: BoxConstraints.expand(),
+                child: Column(
+                  
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+              Text('Pick a word',style: GoogleFonts.notoSans(color: Colors.black, fontSize: 25.0), ),
+              Container(
+                height: 200.0,
+                //color: Colors.red,
+                child:Column(children: <Widget>[
+                FlatButton(
+                  color: wordBack,
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0)),
+                  child: Text(displayWords[0].toUpperCase(), style: GoogleFonts.poppins(color: wordText ,  fontSize: 18.0),),
+              onPressed: (){
+                //PainterScreen().startTimer();
+                choosenWord= displayWords[0];
+                updateWord();
+                wc=false;
+              },
+              ),
+              FlatButton(
+                color:wordBack,
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0)),
+                child: Text(displayWords[1].toUpperCase(), style: GoogleFonts.poppins(color: wordText ,  fontSize: 18.0),),
+              onPressed: (){
+                choosenWord= displayWords[1];
+                updateWord();
+                wc=false;
+              },
+              ),
+              FlatButton(
+                color: wordBack,
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0)),
+                
+                child: Text(displayWords[2].toUpperCase(), style: GoogleFonts.poppins(color: wordText ,  fontSize: 18.0),),
+              onPressed: (){
+                choosenWord= displayWords[2];
+                updateWord();
+                wc=false;
+              },
+              ),
+                ],)
+              )
+                  ],
+                ),
               );
          
     // 

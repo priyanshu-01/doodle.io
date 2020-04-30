@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scribbl/pages/selectRoom.dart';
 import 'package:scribbl/pages/wordWas.dart';
 import 'painter.dart';
 import 'room.dart';
@@ -7,8 +8,11 @@ import 'chooseWord.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiver/async.dart';
 import 'guesserScreen.dart';
+import 'guesserScreen.dart';
 String choosenWord;
 bool timerRunning2= false;
+bool madeIt2=false;
+
 class PainterScreen extends StatefulWidget {
   @override
   _PainterScreenState createState() => _PainterScreenState();
@@ -21,43 +25,35 @@ int star= 95;
   Widget build(BuildContext context) {
     return Scaffold(
           body: SafeArea(
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Container(
+                      child: Container(
+                        color: Colors.white,
               //constraints: BoxConstraints.expand(),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+               mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                 Flexible(child: chooseOrDraw(),
                 flex: 7,),
                Flexible(
                  flex: 5,
-                    child: FractionallySizedBox(
-                    heightFactor: 1.0,
-                     // constraints: BoxConstraints.expand(),
-              //  height: 200.0,
-                     // width: 150.0,
-               // color: Colors.orange[100],
-                   child : Container(
+                    child: Container(
 
-                    decoration: BoxDecoration(
-                                       border: Border.all(
-                                        width: 1.0,
-                                       // color: Colors.grey[300]
-                          
-                          ),
-                          borderRadius: BorderRadius.circular(25.0),
-                          //color: Colors.white
-                           color: Color(0xFF4BCFFA),
-                          // color: Colors.blueAccent[100]
-                        ),
-                     child: Padding(
-                         padding: const EdgeInsets.all(8.0),
-                         child: chatList(),
-                     ),
-                   ),
-
-                     ),
+                     decoration: BoxDecoration(
+                                      border: Border.all(
+                                       width: 1.0,
+                                       color: textAndChat
+                         
+                         ),
+                         borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(35),
+                            topRight: Radius.circular(35),
+                            ),
+                        // color: Colors.white
+                        //  color: Color(0xFF4BCFFA),
+                        color: textAndChat
+                         // color: Colors.blueAccent[100]
+                       ),
+                      child: chatList(),
+                    ),
                 )
                 
 
@@ -65,31 +61,41 @@ int star= 95;
               ],),
         
       ),
-                      ),
           ),
     );
   }
-
   Widget chooseOrDraw(){
-    if(curr>4)
+    if(word!='*')//this is true when it should not be
     {
-                           if(word!='*')
+                           if(curr>4  && counter-1!=guesses)
                               {
                                 if(!timerRunning2)
                                 {
+                                  madeIt2=false;
                                   print('bloc executed');
-                                 // startTimer();
+                                //  startTimer();
                                   timerRunning2=true;
                                 }
-                                
                                 return Painter();
                               }
                             
                             else
-                            return ChooseWordDialog();
+                            {
+                              if(madeIt2==false)
+                              updateDennerScore();
+                              if(counter-1!=guesses)
+                              return WordWas();
+                              else
+                              { 
+                                timerRunning2=false;
+                                subs.cancel();
+                                return WordWas2();
+                              }
+                              
+                            }
     }
     else
-    return WordWas();
+    return  ChooseWordDialog();
                       
   }
    void startTimer() {
@@ -105,7 +111,6 @@ int star= 95;
     curr = star - duration.elapsed.inSeconds;
   });
   subs.onDone(() {
-    curr=20;
     timerRunning2=false;
     print("Done_painterView");    
     subs.cancel();
@@ -116,19 +121,50 @@ void dispose()
 {
   subs.cancel();
   timerRunning2=false;
-  curr=20;
+  if(denId==identity)
+  changeDen();
   super.dispose();
 }
 }
 Future<void> changeDen()async{
   word='*';
    int s= playersId.indexOf(denId);
-   if(s==players.length-1){s=0;}
+   if(s==players.length-1){
+     s=0;
+   round = round+1;
+   }
     else s=s+1;
+    for(int k=0;k<tempScore.length;k++){
+      tempScore[k]=0;
+    }
+
    await Firestore.instance.collection('rooms').document(documentid).updateData({'den':players[s],
    'den_id':playersId[s],
    'xpos':{},'ypos':{},'word':'*','length':0,'wordChosen': false,
-   'indices': [0], 'pointer': 0
+   'indices': [0], 'pointer': 0, 'guesses':0, 'tempScore':tempScore,'round':round
    });
    //startTimer();
  }  
+ Future<void> updateDennerScore() async{
+   madeIt2=true;
+   List tScore =List();
+   List fScore= finalScore;
+   tScore=tempScore;
+   int ind= playersId.indexOf(identity);
+   int sum=0;
+   for(int k=0;k<tempScore.length;k++){
+     if(k==ind)
+     continue;
+      sum=sum+tempScore[k];
+   }
+   sum=sum~/(tempScore.length-1);
+   sum=(sum*1.5).round();
+   tScore[ind]= sum;
+   int previousScore= finalScore[ind];
+   fScore[ind]= previousScore+sum;
+    await Firestore.instance.collection('rooms').document(documentid).updateData({
+      'tempScore':tScore,
+      'finalScore':fScore
+   });
+
+ }

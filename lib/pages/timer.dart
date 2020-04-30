@@ -53,6 +53,7 @@ class TimeAndWord extends StatefulWidget {
 }
 
 class _TimeAndWordState extends State<TimeAndWord> {
+  Color timerColor;
 int current=90;
 int start=90;
 List<int> places =new List();
@@ -62,6 +63,7 @@ int q=0,w=0,e=0,r=0;
   var sub;
   @override
   void initState(){
+    timerColor=Colors.green[600];
     places= getClues();
     initialiseTime();
     startTimer();
@@ -79,7 +81,10 @@ int q=0,w=0,e=0,r=0;
   );
   sub = countDownTimer.listen(null);
   sub.onData((duration) {
-    setState(() { current = start - duration.elapsed.inSeconds; });
+    setState(() { current = start - duration.elapsed.inSeconds; 
+    if(current<20){
+      timerColor=(current%2==0)?Colors.red[800]:Colors.white;
+    }});
     if(current ==q){
       revealed.add(places[counter++]);
     }
@@ -112,6 +117,8 @@ int q=0,w=0,e=0,r=0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
+      Text('$denner',style: GoogleFonts.notoSans(),),
+      Icon(Icons.access_alarm,color: timerColor,),
       Text('$current', style: GoogleFonts.lexendGiga(),),
       wordHint()
     ],);
@@ -121,7 +128,7 @@ int q=0,w=0,e=0,r=0;
     
           return Flexible(
             child: FractionallySizedBox(
-              widthFactor: word.length/14,
+              widthFactor: word.length/17,
               child: Container(
                 //alignment: Alignment.bottomCenter,
                 //color: Colors.orange[50],
@@ -132,22 +139,22 @@ int q=0,w=0,e=0,r=0;
           itemBuilder: (_,int h){
               if(word.indexOf(' ')==h){
                 return Container(
-             // alignment: Alignment.bottomCenter,
-              child: Text('  ',style: TextStyle(fontSize: 25.0),));
+              alignment: Alignment.center,
+              child: Text('  ',style: TextStyle(fontSize: 15.0),));
               }
               else
                 {
                   if(revealed.indexOf(h)==-1){
                         return Container(
-             // alignment: Alignment.bottomCenter,
-              child: Text('_ ',style: TextStyle(fontSize: 25.0),));
+             alignment: Alignment.center,
+              child: Text('_ ',style: TextStyle(fontSize: 15.0),));
                   }
                   else
                   {
                     String rev= word[h];
                     return Container(
-             // alignment: Alignment.bottomCenter,
-              child: Text('$rev ',style: TextStyle(fontSize: 25.0),));
+             alignment: Alignment.center,
+              child: Text('$rev ',style: TextStyle(fontSize: 15.0),));
                   }
                 }
           }),
