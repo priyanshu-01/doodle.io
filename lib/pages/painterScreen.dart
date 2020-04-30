@@ -73,7 +73,7 @@ int star= 95;
                                 {
                                   madeIt2=false;
                                   print('bloc executed');
-                                //  startTimer();
+                                  startTimer();
                                   timerRunning2=true;
                                 }
                                 return Painter();

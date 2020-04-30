@@ -237,7 +237,7 @@ super.initState();
               effectiveLength=guessTotalLength;
               guessCanvasLength=(((effectiveLength-70)*0.6) *(7/8));
               madeIt=false;
-             // startTimer();
+              startTimer();
               timerRunning=true;
             }
               return Guesser();
