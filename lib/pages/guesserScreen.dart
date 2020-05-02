@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
 import 'package:scribbl/pages/guesser.dart';
 import 'package:scribbl/pages/selectRoom.dart';
@@ -25,8 +25,8 @@ class GuesserScreen extends StatefulWidget {
   _GuesserScreenState createState() => _GuesserScreenState();
 }
 class _GuesserScreenState extends State<GuesserScreen> {
-  KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
-  int _keyboardVisibilitySubscriberId;
+  // KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
+  // int _keyboardVisibilitySubscriberId;
   
   //Color textAndChat= Color(0xFFECC5C0);
   int startG=95;
@@ -36,25 +36,36 @@ int score=0;
 @override 
 void initState(){
 super.initState();
-   keyboardState = _keyboardVisibility.isKeyboardVisible;
-    _keyboardVisibilitySubscriberId = _keyboardVisibility.addNewListener(
-      onChange: (bool visible) {
-        setState(() {
-          keyboardState = visible;
-          if(keyboardState)
-          effectiveLength= guessTotalLength*0.6;
-          else
-          effectiveLength=guessTotalLength;
-          print('effective length: $effectiveLength');
-           guessCanvasLength=(((effectiveLength-70)*0.6) *(7/8));
-          //  if(_keyboardState)
-          // refactor2();
-          // else
-          // refactor();
-        });
-      //  print(_keyboardState);
-      },
-    );
+  //  keyboardState = _keyboardVisibility.isKeyboardVisible;
+  //   _keyboardVisibilitySubscriberId = _keyboardVisibility.addNewListener(
+  //     onChange: (bool visible) {
+  //       setState(() {
+  //         keyboardState = visible;
+  //         if(keyboardState)
+  //         effectiveLength= guessTotalLength*0.6;
+  //         else
+  //         effectiveLength=guessTotalLength;
+  //         print('effective length: $effectiveLength');
+  //          guessCanvasLength=(((effectiveLength-70)*0.6) *(7/8));
+    
+  //       });
+  //     //  print(_keyboardState);
+  //     },
+  //   );
+   keyboardState = KeyboardVisibility.isVisible;
+    KeyboardVisibility.onChange.listen((bool visible) {
+      
+      setState(() {
+        keyboardState = visible;
+        if(keyboardState)
+        effectiveLength= guessTotalLength*0.6;
+        else
+        effectiveLength=guessTotalLength;
+        print(keyboardState);
+         print('effective length: $effectiveLength');
+        guessCanvasLength=(((effectiveLength-70)*0.6) *(7/8));
+      });
+    });
 }
   @override
   Widget build(BuildContext context) {
@@ -234,7 +245,10 @@ super.initState();
           {
             if(!timerRunning)
             {
-              effectiveLength=guessTotalLength;
+              if(keyboardState)
+              effectiveLength=guessTotalLength*0.6;
+              else
+              effectiveLength= guessTotalLength;
               guessCanvasLength=(((effectiveLength-70)*0.6) *(7/8));
               madeIt=false;
               startTimer();
@@ -286,7 +300,7 @@ super.initState();
 @override
 void dispose()
 {
-  _keyboardVisibility.removeListener(_keyboardVisibilitySubscriberId);
+ // _keyboardVisibility.removeListener(_keyboardVisibilitySubscriberId);
   subG.cancel();
   timerRunning=false;
   super.dispose();

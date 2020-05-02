@@ -3,12 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../pages/selectRoom.dart';
 import '../pages/signIn.dart';
 import '../pages/name2.dart';
-
+import 'package:flutter/services.dart';
 String name='  ', email='  ', imageUrl='  ';
 
 class AuthHandler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
     return StreamBuilder(
         stream: FirebaseAuth.instance.onAuthStateChanged,
         builder: (context, snapshot) {
