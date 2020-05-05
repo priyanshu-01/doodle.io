@@ -4,6 +4,8 @@ import 'room.dart';
 import 'package:quiver/async.dart';
 import 'selectRoom.dart';
 import 'package:google_fonts/google_fonts.dart';
+List sortedPlayers;
+List sortedScore;
 class WordWas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,8 @@ int start=5;
 
   sub = countDownTimer.listen(null);
   sub.onData((duration) {
+   // changeDenIfNeeded();
+
     setState(() { current = start - duration.elapsed.inSeconds; });
   });
 
@@ -57,7 +61,29 @@ int start=5;
   });
 }
 }
+  void sort(){
+    sortedPlayers=players;
+    sortedScore=tempScore;
+    int temp;
+    String temp2;
+    for(int x=0;x<sortedScore.length-1;x++){
+      for(int y=x+1;y<sortedScore.length;y++){
+        if(sortedScore[x]<sortedScore[y]){
+          temp= sortedScore[x];
+          sortedScore[x]=sortedScore[y];
+          sortedScore[y]=temp;
+
+          temp2= sortedPlayers[x];
+          sortedPlayers[x]=sortedPlayers[y];
+          sortedPlayers[y]=temp2;
+        }
+      }
+
+    }
+  }
+
 Widget wordWasContent(){
+  sort();
   return Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisAlignment: MainAxisAlignment.center,
@@ -73,10 +99,10 @@ Widget wordWasContent(){
           child: Container(
           child: Center(
             child: ListView.builder(
-              itemCount: players.length,
+              itemCount: sortedPlayers.length,
               itemBuilder: (_,int a){
-                String name= players[a];
-                int score=tempScore[a];
+                String name= sortedPlayers[a];
+                int score=sortedScore[a];
                 return FractionallySizedBox(
                   widthFactor: 0.7,
                                     child: Padding(

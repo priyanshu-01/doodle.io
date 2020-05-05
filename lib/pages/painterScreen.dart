@@ -11,8 +11,7 @@ import 'guesserScreen.dart';
 import 'guesserScreen.dart';
 String choosenWord;
 bool timerRunning2= false;
-bool madeIt2=false;
-
+//bool madeIt2=false;
 class PainterScreen extends StatefulWidget {
   @override
   _PainterScreenState createState() => _PainterScreenState();
@@ -71,7 +70,7 @@ int star= 95;
                               {
                                 if(!timerRunning2)
                                 {
-                                  madeIt2=false;
+                                  //madeIt2=false;
                                   print('bloc executed');
                                   startTimer();
                                   timerRunning2=true;
@@ -81,8 +80,8 @@ int star= 95;
                             
                             else
                             {
-                              if(madeIt2==false)
-                              updateDennerScore();
+                              // if(madeIt2==false)
+                              // updateDennerScore();
                               if(counter-1!=guesses)
                               return WordWas();
                               else
@@ -144,27 +143,4 @@ Future<void> changeDen()async{
    'indices': [0], 'pointer': 0, 'guesses':0, 'tempScore':tempScore,'round':round
    });
    //startTimer();
- }  
- Future<void> updateDennerScore() async{
-   madeIt2=true;
-   List tScore =List();
-   List fScore= finalScore;
-   tScore=tempScore;
-   int ind= playersId.indexOf(identity);
-   int sum=0;
-   for(int k=0;k<tempScore.length;k++){
-     if(k==ind)
-     continue;
-      sum=sum+tempScore[k];
-   }
-   sum=sum~/(tempScore.length-1);
-   sum=(sum*1.5).round();
-   tScore[ind]= sum;
-   int previousScore= finalScore[ind];
-   fScore[ind]= previousScore+sum;
-    await Firestore.instance.collection('rooms').document(documentid).updateData({
-      'tempScore':tScore,
-      'finalScore':fScore
-   });
-
- }
+ } 

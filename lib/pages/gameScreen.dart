@@ -14,8 +14,7 @@ class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
    // return WordWas();
-      if(round<4){
-
+      if(round<=numberOfRounds){
         if(denId==identity)
           {
            denCanvasLength = MediaQuery.of(context).size.height*0.5;
@@ -34,6 +33,7 @@ class GameScreen extends StatelessWidget {
         // Navigator.push(context, MaterialPageRoute(builder: (context) => Result()) );
         // if(identity==hostId)
         // delDoc();
+        print('still in gameScreen');
         return Result();
       }
       // return GuesserScreen();

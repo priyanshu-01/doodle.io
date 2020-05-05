@@ -5,22 +5,14 @@ class SignIn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        alignment: Alignment.center,
         constraints: BoxConstraints.expand(),
-        color: Colors.black,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-
-            
-            Image(image:AssetImage('assets/images/google.png') ,height: 150.0,),
-            Text('Signing in...',
-            style: GoogleFonts.quicksand(
-              color: Colors.white,
-              fontSize: 30.0
-
-            ),
-            )
-          ],
+        color: Colors.orange[200],
+        child: Text('Loading...',
+        style: GoogleFonts.quicksand(
+          color: Colors.black,
+          fontSize: 40.0
+        ),
         )
       ),
       

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'selectRoom.dart';
+import '../services/anon.dart';
 String enteredName='';
 class EnterName extends StatefulWidget {
   @override
   _EnterNameState createState() => _EnterNameState();
 }
-
 class _EnterNameState extends State<EnterName> {
   @override
   Widget build(BuildContext context) {
@@ -114,9 +114,10 @@ class _EnterNameState extends State<EnterName> {
 
 
                         Padding(padding: EdgeInsets.all(8.0),
-                        child: RaisedButton(onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context)=> SelectRoom(userName: enteredName)));
-                                  
+                        child: RaisedButton(onPressed: () async {
+                         // Navigator.of(context).pop();
+                          await AuthSignIn().signInAnonymously();
+                          //Navigator.push(context, MaterialPageRoute(builder: (context)=> SelectRoom(userName: enteredName)));
                                 },
                                 shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0)),

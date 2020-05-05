@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/authService.dart';
@@ -9,9 +10,11 @@ import 'roomCreatingScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'guesserScreen.dart';
+import '../services/anon.dart';
+import 'loginPage.dart';
  double effectiveLength=0;
 String userNam;
-int identity;
+String identity;
 int id;
 bool initialiseDimension=true;
 class SelectRoom extends StatefulWidget {
@@ -22,9 +25,24 @@ class SelectRoom extends StatefulWidget {
 }
 class _SelectRoomState extends State<SelectRoom> {
 Widget showDrawer(){
-  if(name !='  ')
   return                 Row(
                   children: <Widget>[
+                    (check==signInMethod.google)?
+                    InkWell(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left:8.0,
+                                            top: 8.0),
+                                            child: CircleAvatar(    
+                                              backgroundColor: Colors.orange,   
+                        backgroundImage: NetworkImage(imageUrl,),
+                        radius: 25.0,
+                      ),
+                                          ),
+                      onTap: () {
+                         _scaffoldKey.currentState.openDrawer();
+                      },
+                    )
+                    :
                     IconButton(
                       color: Colors.red[800],
                       icon: Icon(Icons.menu),
@@ -32,11 +50,19 @@ Widget showDrawer(){
                         _scaffoldKey.currentState.openDrawer();
                       },
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(right:8.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                        Icon(Icons.attach_money),
+                        Text(coins.toString(), style: TextStyle(fontSize: 20.0),)
+                      ],),
+                    )
                   ],
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 );
-    else return Container();
 }
-
   String userName;
   _SelectRoomState(this.userName);
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -64,15 +90,23 @@ Widget showDrawer(){
             child: Column(
               children: <Widget>[
                 UserAccountsDrawerHeader(
-              accountName: Text(name),
-              accountEmail: Text(email),
+                  decoration: BoxDecoration(
+                    color: Colors.orange[100]
+                  ),
+              accountName: Text(name,style: TextStyle(color: Colors.black),),
+              accountEmail: Text(email,style: TextStyle(color: Colors.black),),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(imageUrl),
               ),
             ),
             SizedBox(height: 50.0,),
                 ListTile(
-                          onTap: (){AuthProvider().signOutGoogle();},
+
+                          onTap: (){
+                            //FirebaseAuth.instance.currentUser().
+                              (check==signInMethod.google)?AuthProvider().signOutGoogle():signOut();
+                          },
+                          
                           title: Text('Sign Out'),
                           leading: Icon(Icons.exit_to_app),
                 ),
@@ -236,5 +270,6 @@ Future<void> addRoom()async {
                                'word':'*','wordChosen':false,
                                'chat':[], 
                                'indices': [0], 'pointer': 0, 
+                               'numberOfRounds': 3,
                                });
 }
