@@ -29,8 +29,8 @@ class GuesserScreen extends StatefulWidget {
 
 class _GuesserScreenState extends State<GuesserScreen> {
   //Color textAndChat= Color(0xFFECC5C0);
-  int startG = 95;
-  int currentG = 95;
+  int startG = 90;
+  int currentG = 90;
   var subG;
   int score = 0;
   @override
@@ -200,7 +200,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
     }
     sum = sum ~/ (tempScore.length - 1);
     tempScore[ind] = sum;
-    finalScore[ind] = finalScore[ind]+sum;
+    finalScore[ind] = finalScore[ind] + sum;
     madeIt = true;
     await Firestore.instance
         .collection('rooms')
@@ -231,7 +231,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
 
   Widget guessWaitShow() {
     if (word != '*') {
-      if (currentG > 4 && counter - 1 != guesses) {
+      if (currentG >= 1 && counter - 1 != guesses) {
         if (!timerRunning) {
           if (keyboardState)
             effectiveLength = guessTotalLength * 0.6;
@@ -244,13 +244,17 @@ class _GuesserScreenState extends State<GuesserScreen> {
         }
         return Guesser();
       } else {
-        if (counter - 1 != guesses)
-          return WordWas();
-        else {
-          timerRunning = false;
+        // if (counter - 1 != guesses)
+        // {
+        //    return WordWas();
+        // }
+        // else {
           subG.cancel();
+          currentG = 90;
+          pointsG = [];
+          timerRunning = false;
           return WordWas2();
-        }
+        //}
       }
     } else
       return WaitScreen();
@@ -264,7 +268,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
 
     subG = countDownTimer.listen(null);
     subG.onData((duration) {
-      if (currentG < 5)
+      if (currentG <= 1)
         setState(() {
           currentG = startG - duration.elapsed.inSeconds;
         });
@@ -272,23 +276,21 @@ class _GuesserScreenState extends State<GuesserScreen> {
         currentG = startG - duration.elapsed.inSeconds;
     });
 
-    subG.onDone(() {
-      timerRunning = false;
-      print("Done");
-      word = '*';
-      guesses = 0;
-      currentG = 95;
-      pointsG = [];
-      subG.cancel();
-      // currentG=95;
-    });
+    // subG.onDone(() {
+    //   // timerRunning = false;
+    //   // print("Done");
+    //   //  word = '*';
+      
+    //   // subG.cancel();
+    //   // currentG=95;
+    // });
   }
 
   @override
   void dispose() {
     word = '*';
-    // _keyboardVisibility.removeListener(_keyboardVisibilitySubscriberId);
     subG.cancel();
+    currentG=90;
     timerRunning = false;
     super.dispose();
   }

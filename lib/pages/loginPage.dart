@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
    
     double c_width = MediaQuery.of(context).size.width*0.7;
-    double c_height= MediaQuery.of(context).size.height*0.3;
+   // double c_height= MediaQuery.of(context).size.height*0.3;
      if(check==signInMethod.anonymous){
        return WillPopScope(
          onWillPop: (){
@@ -120,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    Text('Sign in with ',style: GoogleFonts.notoSans(color: Colors.white,
+                                    Text('Sign in with ',style: GoogleFonts.roboto(color: Colors.white,
                                 fontSize: 18.0),),
                                Image(image: AssetImage('assets/images/google.png'), height: 40.0,)
                                   ],
@@ -139,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(30.0)),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical:13.0,horizontal: 30.0),
-                              child: Text('Play as Guest',style: GoogleFonts.notoSans(color: Colors.black,
+                              child: Text('Play as Guest',style: GoogleFonts.roboto(color: Colors.black,
                               fontSize: 18.0),),
                             ),
                             color: Colors.white,),

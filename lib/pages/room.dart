@@ -12,13 +12,14 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:math';
 import 'package:share/share.dart';
 import '../services/authHandler.dart';
-
+import 'enterName.dart';
 bool game;
 bool wordChosen;
 String host;
 int flag = 0;
 int counter;
 List players = new List();
+List playersImage=List();
 int roomID;
 String denner;
 String word;
@@ -36,15 +37,6 @@ var chat = new List();
 
 String documentid;
 
-void getUserId() {
-  // Random random = Random();
-  // double randomNumber;
-  // randomNumber = random.nextDouble();
-  // double d = randomNumber * 1000000;
-  // identity = d.toInt();
-  identity=uid;
-}
-
 class CreateRoom extends StatefulWidget {
   int id;
 
@@ -55,24 +47,8 @@ class CreateRoom extends StatefulWidget {
 }
 
 class _CreateRoomState extends State<CreateRoom> {
-  int count;
-  List play = new List();
-
-  List playId = new List();
-
-  List tScores = new List();
-
-  List fScores = new List();
-
-  void cancelStream() {
-    setState(() {
-      print('out now');
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    getUserId();
     roomID = widget.id;
     return WillPopScope(
         child: Scaffold(
@@ -94,6 +70,7 @@ class _CreateRoomState extends State<CreateRoom> {
                 word = a['word'];
                 chat = a['chat'];
                 playersId = a['users_id'];
+                playersImage= a['usersImage'];
                 hostId = a['host_id'];
                 denId = a['den_id'];
                 wordChosen = a['wordChosen'];
@@ -104,11 +81,15 @@ class _CreateRoomState extends State<CreateRoom> {
                 denCanvasLength = a['denCanvasLength'];
                 numberOfRounds = a['numberOfRounds'];
                 if (flag == 0) {
-                  play = players + [userNam];
-                  count = counter + 1;
-                  playId = playersId + [identity];
-                  tScores = tempScore + [0];
-                  fScores = finalScore + [0];
+                  players = players + [userNam];
+                  counter = counter + 1;
+                  playersId = playersId + [identity];
+                  tempScore = tempScore + [0];
+                  finalScore = finalScore + [0];
+                  if(check==signInMethod.google)
+                  playersImage= playersImage+[imageUrl];
+                  else
+                  playersImage= playersImage+ [imageIndex];
                   if (players.length == 0) {
                     Firestore.instance
                         .collection('rooms')
@@ -122,11 +103,11 @@ class _CreateRoomState extends State<CreateRoom> {
                       .collection('rooms')
                       .document(documentid)
                       .updateData({
-                    'users': play,
-                    'counter': (count),
-                    'users_id': playId,
-                    'tempScore': tScores,
-                    'finalScore': fScores
+                    'users': players,
+                    'counter': counter,
+                    'users_id': playersId,
+                    'tempScore': tempScore,
+                    'finalScore': finalScore
                   });
                   flag = 1;
                   //return RoomCreatingScreen();
@@ -266,8 +247,8 @@ class _CreateRoomState extends State<CreateRoom> {
                                                                         20.0,
                                                                     vertical:
                                                                         9.0),
-                                                            child: (check==signInMethod.google)?CircleAvatar(
-                                                               backgroundImage: NetworkImage(imageUrl,),
+                                                            child: (playersImage[a]!='')?CircleAvatar(
+                                                               backgroundImage: NetworkImage(playersImage[a]),
                                                                radius: 20.0,
                                                             ):
                                                             Icon(

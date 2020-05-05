@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'selectRoom.dart';
 import '../services/anon.dart';
 String enteredName='';
+String imageIndex='';
 class EnterName extends StatefulWidget {
   @override
   _EnterNameState createState() => _EnterNameState();
