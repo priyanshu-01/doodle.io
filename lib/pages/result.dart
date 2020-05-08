@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:scribbl/pages/room.dart';
 import 'gameScreen.dart';
-class Result extends StatelessWidget {
+class Result extends StatefulWidget {
+  @override
+  _ResultState createState() => _ResultState();
+}
+
+class _ResultState extends State<Result> {
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
           body: Center(
         child: Container(

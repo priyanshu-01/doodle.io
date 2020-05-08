@@ -4,19 +4,14 @@ import 'room.dart';
 import 'package:quiver/async.dart';
 import 'selectRoom.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../main.dart';
 List sortedPlayers;
 List sortedScore;
-class WordWas extends StatelessWidget {
+class WordWas extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return wordWasContent();
-  }
+  _WordWasState createState() => _WordWasState();
 }
-class WordWas2 extends StatefulWidget {
-  @override
-  _WordWas2State createState() => _WordWas2State();
-}
-class _WordWas2State extends State<WordWas2> {
+class _WordWasState extends State<WordWas> {
   int current = 0;
   int end = 30+(counter*2);
   var sub;
@@ -36,9 +31,9 @@ class _WordWas2State extends State<WordWas2> {
 
   @override
   Widget build(BuildContext context) {
+    print(online);
     return wordWasContent();
   }
-
   void startTimer() {
     CountdownTimer countDownTimer = new CountdownTimer(
       new Duration(seconds: end),
@@ -73,10 +68,9 @@ class _WordWas2State extends State<WordWas2> {
      else{
        distance= counter+ m-d;
      }
-     if(current==5+(distance*2))
+     if(current==5+(distance*2)   && resumed && online)
      changeDen();
   }
-
 }
 
 

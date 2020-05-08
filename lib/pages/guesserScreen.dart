@@ -253,7 +253,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
           currentG = 90;
           pointsG = [];
           timerRunning = false;
-          return WordWas2();
+          return WordWas();
         //}
       }
     } else

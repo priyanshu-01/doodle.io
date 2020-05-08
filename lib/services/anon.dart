@@ -20,7 +20,8 @@ class AuthSignIn{
       'uid':uid,
       'coins': 1000,
       'name': enteredName,
-      'active': true
+      'active': true,
+      'imageUrl':imageUrl,
     }).then((value){
       dataDocId= value.documentID;
     });

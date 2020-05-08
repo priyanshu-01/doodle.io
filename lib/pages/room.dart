@@ -9,14 +9,12 @@ import 'selectRoom.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'gameScreen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'dart:math';
 import 'package:share/share.dart';
 import '../services/authHandler.dart';
-import 'enterName.dart';
+import 'WaitScreen.dart';
 bool game;
 bool wordChosen;
 String host;
-int flag = 0;
 int counter;
 List players = new List();
 List playersImage=List();
@@ -50,6 +48,11 @@ class _CreateRoomState extends State<CreateRoom> {
   @override
   Widget build(BuildContext context) {
     roomID = widget.id;
+    // if(round>numberOfRounds)
+    // {print('should return result');
+    // return Result();}
+    // else
+    print('returned room');
     return WillPopScope(
         child: Scaffold(
           body: Container(
@@ -60,6 +63,8 @@ class _CreateRoomState extends State<CreateRoom> {
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
+                 if(snapshot==null)
+                 return Container();
                 a = snapshot.data.documents[0].data;
                 documentid = snapshot.data.documents[0].documentID;
                 counter = a['counter'];
@@ -80,44 +85,18 @@ class _CreateRoomState extends State<CreateRoom> {
                 round = a['round'];
                 denCanvasLength = a['denCanvasLength'];
                 numberOfRounds = a['numberOfRounds'];
-                if (flag == 0) {
+                if (playersId.indexOf(identity)==-1) {
                   players = players + [userNam];
                   counter = counter + 1;
                   playersId = playersId + [identity];
                   tempScore = tempScore + [0];
                   finalScore = finalScore + [0];
-                  if(check==signInMethod.google)
                   playersImage= playersImage+[imageUrl];
-                  else
-                  playersImage= playersImage+ [imageIndex];
-                  if (players.length == 0) {
-                    Firestore.instance
-                        .collection('rooms')
-                        .document(documentid)
-                        .updateData({
-                      'host_id': identity,
-                      'den_id': identity,
-                    });
+                  if (players.length == 1) {
+                     updateHostData();
                   }
-                  Firestore.instance
-                      .collection('rooms')
-                      .document(documentid)
-                      .updateData({
-                    'users': players,
-                    'counter': counter,
-                    'users_id': playersId,
-                    'tempScore': tempScore,
-                    'finalScore': finalScore
-                  });
-                  flag = 1;
-                  //return RoomCreatingScreen();
+                 updatePlayerData();
                 }
-                // if(round>3){
-                //   setState(() {
-                //   });
-                // }
-                // if(round>3)
-                // cancelStream();
                 if (game == false)
                   return Center(
                     child: Container(
@@ -247,14 +226,11 @@ class _CreateRoomState extends State<CreateRoom> {
                                                                         20.0,
                                                                     vertical:
                                                                         9.0),
-                                                            child: (playersImage[a]!='')?CircleAvatar(
+                                                            child:CircleAvatar(
+                                                              backgroundColor: Colors.grey[100],
                                                                backgroundImage: NetworkImage(playersImage[a]),
                                                                radius: 20.0,
-                                                            ):
-                                                            Icon(
-                                                                Icons.person,
-                                                                color: Color(
-                                                                    0xFF45454D)),
+                                                            ) 
                                                           ),
                                                           Text(
                                                             players[a],
@@ -296,6 +272,8 @@ class _CreateRoomState extends State<CreateRoom> {
                     ),
                   );
                 else
+                // waitCurrent=0;
+                // waitSub.cancel();
                   return GameScreen();
               },
             ),
@@ -451,7 +429,6 @@ class _CreateRoomState extends State<CreateRoom> {
         changeDen();
       }
     }
-    flag = 0;
   }
 
   Future<void> startGame() async {
@@ -506,4 +483,26 @@ class _DisplayRoundState extends State<DisplayRound> {
         ),
       );
   }
+}
+Future<void> updateHostData()async{
+        await Firestore.instance
+                        .collection('rooms')
+                        .document(documentid)
+                        .updateData({
+                      'host_id': identity,
+                      'den_id': identity,
+                    });
+}
+Future<void> updatePlayerData() async{
+  await  Firestore.instance
+                      .collection('rooms')
+                      .document(documentid)
+                      .updateData({
+                    'users': players,
+                    'counter': counter,
+                    'users_id': playersId,
+                    'tempScore': tempScore,
+                    'finalScore': finalScore,
+                    'usersImage': playersImage
+                  });
 }

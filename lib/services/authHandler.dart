@@ -61,6 +61,7 @@ Widget fetchFutureAnonymous() {
           dataDocId = a.documentID;
           coins = a['coins'];
           name = a['name'];
+          imageUrl= a['imageUrl'];
           print('coins $coins');
           AuthSignIn().activate();
         }

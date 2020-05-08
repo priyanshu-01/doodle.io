@@ -10,7 +10,12 @@ import 'result.dart';
 List displayNames;
 List displayScores;
 String docId;
-class GameScreen extends StatelessWidget {
+class GameScreen extends StatefulWidget {
+  @override
+  _GameScreenState createState() => _GameScreenState();
+}
+
+class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
    // return WordWas();
@@ -33,6 +38,9 @@ class GameScreen extends StatelessWidget {
         // Navigator.push(context, MaterialPageRoute(builder: (context) => Result()) );
         // if(identity==hostId)
         // delDoc();
+       // flag=0;
+        // setState(() {
+        // });
         print('still in gameScreen');
         return Result();
       }
@@ -47,7 +55,7 @@ Future<void> delDoc() async{
 }
 Future<void> updateDimension() async{
             if(a['denCanvasLength']!=denCanvasLength)
-                      Firestore.instance
+                      await Firestore.instance
                       .collection('rooms')
                         .document(documentid)
               .updateData({

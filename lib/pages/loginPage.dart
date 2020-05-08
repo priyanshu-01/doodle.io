@@ -19,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
    
-    double c_width = MediaQuery.of(context).size.width*0.7;
+    double cWidth = MediaQuery.of(context).size.width*0.7;
    // double c_height= MediaQuery.of(context).size.height*0.3;
      if(check==signInMethod.anonymous){
        return WillPopScope(
@@ -99,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: <Widget>[
                         SizedBox(width: 20.0,),
                         Container(
-                          width: c_width,
+                          width: cWidth,
                           child: Text('Think out of the box to draw challenging objects.', style: TextStyle(color: Colors.grey),softWrap: true,)),
                       ],
                     ),

@@ -12,14 +12,17 @@ import 'dart:async';
 import 'guesserScreen.dart';
 import '../services/anon.dart';
 import 'loginPage.dart';
-
+import '../main.dart';
+import 'package:connectivity/connectivity.dart';
+import 'dart:io';
 double effectiveLength = 0;
 String userNam;
 String identity = uid;
 int id;
 bool initialiseDimension = true;
-
+bool online;
 class SelectRoom extends StatefulWidget {
+
   String userName;
   SelectRoom({Key key, this.userName}) : super(key: key);
   @override
@@ -27,15 +30,17 @@ class SelectRoom extends StatefulWidget {
 }
 
 class _SelectRoomState extends State<SelectRoom> {
+    Map _source = {ConnectivityResult.none: false};
+  MyConnectivity _connectivity = MyConnectivity.instance;
   Widget showDrawer() {
     return Row(
       children: <Widget>[
-        (check == signInMethod.google)
-            ? InkWell(
+  
+             InkWell(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                   child: CircleAvatar(
-                    backgroundColor: Colors.orange,
+                    backgroundColor: Colors.grey[100],
                     backgroundImage: NetworkImage(
                       imageUrl,
                     ),
@@ -45,14 +50,8 @@ class _SelectRoomState extends State<SelectRoom> {
                 onTap: () {
                   _scaffoldKey.currentState.openDrawer();
                 },
-              )
-            : IconButton(
-                color: Colors.red[800],
-                icon: Icon(Icons.menu),
-                onPressed: () {
-                  _scaffoldKey.currentState.openDrawer();
-                },
               ),
+  
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
           child: Row(
@@ -76,6 +75,7 @@ class _SelectRoomState extends State<SelectRoom> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    resumed=true;
     print('selectRoom called');
     if (initialiseDimension) {
       effectiveLength = MediaQuery.of(context).size.height;
@@ -85,7 +85,6 @@ class _SelectRoomState extends State<SelectRoom> {
       print('Canvas Length $guessCanvasLength');
       initialiseDimension = false;
     }
-
     userNam = userName;
     if (userNam.indexOf(' ') == -1) {
       userNam = '$userNam ';
@@ -93,6 +92,17 @@ class _SelectRoomState extends State<SelectRoom> {
     String first = userNam.substring(0, userNam.indexOf(' ') + 1);
     // String first = userNam;
     userNam = first;
+     switch (_source.keys.toList()[0]) {
+      case ConnectivityResult.none:
+        online =false;
+        break;
+      case ConnectivityResult.mobile:
+        online = true;
+        break;
+      case ConnectivityResult.wifi:
+        online =true;
+    }
+    print('connected to internet : $online');
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
@@ -108,13 +118,12 @@ class _SelectRoomState extends State<SelectRoom> {
                   email,
                   style: TextStyle(color: Colors.black),
                 ),
-                currentAccountPicture: (check == signInMethod.google)
-                    ? CircleAvatar(
+                currentAccountPicture: 
+                    CircleAvatar(
+                        backgroundColor: Colors.grey[100],
                         backgroundImage: NetworkImage(imageUrl),
                       )
-                    : CircleAvatar(
-                        backgroundColor: Colors.blue,
-                      )),
+                   ),
             SizedBox(
               height: 10.0,
             ),
@@ -295,7 +304,21 @@ class _SelectRoomState extends State<SelectRoom> {
       ),
     );
   }
+  @override
+  void initState() { 
+        _connectivity.initialise();
+    _connectivity.myStream.listen((source) {
+      setState(() => _source = source);
+    });
+    super.initState();
+  }
+  @override
+  void dispose() {
+        _connectivity.disposeStream();
+    super.dispose();
+  }
 }
+
 
 Future<void> addRoom() async {
   await Firestore.instance.collection('rooms').add({
@@ -323,4 +346,41 @@ Future<void> addRoom() async {
     'xpos': {},
     'ypos': {},
   });
+}
+class MyConnectivity {
+  MyConnectivity._internal();
+
+  static final MyConnectivity _instance = MyConnectivity._internal();
+
+  static MyConnectivity get instance => _instance;
+
+  Connectivity connectivity = Connectivity();
+
+  StreamController controller = StreamController.broadcast();
+
+  Stream get myStream => controller.stream;
+
+  void initialise() async {
+    ConnectivityResult result = await connectivity.checkConnectivity();
+    _checkStatus(result);
+    connectivity.onConnectivityChanged.listen((result) {
+      _checkStatus(result);
+    });
+  }
+
+  void _checkStatus(ConnectivityResult result) async {
+    bool isOnline = false;
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        isOnline = true;
+      } else
+        isOnline = false;
+    } on SocketException catch (_) {
+      isOnline = false;
+    }
+    controller.sink.add({result: isOnline});
+  }
+
+  void disposeStream() => controller.close();
 }

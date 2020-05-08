@@ -79,7 +79,7 @@ class _PainterScreenState extends State<PainterScreen> {
           timerRunning2 = false;
           subs.cancel();
           curr=90;
-          return WordWas2();
+          return WordWas();
         //}
       }
     } else
