@@ -50,9 +50,9 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
         //  if(ind2!=0 && indStore==ind2)
         //  indStore=indStore-1;
         
-        if(keyboardState)
-         refactor2();
-         else
+        // if(keyboardState)
+        //  refactor2();
+        //  else
          refactor();
           if(pStore!=pointerVal)//undertesting if
           {

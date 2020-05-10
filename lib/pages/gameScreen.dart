@@ -18,15 +18,14 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
-   // return WordWas();
+    //return WordWas();
       if(round<=numberOfRounds){
         if(denId==identity)
           {
-           denCanvasLength = MediaQuery.of(context).size.height*0.5;
+           denCanvasLength = MediaQuery.of(context).size.height*(7/12);
            updateDimension(); 
             return PainterScreen();
           }
-              
       else
         return GuesserScreen();
       }
@@ -44,7 +43,7 @@ class _GameScreenState extends State<GameScreen> {
         print('still in gameScreen');
         return Result();
       }
-      // return GuesserScreen();
+      //return GuesserScreen();
   }
 }
 Future<void> delDoc() async{

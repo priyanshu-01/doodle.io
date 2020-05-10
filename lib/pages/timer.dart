@@ -117,7 +117,7 @@ int q=0,w=0,e=0,r=0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-      Text('$denner',style: GoogleFonts.notoSans(),),
+      //Text('$denner',style: GoogleFonts.notoSans(),),
       Icon(Icons.access_alarm,color: timerColor,),
       Text('$current', style: GoogleFonts.lexendGiga(),),
       wordHint()

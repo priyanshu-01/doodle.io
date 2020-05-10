@@ -21,6 +21,7 @@ String identity = uid;
 int id;
 bool initialiseDimension = true;
 bool online;
+double totalWidth;
 class SelectRoom extends StatefulWidget {
 
   String userName;
@@ -83,6 +84,7 @@ class _SelectRoomState extends State<SelectRoom> {
       print('Total length ' + '$guessTotalLength');
       guessCanvasLength = ((effectiveLength - 70) * 0.6) * (7 / 8);
       print('Canvas Length $guessCanvasLength');
+      totalWidth =MediaQuery.of(context).size.width;
       initialiseDimension = false;
     }
     userNam = userName;
@@ -230,6 +232,7 @@ class _SelectRoomState extends State<SelectRoom> {
                         padding: const EdgeInsets.all(18.0),
                         child: RaisedButton(
                           onPressed: () {
+                            flag=false;
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -271,6 +274,7 @@ class _SelectRoomState extends State<SelectRoom> {
                         padding: const EdgeInsets.all(18.0),
                         child: RaisedButton(
                             onPressed: () {
+                              flag=false;
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -321,18 +325,19 @@ class _SelectRoomState extends State<SelectRoom> {
 
 
 Future<void> addRoom() async {
+  String doc;
   await Firestore.instance.collection('rooms').add({
     'id': id,
     'game': false,
     'counter': 0,
-    'guesses': 0,
+    'guessersImage': [],
     'users': [],
     'users_id': [],
     'usersImage':[],
     'host': userNam,
-    'host_id': '',
+    'host_id': uid,
     'den': userNam,
-    'den_id': '',
+    'den_id': uid,
     'numberOfRounds': 3,
     'round': 1,
     'word': '*',
@@ -345,7 +350,34 @@ Future<void> addRoom() async {
     'length': 0,
     'xpos': {},
     'ypos': {},
+  }).then((value) {
+    doc= value.documentID;
+  }).catchError((e){
+    print('error $e');
   });
+
+
+       
+    //  await Firestore.instance.collection('rooms').document(doc).
+    //  collection('rooms/guessers').document().setData({'id':'imagepath'}).catchError((e){
+    //    print('error $e');
+    //  });
+
+
+
+
+
+    
+
+      //  String subDoc;
+      //  QuerySnapshot qs = await Firestore.instance.collection('rooms').document(doc).collection('guessers').getDocuments().catchError((e){
+      //    print('error $e');
+      //  }); 
+      //  subDoc= qs.documents[0].documentID;
+      // await Firestore.instance.collection('rooms').document(doc).updateData({
+      //  'guessersDocumentId': subDoc
+      // });
+  
 }
 class MyConnectivity {
   MyConnectivity._internal();

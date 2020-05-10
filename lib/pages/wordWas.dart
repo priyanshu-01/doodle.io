@@ -11,7 +11,7 @@ class WordWas extends StatefulWidget {
   @override
   _WordWasState createState() => _WordWasState();
 }
-class _WordWasState extends State<WordWas> {
+class _WordWasState extends State<WordWas>{
   int current = 0;
   int end = 30+(counter*2);
   var sub;
@@ -19,6 +19,7 @@ class _WordWasState extends State<WordWas> {
   void initState() {
     current=0;
     startTimer();
+   
     super.initState();
   }
   @override
@@ -28,11 +29,11 @@ class _WordWasState extends State<WordWas> {
     print('word was is disposed');
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     print(online);
-    return wordWasContent();
+
+    return WordWasContent();
   }
   void startTimer() {
     CountdownTimer countDownTimer = new CountdownTimer(
@@ -43,7 +44,7 @@ class _WordWasState extends State<WordWas> {
     sub = countDownTimer.listen(null);
     sub.onData((duration) {
       if (current == 5) {
-        guesses = 0;
+        guessersImage = [];
         word='*';
         print('WordWas 2 .... 5 seconds over');
       }
@@ -73,7 +74,91 @@ class _WordWasState extends State<WordWas> {
   }
 }
 
+class WordWasContent extends StatefulWidget {
+  @override
+  _WordWasContentState createState() => _WordWasContentState();
+}
 
+class _WordWasContentState extends State<WordWasContent>  with TickerProviderStateMixin {
+  AnimationController controller;
+  @override
+  void initState() {
+    sort();
+     controller= AnimationController(
+      vsync: this,
+    duration: Duration(seconds: 02),
+   // value: 1.0,
+    lowerBound: 0.0,
+    upperBound: 1.0,
+    );
+    // TODO: implement initState
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+     controller.forward();
+ print(controller.value);
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (BuildContext context, Widget child){
+       return wordWasContent();
+      },
+      );
+  }
+Widget wordWasContent() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: <Widget>[
+      Flexible(
+        flex: 1,
+        child:
+            // Text('The word was $word')
+            Text(
+          'Word was $word',
+          style: GoogleFonts.notoSans(color: Colors.black, fontSize: 25.0),
+        ),
+      ),
+      Flexible(
+        flex: 4,
+        child: Container(
+          child: Center(
+            child: ListView.builder(
+                itemCount: sortedPlayers.length,
+              //  itemCount: 10,
+                itemBuilder: (_, int a) {
+                  String name = sortedPlayers[a];
+                //  int score = sortedScore[a]*controller.value;
+                double sc= sortedScore[a]*controller.value;
+                 int  score= sc.toInt();
+                  return FractionallySizedBox(
+                    widthFactor: 0.7,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Text('$name',
+                              style: GoogleFonts.notoSans(
+                                  color: Colors.black, fontSize: totalWidth/20)),
+                          //Text(':',style: GoogleFonts.notoSans(color: Colors.black, fontSize: 20.0)),
+                          Text('+ $score',
+                              style: GoogleFonts.notoSans(
+                                  color: (score == 0)
+                                      ? Colors.red[800]
+                                      : Colors.green[600],
+                                  fontSize: totalWidth/20))
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+          ),
+        ),
+      )
+    ],
+  );
+}
 void sort() {
   sortedPlayers = players;
   sortedScore = tempScore;
@@ -93,56 +178,4 @@ void sort() {
     }
   }
 }
-
-Widget wordWasContent() {
-  sort();
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: <Widget>[
-      Flexible(
-        flex: 1,
-        child:
-            // Text('The word was $word')
-            Text(
-          'Word was $word',
-          style: GoogleFonts.notoSans(color: Colors.black, fontSize: 25.0),
-        ),
-      ),
-      Flexible(
-        flex: 1,
-        child: Container(
-          child: Center(
-            child: ListView.builder(
-                itemCount: sortedPlayers.length,
-                itemBuilder: (_, int a) {
-                  String name = sortedPlayers[a];
-                  int score = sortedScore[a];
-                  return FractionallySizedBox(
-                    widthFactor: 0.7,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text('$name',
-                              style: GoogleFonts.notoSans(
-                                  color: Colors.black, fontSize: 20.0)),
-                          //Text(':',style: GoogleFonts.notoSans(color: Colors.black, fontSize: 20.0)),
-                          Text('+ $score',
-                              style: GoogleFonts.notoSans(
-                                  color: (score == 0)
-                                      ? Colors.red[800]
-                                      : Colors.green[600],
-                                  fontSize: 20.0))
-                        ],
-                      ),
-                    ),
-                  );
-                }),
-          ),
-        ),
-      )
-    ],
-  );
 }

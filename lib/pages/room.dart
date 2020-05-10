@@ -12,19 +12,21 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:share/share.dart';
 import '../services/authHandler.dart';
 import 'WaitScreen.dart';
+import 'guesserScreen.dart';
+
 bool game;
 bool wordChosen;
 String host;
 int counter;
 List players = new List();
-List playersImage=List();
+List playersImage = List();
 int roomID;
 String denner;
 String word;
 String hostId;
 String denId;
 List playersId = new List();
-int guesses;
+List guessersImage = new List();
 List tempScore = new List();
 List finalScore = new List();
 int round = 1;
@@ -32,7 +34,7 @@ double denCanvasLength;
 int numberOfRounds = 3;
 var a;
 var chat = new List();
-
+bool flag = false;
 String documentid;
 
 class CreateRoom extends StatefulWidget {
@@ -63,8 +65,8 @@ class _CreateRoomState extends State<CreateRoom> {
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
-                 if(snapshot==null)
-                 return Container();
+                if (snapshot == null) return Container();
+                 else{
                 a = snapshot.data.documents[0].data;
                 documentid = snapshot.data.documents[0].documentID;
                 counter = a['counter'];
@@ -75,28 +77,38 @@ class _CreateRoomState extends State<CreateRoom> {
                 word = a['word'];
                 chat = a['chat'];
                 playersId = a['users_id'];
-                playersImage= a['usersImage'];
+                playersImage = a['usersImage'];
                 hostId = a['host_id'];
                 denId = a['den_id'];
                 wordChosen = a['wordChosen'];
-                guesses = a['guesses'];
+                guessersImage = a['guessersImage'];
                 tempScore = a['tempScore'];
                 finalScore = a['finalScore'];
                 round = a['round'];
                 denCanvasLength = a['denCanvasLength'];
                 numberOfRounds = a['numberOfRounds'];
-                if (playersId.indexOf(identity)==-1) {
+                if (playersId.indexOf(identity) == -1 && !flag) {
                   players = players + [userNam];
                   counter = counter + 1;
                   playersId = playersId + [identity];
                   tempScore = tempScore + [0];
                   finalScore = finalScore + [0];
-                  playersImage= playersImage+[imageUrl];
-                  if (players.length == 1) {
-                     updateHostData();
-                  }
-                 updatePlayerData();
+                  playersImage = playersImage + [imageUrl];
+                  updatePlayerData();
+                  flag = true;
                 }
+                if (a
+                            [identity] ==
+                        '$denId $round' &&
+                    guessersImage.indexOf(
+                            playersImage[playersId.indexOf(identity)]) ==
+                        -1) {
+                  // guessersImage.add(playersImage[playersId.indexOf(identity)]);
+                  // updateUserImage();
+                  updateScore();
+                }
+                if(denner!=players[playersId.indexOf(denId)] && identity==hostId)
+                updateDennerName();
                 if (game == false)
                   return Center(
                     child: Container(
@@ -220,18 +232,23 @@ class _CreateRoomState extends State<CreateRoom> {
                                                         // mainAxisSize: MainAxisSize.min,
                                                         children: <Widget>[
                                                           Padding(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        20.0,
-                                                                    vertical:
-                                                                        9.0),
-                                                            child:CircleAvatar(
-                                                              backgroundColor: Colors.grey[100],
-                                                               backgroundImage: NetworkImage(playersImage[a]),
-                                                               radius: 20.0,
-                                                            ) 
-                                                          ),
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          20.0,
+                                                                      vertical:
+                                                                          9.0),
+                                                              child:
+                                                                  CircleAvatar(
+                                                                backgroundColor:
+                                                                    Colors.grey[
+                                                                        100],
+                                                                backgroundImage:
+                                                                    NetworkImage(
+                                                                        playersImage[
+                                                                            a]),
+                                                                radius: 20.0,
+                                                              )),
                                                           Text(
                                                             players[a],
                                                             style: GoogleFonts
@@ -272,9 +289,10 @@ class _CreateRoomState extends State<CreateRoom> {
                     ),
                   );
                 else
-                // waitCurrent=0;
-                // waitSub.cancel();
+                  // waitCurrent=0;
+                  // waitSub.cancel();
                   return GameScreen();
+                  }
               },
             ),
           ),
@@ -284,12 +302,12 @@ class _CreateRoomState extends State<CreateRoom> {
         });
     //funct(id);
   }
- 
+
   Widget roundNumberOrWaiting() {
     if (identity == hostId) {
       return DisplayRound();
     } else
-    //return DisplayRound();
+      //return DisplayRound();
       return Row(
         //crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -435,74 +453,87 @@ class _CreateRoomState extends State<CreateRoom> {
     await Firestore.instance
         .collection('rooms')
         .document(documentid)
-        .updateData({'game': true, 'numberOfRounds':r});
+        .updateData({'game': true, 'numberOfRounds': r});
   }
 }
+
 class DisplayRound extends StatefulWidget {
   @override
   _DisplayRoundState createState() => _DisplayRoundState();
 }
-  int r=3;
+
+int r = 3;
+
 class _DisplayRoundState extends State<DisplayRound> {
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.chevron_left,size: 45.0,),
-              onPressed: () {
-                (r==1)?null:
-                setState(() {
-                  r=r-1;
-                });
-              },
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.chevron_left,
+              size: 45.0,
             ),
-            Padding(
-              padding: const EdgeInsets.only(top:8.0),
-              child: Text('$r',style: TextStyle(fontSize: 20.0,),),
+            onPressed: () {
+              (r == 1)
+                  ? null
+                  : setState(() {
+                      r = r - 1;
+                    });
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Text(
+              '$r',
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
             ),
-            IconButton(
-              icon: Icon(Icons.chevron_right,size: 45.0,),
-              onPressed: () {
-                (r==5)?null:
-                setState(() {
-                  r=r+1;
-                });
-              },
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.chevron_right,
+              size: 45.0,
             ),
-            Padding(
-              padding: const EdgeInsets.only(top:8.0),
-              child: Text('Rounds',style: TextStyle(fontSize: 20.0,)),
-            ),
-          ],
-        ),
-      );
+            onPressed: () {
+              (r == 5)
+                  ? null
+                  : setState(() {
+                      r = r + 1;
+                    });
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Text('Rounds',
+                style: TextStyle(
+                  fontSize: 20.0,
+                )),
+          ),
+        ],
+      ),
+    );
   }
 }
-Future<void> updateHostData()async{
-        await Firestore.instance
-                        .collection('rooms')
-                        .document(documentid)
-                        .updateData({
-                      'host_id': identity,
-                      'den_id': identity,
-                    });
+
+Future<void> updatePlayerData() async {
+  await Firestore.instance.collection('rooms').document(documentid).updateData({
+    'users': players,
+    'counter': counter,
+    'users_id': playersId,
+    'tempScore': tempScore,
+    'finalScore': finalScore,
+    'usersImage': playersImage
+  });
 }
-Future<void> updatePlayerData() async{
-  await  Firestore.instance
-                      .collection('rooms')
-                      .document(documentid)
-                      .updateData({
-                    'users': players,
-                    'counter': counter,
-                    'users_id': playersId,
-                    'tempScore': tempScore,
-                    'finalScore': finalScore,
-                    'usersImage': playersImage
-                  });
+Future<void> updateDennerName() async{
+  await Firestore.instance.collection('rooms').document(documentid).updateData({
+     'den': players[playersId.indexOf(denId)]
+  });
 }

@@ -12,7 +12,6 @@ import 'guesserScreen.dart';
 
 String choosenWord;
 bool timerRunning2 = false;
-
 //bool madeIt2=false;
 class PainterScreen extends StatefulWidget {
   @override
@@ -27,36 +26,84 @@ class _PainterScreenState extends State<PainterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          color: Colors.white,
-          //constraints: BoxConstraints.expand(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Flexible(
-                child: chooseOrDraw(),
-                flex: 7,
-              ),
-              Flexible(
-                flex: 5,
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: textAndChat),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(35),
-                        topRight: Radius.circular(35),
-                      ),
-                      // color: Colors.white
-                      //  color: Color(0xFF4BCFFA),
-                      color: textAndChat
-                      // color: Colors.blueAccent[100]
-                      ),
-                  child: chatList(),
+        child: Stack(
+          children: <Widget>[
+          Container(
+            color: Colors.white,
+            //constraints: BoxConstraints.expand(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Flexible(
+                  child: chooseOrDraw(),
+                  flex: 8,
                 ),
-              )
-            ],
+                Flexible(
+                  flex: 4,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 1.0, color: textAndChat),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(35),
+                          topRight: Radius.circular(35),
+                        ),
+                        // color: Colors.white
+                        //  color: Color(0xFF4BCFFA),
+                        color: textAndChat
+                        // color: Colors.blueAccent[100]
+                        ),
+                    child: chatList(),
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
+          //stack child 2 down
+          Container(
+            // color: Colors.red,
+            // constraints: BoxConstraints.expand(),
+            height: denCanvasLength,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  //    color: Colors.blue,
+                  height: denCanvasLength-15,
+                  width: 50.0,
+                  child: ListView.builder(
+                    reverse: true,
+                    itemCount: guessersImage.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: CircleAvatar(
+                          radius: 20.0,
+                          backgroundColor: Colors.grey[100],
+                          backgroundImage: NetworkImage(guessersImage[index]),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Container(
+                  // color: Colors.blue,
+                  //  height: guessCanvasLength,
+                  //width: 50.0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20.0, right: 10.0),
+                    child: CircleAvatar(
+                      radius: 20.0,
+                      backgroundColor: Colors.grey[100],
+                      backgroundImage:
+                          NetworkImage(playersImage[playersId.indexOf(denId)]),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
+        ]),
       ),
     );
   }
@@ -64,7 +111,7 @@ class _PainterScreenState extends State<PainterScreen> {
   Widget chooseOrDraw() {
     if (word != '*') //this is true when it should not be
     {
-      if (curr >= 1 && counter - 1 != guesses) {
+      if (curr >= 1 && counter - 1 != guessersImage.length) {
         if (!timerRunning2) {
           //madeIt2=false;
           print('bloc executed');
@@ -76,10 +123,10 @@ class _PainterScreenState extends State<PainterScreen> {
         // if (counter - 1 != guesses)
         //   return WordWas();
         // else {
-          timerRunning2 = false;
-          subs.cancel();
-          curr=90;
-          return WordWas();
+        timerRunning2 = false;
+        subs.cancel();
+        curr = 90;
+        return WordWas();
         //}
       }
     } else
@@ -107,6 +154,7 @@ class _PainterScreenState extends State<PainterScreen> {
     //  // changeDen();
     // });
   }
+
   void dispose() {
     subs.cancel();
     timerRunning2 = false;
@@ -114,6 +162,7 @@ class _PainterScreenState extends State<PainterScreen> {
     super.dispose();
   }
 }
+
 Future<void> changeDen() async {
   word = '*';
   int s = playersId.indexOf(denId);
@@ -135,9 +184,8 @@ Future<void> changeDen() async {
     'wordChosen': false,
     'indices': [0],
     'pointer': 0,
-    'guesses': 0,
+    'guessersImage': [],
     'tempScore': tempScore,
     'round': round
   });
-  //startTimer();
 }

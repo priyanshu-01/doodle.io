@@ -24,6 +24,7 @@ dependencies:
   flutter_keyboard_visibility: ^2.0.0
   carousel_slider: ^2.1.0
   connectivity: ^0.4.8+5
+  screen: ^0.0.5
   # keyboard_visibility: ^0.5.5
 dev_dependencies:
   flutter_test:
@@ -33,6 +34,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/icons/
 
   
 

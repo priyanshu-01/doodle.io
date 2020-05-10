@@ -7,6 +7,7 @@ import 'selectRoom.dart';
 import '../services/anon.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 String enteredName = '';
 double screenHeight;
 DocumentSnapshot av;
@@ -70,15 +71,22 @@ class _EnterNameState extends State<EnterName> {
                         radius: 1.0*x,
                         backgroundColor: Colors.grey[100],
                         backgroundImage: NetworkImage(
-                            av.data['images'][index]),
+
+                            av.data['images'][index],
+                            ),
                       );
                     },
-                  ):Container(
+                  ):
+                  Container(
                     child: CircleAvatar(
                       backgroundColor: Colors.grey[100],
                       radius: 0.7*x,
                     ),
                   ),
+                  // SpinKitDoubleBounce(
+                  //   color: Colors.grey[100],
+                  //   size: 0.7*x,
+                  // ),
                   SizedBox(height: x,),
                    Text(
                      'Hey $enteredName !',

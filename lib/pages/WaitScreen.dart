@@ -65,8 +65,8 @@ String waitDenId;
               flex: 5,
               child: SpinKitPouringHourglass(
                 //color: Colors.white,
-                // color: Color(0xFF9868AC),
-                color: Color(0xFF1A2F77),
+                 color: Color(0xFF9868AC),
+               // color: Color(0xFF1A2F77),
                 size: 100.0,
               ),
             ),
