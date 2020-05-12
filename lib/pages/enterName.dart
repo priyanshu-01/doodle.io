@@ -33,7 +33,9 @@ class _EnterNameState extends State<EnterName> {
                           .collection('avatars')
                           .document('images')
                           .get().whenComplete(() {
-                            setState(() {  });
+                            setState(() { 
+                              imageUrl= av.data['images'][0];
+                             });
                           } );
   }
   @override

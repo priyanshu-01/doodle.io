@@ -98,6 +98,7 @@ class _EnterRoomIdState extends State<EnterRoomId> {
                   ShowWarning(),
 
                   RaisedButton(onPressed: () {
+                    flag=false;
                             val = int.parse(enteredId);
                             print(val);
 

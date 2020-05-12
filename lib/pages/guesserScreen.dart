@@ -380,6 +380,7 @@ Future<void> updateScore() async {
     int previousScore = finalScore[place];
     int newScore = previousScore + score;
     finalScore[place] = newScore;
+    guessersImage= guessersImage+[playersImage[place]];
     int ind = playersId.indexOf(denId);
     int sum = 0;
     for (int k = 0; k < tempScore.length; k++) {
@@ -400,7 +401,6 @@ Future<void> updateScore() async {
     });
     
   }
-
 Widget chatList() {
   return ListView.builder(
     //shrinkWrap: true,

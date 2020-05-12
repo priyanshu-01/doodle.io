@@ -273,8 +273,7 @@ class _SelectRoomState extends State<SelectRoom> {
                       Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: RaisedButton(
-                            onPressed: () {
-                              flag=false;
+                            onPressed: () {                
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

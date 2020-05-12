@@ -69,7 +69,7 @@ class _WordWasState extends State<WordWas>{
      else{
        distance= counter+ m-d;
      }
-     if(current==5+(distance*2)   && resumed && online)
+     if(current==5+(distance*3)   && resumed && online)
      changeDen();
   }
 }
@@ -86,7 +86,7 @@ class _WordWasContentState extends State<WordWasContent>  with TickerProviderSta
     sort();
      controller= AnimationController(
       vsync: this,
-    duration: Duration(seconds: 02),
+    duration: Duration(seconds: 1),
    // value: 1.0,
     lowerBound: 0.0,
     upperBound: 1.0,
@@ -114,10 +114,19 @@ Widget wordWasContent() {
         flex: 1,
         child:
             // Text('The word was $word')
-            Text(
-          'Word was $word',
-          style: GoogleFonts.notoSans(color: Colors.black, fontSize: 25.0),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+          'Word was',
+          style: GoogleFonts.notoSans(color: Colors.black, fontSize: 15.0),
         ),
+        Text('$word',
+         style: GoogleFonts.notoSans(color: Colors.black, fontSize: 15.0),
+        ),
+              ],
+            ),
+        
       ),
       Flexible(
         flex: 4,
