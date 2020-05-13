@@ -353,15 +353,17 @@ Future<void> addRoom() async {
     doc= value.documentID;
   }).catchError((e){
     print('error $e');
+  }).whenComplete(()  async{
+   await Firestore.instance.collection('rooms').document(doc).
+     collection('guessers').document().setData({'id':'imagepath'}).catchError((e){
+       print('error $e');
+     });
   });
 
 
        
-    //  await Firestore.instance.collection('rooms').document(doc).
-    //  collection('rooms/guessers').document().setData({'id':'imagepath'}).catchError((e){
-    //    print('error $e');
-    //  });
-
+  
+   
 
 
 

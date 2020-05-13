@@ -257,7 +257,7 @@ class Signature extends CustomPainter {
     Paint paint = new Paint()
       ..color = Colors.black
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = 04.0;
+      ..strokeWidth = 03.0;
     for (int i = 0; i < indices[p] - 1; i++) {
       if ((points[i] != null && points[i] != Offset(-1, -1)) &&
           (points[i + 1] != null && points[i + 1] != Offset(-1, -1))) {

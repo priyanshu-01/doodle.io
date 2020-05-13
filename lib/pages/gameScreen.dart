@@ -10,15 +10,10 @@ import 'result.dart';
 List displayNames;
 List displayScores;
 String docId;
-class GameScreen extends StatefulWidget {
-  @override
-  _GameScreenState createState() => _GameScreenState();
-}
-
-class _GameScreenState extends State<GameScreen> {
+class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //return WordWas();
+    //return PainterScreen();
       if(round<=numberOfRounds){
         if(denId==identity)
           {

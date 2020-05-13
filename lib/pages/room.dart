@@ -13,7 +13,6 @@ import 'package:share/share.dart';
 import '../services/authHandler.dart';
 import 'WaitScreen.dart';
 import 'guesserScreen.dart';
-
 bool game;
 bool wordChosen;
 String host;
@@ -37,19 +36,21 @@ var chat = new List();
 bool flag = false;
 String documentid;
 
-class CreateRoom extends StatefulWidget {
-  int id;
+// class CreateRoom extends StatefulWidget {
+//   int id;
 
-  CreateRoom({Key key, this.id}) : super(key: key);
+//   CreateRoom({Key key, this.id}) : super(key: key);
 
-  @override
-  _CreateRoomState createState() => _CreateRoomState();
-}
+//   @override
+//   _CreateRoomState createState() => _CreateRoomState();
+// }
 
-class _CreateRoomState extends State<CreateRoom> {
+class CreateRoom extends StatelessWidget {
+  final int id;
+   CreateRoom({Key key, this.id}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    roomID = widget.id;
+    roomID = id;
     // if(round>numberOfRounds)
     // {print('should return result');
     // return Result();}
@@ -61,7 +62,7 @@ class _CreateRoomState extends State<CreateRoom> {
             child: StreamBuilder<QuerySnapshot>(
               stream: Firestore.instance
                   .collection('rooms')
-                  .where('id', isEqualTo: widget.id)
+                  .where('id', isEqualTo: id)
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -132,7 +133,7 @@ class _CreateRoomState extends State<CreateRoom> {
                                         padding: const EdgeInsets.only(
                                             left: 12.0, right: 12.0),
                                         child: Text(
-                                          'Room id : ${widget.id}',
+                                          'Room id : $id',
                                           style: GoogleFonts.quicksand(
                                               fontSize: 25.0,
                                               color: Colors.black),
@@ -165,7 +166,8 @@ class _CreateRoomState extends State<CreateRoom> {
                                                 size: 30.0,
                                               ),
                                               onPressed: () {
-                                                Share.share('Room id $roomID');
+                                                Share.share('Room id $roomID'
+                                                );
                                               },
                                             )
                                           ],

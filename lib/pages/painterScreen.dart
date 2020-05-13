@@ -19,11 +19,15 @@ class PainterScreen extends StatefulWidget {
 }
 
 class _PainterScreenState extends State<PainterScreen> {
+  double x;
+int i;
   var subs;
   int curr = 90;
   int star = 90;
   @override
   Widget build(BuildContext context) {
+    i=50* guessersImage.length;
+    x= i.toDouble();
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -67,23 +71,30 @@ class _PainterScreenState extends State<PainterScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+               
                 Container(
+                  alignment: Alignment.bottomCenter,
                   //    color: Colors.blue,
                   height: denCanvasLength-15,
                   width: 50.0,
-                  child: ListView.builder(
-                    reverse: true,
-                    itemCount: guessersImage.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: CircleAvatar(
-                          radius: 20.0,
-                          backgroundColor: Colors.grey[100],
-                          backgroundImage: NetworkImage(guessersImage[index]),
-                        ),
-                      );
-                    },
+                  child: Container(
+                  //  color: Colors.blue,
+                    height: x,
+                    child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      reverse: true,
+                      itemCount: guessersImage.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: CircleAvatar(
+                            radius: 20.0,
+                            backgroundColor: Colors.grey[100],
+                            backgroundImage: NetworkImage(guessersImage[index]),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
                 Container(

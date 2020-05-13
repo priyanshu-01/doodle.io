@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'services/authHandler.dart';
 import 'package:screen/screen.dart';
+import 'pages/stateTest.dart';
 bool resumed=true;
 void main() => runApp(new MaterialApp(
       // home: new RoomCreatingScreen(),
@@ -61,5 +62,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
   Widget build(BuildContext context) {
     Screen.keepOn(true);
     return AuthHandler();
+    //return Wid1();
+
   }
 }
