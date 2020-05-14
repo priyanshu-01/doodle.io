@@ -75,17 +75,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
                           Padding(
                               padding:
                                   const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 10.0),
-                              // child: KoukiconsGift(
-                              //      color: Colors.pink,
-                              //      height: 10.0,
-                              //    ),
-                              //  child: Container(),
-
                               child:
-                              //  IconButton(
-                              //   icon: Icon(Icons.brush),
-                              //   onPressed: () {},
-                              // )
                               Image(
                                 image: AssetImage('assets/icons/gift.gif'),)
                               ),
@@ -101,20 +91,6 @@ class _GuesserScreenState extends State<GuesserScreen> {
                               focusNode: fn,
                               cursorColor: Color(0xFF1A2F77),
                               decoration: InputDecoration(
-                                  //  fillColor: Colors.pink,
-                                  // border: OutlineInputBorder(
-                                  //     borderRadius: BorderRadius.circular(25.0),
-                                  //     borderSide: BorderSide(color: Colors.black)),
-                                  // focusedBorder: OutlineInputBorder(
-                                  //  // borderRadius: new BorderRadius.circular(25.0),
-                                  //   borderSide:
-                                  //       new BorderSide(color: Color(0xFF16162E)
-                                  //           // color: Colors.black,
-                                  //           // width: 16.0,style: BorderStyle.solid
-                                  //           ),
-                                  // ),
-                                  //  suffix:
-                                  //   prefix:
                                   focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
                                     color: Color(0xFFFF4893),
@@ -177,8 +153,6 @@ class _GuesserScreenState extends State<GuesserScreen> {
                                         if (guessersImage.indexOf( playersImage[playersId.indexOf(identity)] )==-1) {
                                           calculateScore();
                                           updateGuesserId();
-                                           //and guesses number also
-                                          //painter score gets updated in updateScore
                                         }
                                       } else {
                                         String newMessage =
