@@ -26,8 +26,7 @@ class _ResultContentState extends State<ResultContent>  with TickerProviderState
     sort();
      controller= AnimationController(
       vsync: this,
-    duration: Duration(seconds: 02),
-   // value: 1.0,
+    duration: Duration(milliseconds: 1500),
     lowerBound: 0.0,
     upperBound: 1.0,
     );

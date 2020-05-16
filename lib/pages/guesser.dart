@@ -111,7 +111,6 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
                       ),
           );
   }
-
 }
 class Signature extends CustomPainter {
   List<Offset> points;
@@ -122,7 +121,7 @@ class Signature extends CustomPainter {
     Paint paint = new Paint()
       ..color = Colors.black
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = 04.0;
+      ..strokeWidth = 03.0;
     int diff= ind2-ind1;
     double v= animation.value * diff;
     int val = v.toInt();

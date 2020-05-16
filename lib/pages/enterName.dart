@@ -34,7 +34,7 @@ class _EnterNameState extends State<EnterName> {
                           .document('images')
                           .get().whenComplete(() {
                             setState(() { 
-                              imageUrl= av.data['images'][0];
+                            //  imageUrl= av.data['images'][0];
                              });
                           } );
   }
@@ -45,6 +45,8 @@ class _EnterNameState extends State<EnterName> {
     else
     screenHeight= MediaQuery.of(context).size.height;
     double x= screenHeight/12;
+    if(av!=null && imageUrl == '  ')
+    imageUrl= av.data['images'][0];
     return Scaffold(
       body: Container(
         constraints: BoxConstraints.expand(),
@@ -157,113 +159,6 @@ class _EnterNameState extends State<EnterName> {
             ),
         ],)
         
-        
-        
-        
-        
-        
-        
-        
-        //  Column(
-        //   mainAxisSize: MainAxisSize.min,
-        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //   children: <Widget>[
-        //     // Column(
-        //     //   children: <Widget>[
-        //     //     Row(
-        //     //       children: <Widget>[
-        //     //         Padding(
-        //     //           padding: const EdgeInsets.only(left: 25.0),
-        //     //           child: Text(
-        //     //             'Hey $enteredName !',
-        //     //             style: GoogleFonts.roboto(
-        //     //                 fontSize: 24.0,
-        //     //                 fontWeight: FontWeight.bold),
-        //     //           ),
-        //     //         ),
-        //     //       ],
-        //     //     ),
-        //     //     SizedBox(
-        //     //       height: 10.0,
-        //     //     ),
-        //     //     Row(
-        //     //       children: <Widget>[
-        //     //         SizedBox(
-        //     //           width: 25.0,
-        //     //         ),
-        //     //         Flexible(
-        //     //             child: FractionallySizedBox(
-        //     //                 widthFactor: 0.9,
-        //     //                 child: Text(
-        //     //                   "Don't forget to take a snapshot when your name pops on the leaderboard!",
-        //     //                   style: TextStyle(color: Colors.grey),
-        //     //                   softWrap: true,
-        //     //                 ))),
-        //     //       ],
-        //     //     ),
-        //     //   ],
-        //     // ),
-        //     // FutureBuilder<DocumentSnapshot>(
-        //     //   future: Firestore.instance
-        //     //       .collection('avatars')
-        //     //       .document('images')
-        //     //       .get(),
-        //     //   builder: (context, snapshot) {
-        //     //     if (snapshot.connectionState == ConnectionState.waiting)
-        //     //       return Container();
-        //     //     else
-        //     //     imageUrl= snapshot.data['images'][0];
-        //     //  Padding(
-        //     //           padding: const EdgeInsets.only(left: 25.0),
-        //     //           child: Text(
-        //     //             'Hey $enteredName !',
-        //     //             style: GoogleFonts.roboto(
-        //     //                 fontSize: 24.0,
-        //     //                 fontWeight: FontWeight.bold),
-        //     //           ),
-        //     //         ),
-            
-        //     // Padding(
-        //     //   padding: EdgeInsets.all(8.0),
-        //     //   child: RaisedButton(
-        //     //       onPressed: () async {
-        //     //         // Navigator.of(context).pop();
-        //     //         await AuthSignIn().signInAnonymously();
-        //     //         //Navigator.push(context, MaterialPageRoute(builder: (context)=> SelectRoom(userName: enteredName)));
-        //     //       },
-        //     //       shape: RoundedRectangleBorder(
-        //     //           borderRadius: BorderRadius.circular(18.0)),
-        //     //       child: Padding(
-        //     //         padding: const EdgeInsets.symmetric(
-        //     //             horizontal: 12.0, vertical: 18.0),
-        //     //         child: Row(
-        //     //           mainAxisAlignment: MainAxisAlignment.center,
-        //     //           mainAxisSize: MainAxisSize.min,
-        //     //           children: <Widget>[
-        //     //             Text(
-        //     //               'Continue',
-        //     //               style: GoogleFonts.notoSans(
-        //     //                 color: Color(0xFF00008B),
-        //     //                 fontSize: 20.0,
-        //     //               ),
-        //     //             ),
-        //     //             SizedBox(
-        //     //               width: 20.0,
-        //     //             ),
-        //     //             Icon(
-        //     //               Icons.arrow_forward_ios,
-        //     //               color: Color(0xFF00008B),
-        //     //             )
-        //     //           ],
-        //     //         ),
-        //     //       ),
-        //     //       color: Colors.orange[200]
-        //     //       //  color: Color(0xFFFAEBD7)
-        //     //       //0xFF4BCFFA
-        //     //       ),
-        //     // )
-        //   ],
-        // ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat
       ,

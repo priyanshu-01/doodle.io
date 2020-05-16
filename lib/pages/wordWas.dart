@@ -31,8 +31,6 @@ class _WordWasState extends State<WordWas>{
   }
   @override
   Widget build(BuildContext context) {
-    print(online);
-
     return WordWasContent();
   }
   void startTimer() {
@@ -91,7 +89,6 @@ class _WordWasContentState extends State<WordWasContent>  with TickerProviderSta
     lowerBound: 0.0,
     upperBound: 1.0,
     );
-    // TODO: implement initState
     super.initState();
   }
   @override

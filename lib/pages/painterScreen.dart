@@ -26,7 +26,10 @@ int i;
   int star = 90;
   @override
   Widget build(BuildContext context) {
+    if(guessersImage.length<=6)
     i=50* guessersImage.length;
+    else
+    i=300;
     x= i.toDouble();
     return Scaffold(
       body: SafeArea(
@@ -122,10 +125,9 @@ int i;
   Widget chooseOrDraw() {
     if (word != '*') //this is true when it should not be
     {
-      if (curr >= 1 && counter - 1 != guessersImage.length) {
+      if (curr > 1 && counter - 1 != guessersImage.length) {
         if (!timerRunning2) {
-          //madeIt2=false;
-          print('bloc executed');
+          print('timer started');
           startTimer();
           timerRunning2 = true;
         }

@@ -14,12 +14,12 @@ import 'package:bubble/bubble.dart';
 
 bool timerRunning = false;
 final messageHolder = TextEditingController();
-List recentChat = chat;
 String message = '';
 bool madeIt = false;
 double guessTotalLength;
 double guessCanvasLength;
 bool keyboardState;
+String newMessage;
 Color textAndChat = Color(0xFFFFF1E9);
 int score = 0;
 class GuesserScreen extends StatefulWidget {
@@ -54,9 +54,6 @@ class _GuesserScreenState extends State<GuesserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //textAndChat=Colors.pink[100];
-
-    recentChat = chat;
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -132,9 +129,6 @@ class _GuesserScreenState extends State<GuesserScreen> {
                                       },
                                     )
                               : IconButton(
-                                  //  backgroundColor: Colors.black,
-                                  //   mini: true,
-                                  //  color: Colors.blue,
                                   icon: Icon(
                                     Icons.send,
                                     //color: Color(0xFF16162E),
@@ -148,16 +142,17 @@ class _GuesserScreenState extends State<GuesserScreen> {
                                     if (message != '  ') {
                                       messageHolder.clear();
                                       messageHolder.clearComposing();
-                                      if (message.indexOf(word) != -1) {
+                                      String lowerCase= message.toLowerCase();
+                                      if (lowerCase.indexOf(word) != -1) {
                                         message = 'd123';
                                         if (guessersImage.indexOf( playersImage[playersId.indexOf(identity)] )==-1) {
                                           calculateScore();
                                           updateGuesserId();
                                         }
                                       } else {
-                                        String newMessage =
+                                         newMessage =
                                             '$identity[$userNam]$message';
-                                        recentChat.add(newMessage);
+                                        chat.add(newMessage);
                                         //Navigator.pop(context);
                                         sendMessage();
                                       }
@@ -250,13 +245,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
     );
   }
 
-  Future<void> sendMessage() async {
-    await Firestore.instance
-        .collection('rooms')
-        .document(documentid)
-        .updateData({'chat': recentChat});
-  }
-
+ 
   
  Future<void> updateGuesserId() async{
    await Firestore.instance.collection('rooms').
@@ -283,7 +272,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
 
   Widget guessWaitShow() {
     if (word != '*') {
-      if (currentG >= 1 && counter - 1 != guessersImage.length) {
+      if (currentG > 1 && counter - 1 != guessersImage.length) {
         if (!timerRunning) {
           // if (keyboardState)
           //   effectiveLength = guessTotalLength * 0.6;
@@ -348,6 +337,16 @@ class _GuesserScreenState extends State<GuesserScreen> {
     super.dispose();
   }
 }
+ Future<void> sendMessage() async {
+    await Firestore.instance
+        .collection('rooms')
+        .document(documentid)
+        .updateData({
+          'chat': chat,
+          '$identity Chat': chat.length-1
+        });
+  }
+
 Future<void> updateScore() async {
     int place = playersId.indexOf(identity);
     tempScore[place] = score;
@@ -376,6 +375,11 @@ Future<void> updateScore() async {
     
   }
 Widget chatList() {
+   int lastIndex= a['$identity Chat'];
+          if( lastIndex!=null && chat[lastIndex].substring(0,chat[lastIndex].indexOf('[')) != identity    ){
+            chat=chat+[newMessage];
+            sendMessage();
+          }
   return ListView.builder(
     //shrinkWrap: true,
     reverse: true,
@@ -386,26 +390,6 @@ Widget chatList() {
       String i = both.substring(0, both.indexOf('['));
       String n = both.substring(both.indexOf('[') + 1, both.indexOf(']'));
       String m = both.substring(both.indexOf(']') + 1);
-      // if (m == 'd123') {
-      //   return Center(
-      //     child: Padding(
-      //       padding: const EdgeInsets.all(1.0),
-      //       child: Container(
-      //         decoration: BoxDecoration(
-      //             border: Border.all(width: 1.0, color: Colors.black),
-      //             borderRadius: BorderRadius.circular(15.0),
-      //             color: Colors.white),
-      //         child: Padding(
-      //           padding: const EdgeInsets.fromLTRB(15.0, 7.0, 15.0, 7.0),
-      //           child: Text(
-      //             '$n Guessed',
-      //             style: TextStyle(color: Colors.black, fontSize: 14.0),
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //   );
-      // } else
       return Column(
         crossAxisAlignment: (identity.toString() == i)
             ? CrossAxisAlignment.end
@@ -420,18 +404,6 @@ Widget chatList() {
                       Bubble(
                           nip: BubbleNip.rightTop,
                           color: Colors.white,
-                          //  shadowColor: Colors.black,
-                          // elevation: 2.0,
-
-                          //                 decoration: BoxDecoration(
-                          //                border: Border.all(
-                          //                 width: 1.0,
-                          //                 color: Colors.black
-                          //                // color: Colors.grey[300]
-                          //   ),
-                          //   borderRadius: BorderRadius.circular(25.0),
-                          //   color: Colors.white
-                          // ),
                           child: Padding(
                             padding:
                                 const EdgeInsets.fromLTRB(6.0, 2.0, 6.0, 2.0),

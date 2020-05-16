@@ -22,6 +22,22 @@ int id;
 bool initialiseDimension = true;
 bool online;
 double totalWidth;
+Map<String,Color> color = {
+  
+  //'bg2': Color(0xFF2994b2),
+  'bg': Color(0xfffffbe0),
+  //'buttonBg': Color(0xFF2d4059),
+ // 'buttonBg': Color(0xFF120136),
+  //'bg2': Color(0xFFfde9c9),
+// 'buttonBg': Color(0xFFfcbf1e),
+'buttonBg': Color(0xFFea5455),
+
+
+ 
+  'bg2': Color(0xfffffbe0),
+  'buttonText': Color(0xFFea5455),
+  'blackShade': Color(0xFF343434) 
+};
 class SelectRoom extends StatefulWidget {
 
   String userName;
@@ -41,11 +57,15 @@ class _SelectRoomState extends State<SelectRoom> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                   child: CircleAvatar(
-                    backgroundColor: Colors.grey[100],
-                    backgroundImage: NetworkImage(
-                      imageUrl,
+                    radius: 26.0,
+                    backgroundColor: color['buttonBg'],
+                                      child: CircleAvatar(
+                      backgroundColor: Colors.grey[100],
+                      backgroundImage: NetworkImage(
+                        imageUrl,
+                      ),
+                      radius: 25.0,
                     ),
-                    radius: 25.0,
                   ),
                 ),
                 onTap: () {
@@ -156,12 +176,13 @@ class _SelectRoomState extends State<SelectRoom> {
       ),
       body: Container(
         decoration: new BoxDecoration(
-          // color: Colors.orange[50],
-          image: new DecorationImage(
-              fit: BoxFit.cover,
-              colorFilter: new ColorFilter.mode(
-                  Colors.black.withOpacity(0.10), BlendMode.dstATop),
-              image: new AssetImage('assets/images/selectRoom.jpg')),
+          //color: Colors.orange[50],
+          color: color['bg'],
+          // image: new DecorationImage(
+          //     fit: BoxFit.cover,
+          //     colorFilter: new ColorFilter.mode(
+          //         Colors.black.withOpacity(0.10), BlendMode.dstATop),
+          //     image: new AssetImage('assets/images/selectRoom.jpg')),
         ),
         child: Column(
           children: <Widget>[
@@ -173,132 +194,134 @@ class _SelectRoomState extends State<SelectRoom> {
             Center(
               child: Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                child: Card(
-                  elevation: 10.0,
-                  //color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0)),
-                  borderOnForeground: true,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 20.0,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    // Row(
+                    //   children: <Widget>[
+                    //     SizedBox(
+                    //       width: 20.0,
+                    //     ),
+                    //     Text(
+                    //       "Let's Play",
+                    //       style: GoogleFonts.roboto(
+                    //           fontSize: 24.0, fontWeight: FontWeight.bold),
+                    //     ),
+                    //   ],
+                    // ),
+                    // // Divider(
+                    // //   color: Colors.indigo[700],
+                    // //   indent: 60.0,
+                    // //   endIndent: 20.0,
+                    // //   thickness: 2.0,
+                    // //   height: 30.0,
+                    // // ),
+                    // SizedBox(
+                    //   height: 10.0,
+                    // ),
+                    // Row(
+                    //   children: <Widget>[
+                    //     SizedBox(
+                    //       width: 20.0,
+                    //     ),
+                    //     Flexible(
+                    //       child: FractionallySizedBox(
+                    //           widthFactor: 0.8,
+                    //           child:
+                    //               //Text('You have 90 seconds to make it happen. All the Best!', style: TextStyle(color: Colors.grey),softWrap: true,)
+                    //               Text(
+                    //             'Connect with your friends to start Doodling. All the Best!',
+                    //             style: TextStyle(color: Colors.grey),
+                    //             softWrap: true,
+                    //           )),
+                    //     ),
+                    //   ],
+                    // ),
+                    SizedBox(
+                      height: 100.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: RaisedButton(
+                        onPressed: () {
+                          flag=false;
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      RoomCreatingScreen()));
+
+                          Random random = Random();
+                          double randomNumber;
+
+                          randomNumber = random.nextDouble();
+                          double d = randomNumber * 1000000;
+                          id = d.toInt();
+                          print(id);
+                          addRoom();
+                          Navigator.pop(context);
+
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CreateRoom(id: id)));
+                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 18.0, horizontal: 20.0),
+                          child: Text('Create Room',
+                              style: GoogleFonts.notoSans(
+                                  //color: Color(0xFF00008B),
+                                  color: color['bg2'],
+                                   fontSize: 20.0)),
+                        ),
+                        //color: Colors.orange[300],
+                        color: color['buttonBg']
                       ),
-                      Row(
-                        children: <Widget>[
-                          SizedBox(
-                            width: 20.0,
-                          ),
-                          Text(
-                            "Let's Play",
-                            style: GoogleFonts.roboto(
-                                fontSize: 24.0, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.indigo[700],
-                        indent: 60.0,
-                        endIndent: 20.0,
-                        thickness: 2.0,
-                        height: 30.0,
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Row(
-                        children: <Widget>[
-                          SizedBox(
-                            width: 20.0,
-                          ),
-                          Flexible(
-                            child: FractionallySizedBox(
-                                widthFactor: 0.8,
-                                child:
-                                    //Text('You have 90 seconds to make it happen. All the Best!', style: TextStyle(color: Colors.grey),softWrap: true,)
-                                    Text(
-                                  'Connect with your friends to start Doodling. All the Best!',
-                                  style: TextStyle(color: Colors.grey),
-                                  softWrap: true,
-                                )),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: RaisedButton(
-                          onPressed: () {
-                            flag=false;
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: RaisedButton(
+                          onPressed: () {                
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        RoomCreatingScreen()));
-
-                            Random random = Random();
-                            double randomNumber;
-
-                            randomNumber = random.nextDouble();
-                            double d = randomNumber * 1000000;
-                            id = d.toInt();
-                            print(id);
-                            addRoom();
-                            Navigator.pop(context);
-
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CreateRoom(id: id)));
+                                    builder: (context) => EnterRoomId()));
                           },
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ),
+                              side: BorderSide(
+                                 // color: Colors.orange[400],
+                                 color: color['buttonBg'],
+                                   width: 2.0),
+                              borderRadius: BorderRadius.circular(18.0)),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                vertical: 18.0, horizontal: 20.0),
-                            child: Text('Create Room',
-                                style: GoogleFonts.notoSans(
-                                    color: Color(0xFF00008B), fontSize: 20.0)),
-                          ),
-                          color: Colors.orange[300],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: RaisedButton(
-                            onPressed: () {                
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => EnterRoomId()));
-                            },
-                            shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    color: Colors.orange[400], width: 2.0),
-                                borderRadius: BorderRadius.circular(18.0)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 18.0, horizontal: 30.0),
-                              child: Text(
-                                'Join Room',
-                                style: GoogleFonts.notoSans(
-                                    color: Colors.orange[700], fontSize: 20.0),
-                              ),
+                                vertical: 18.0, horizontal: 30.0),
+                            child: Text(
+                              'Join Room',
+                              style: GoogleFonts.notoSans(
+                                  //color: Colors.orange[700],
+                                  color: color['bg2'],
+                                   fontSize: 20.0),
                             ),
-                            color: Colors.white),
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                    ],
-                  ),
+                          ),
+                        //  color: Colors.white
+                        color: color['buttonBg'],
+                          ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                  ],
                 ),
               ),
             ),

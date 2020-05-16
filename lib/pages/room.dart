@@ -32,18 +32,9 @@ int round = 1;
 double denCanvasLength;
 int numberOfRounds = 3;
 var a;
-var chat = new List();
+List chat = [];
 bool flag = false;
 String documentid;
-
-// class CreateRoom extends StatefulWidget {
-//   int id;
-
-//   CreateRoom({Key key, this.id}) : super(key: key);
-
-//   @override
-//   _CreateRoomState createState() => _CreateRoomState();
-// }
 
 class CreateRoom extends StatelessWidget {
   final int id;
