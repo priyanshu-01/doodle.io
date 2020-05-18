@@ -21,7 +21,7 @@ String word;
 String hostId;
 String denId;
 List playersId = new List();
-List guessersImage = new List();
+List guessersId = new List();
 List tempScore = new List();
 List finalScore = new List();
 int round = 1;
@@ -53,7 +53,7 @@ class CreateRoom extends StatelessWidget {
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot == null) return Container();
+                if (snapshot.connectionState==ConnectionState.waiting || snapshot == null  ) return Container();
                  else{
                 a = snapshot.data.documents[0].data;
                 documentid = snapshot.data.documents[0].documentID;
@@ -69,7 +69,7 @@ class CreateRoom extends StatelessWidget {
                 hostId = a['host_id'];
                 denId = a['den_id'];
                 wordChosen = a['wordChosen'];
-                guessersImage = a['guessersImage'];
+                guessersId = a['guessersId'];
                 tempScore = a['tempScore'];
                 finalScore = a['finalScore'];
                 round = a['round'];
@@ -88,11 +88,10 @@ class CreateRoom extends StatelessWidget {
                 if (a
                             [identity] ==
                         '$denId $round' &&
-                    guessersImage.indexOf(
-                            playersImage[playersId.indexOf(identity)]) ==
+                    guessersId.indexOf(
+                            identity) ==
                         -1) {
-                  // guessersImage.add(playersImage[playersId.indexOf(identity)]);
-                  // updateUserImage();
+                 
                   updateScore();
                 }
                 if(denner!=players[playersId.indexOf(denId)] && identity==hostId)
@@ -278,8 +277,6 @@ class CreateRoom extends StatelessWidget {
                     ),
                   );
                 else
-                  // waitCurrent=0;
-                  // waitSub.cancel();
                   return gameScreen();
                   }
               },
@@ -288,6 +285,7 @@ class CreateRoom extends StatelessWidget {
         ),
         onWillPop: () {
           leaveRoomAlert(context, players, counter);
+       //   return;
         });
     //funct(id);
   }
@@ -390,14 +388,10 @@ class CreateRoom extends StatelessWidget {
   }
 
   Future<void> removeMe() async {
-    List playerRemoved = new List();
-    List identityRemoved = new List();
-    List tempScoreRemoved = new List();
-    List finalScoreRemoved = new List();
-    playerRemoved = players;
-    identityRemoved = playersId;
-    tempScoreRemoved = tempScore;
-    finalScoreRemoved = finalScore;
+    List  playerRemoved = players;
+    List identityRemoved = playersId;
+    List tempScoreRemoved = tempScore;
+    List finalScoreRemoved = finalScore;
     int count = counter - 1;
     int plInd = playersId.indexOf(identity);
     playerRemoved.removeAt(plInd);

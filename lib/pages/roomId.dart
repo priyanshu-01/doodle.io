@@ -153,9 +153,5 @@ Future<void> getDetails(BuildContext context) async{
         });
         
       }
-      
-    // setState(() {
-      
-    // });
   }
 }

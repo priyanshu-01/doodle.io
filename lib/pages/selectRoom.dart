@@ -42,11 +42,20 @@ String commas(int n) {
   String r;
   if (c.length <= 3)
     r = c;
-  else if (c.length <= 5) {
+    else if (c.length == 4) {
+    r = c.substring(0, 1) + ',' + c.substring(1);
+  }
+  else if (c.length == 5) {
     r = c.substring(0, 2) + ',' + c.substring(2);
-  } else if (c.length <= 7) {
+  }
+    else if (c.length == 6) {
+    r = c.substring(0, 1) + ',' + c.substring(1, 3) + ',' + c.substring(3);
+  }
+   else if (c.length == 7) {
     r = c.substring(0, 2) + ',' + c.substring(2, 4) + ',' + c.substring(4);
   }
+  else
+  r=c;
   return r;
 }
 
@@ -321,7 +330,7 @@ Future<void> addRoom() async {
     'id': id,
     'game': false,
     'counter': 0,
-    'guessersImage': [],
+    'guessersId': [],
     'users': [],
     'users_id': [],
     'usersImage': [],

@@ -48,7 +48,7 @@ class _WordWasState extends State<WordWas> {
     sub = countDownTimer.listen(null);
     sub.onData((duration) {
       if (current == 5) {
-        guessersImage = [];
+        guessersId = [];
         word = '*';
         print('WordWas 2 .... 5 seconds over');
       }

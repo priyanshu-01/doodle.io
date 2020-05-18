@@ -119,7 +119,7 @@ int q=0,w=0,e=0,r=0;
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
       //Text('$denner',style: GoogleFonts.notoSans(),),
-       (guessersImage.indexOf( playersImage[playersId.indexOf(identity)] )==-1)?
+       (guessersId.indexOf( identity )==-1)?
       Icon(Icons.access_alarm,color: timerColor,):
       Container(
         decoration: BoxDecoration(

@@ -23,10 +23,10 @@ int i;
   int star = 90;
   @override
   Widget build(BuildContext context) {
-    if(guessersImage.length<=6)
-    i=50* guessersImage.length;
+    if(guessersId.length<=5)
+    i=50* guessersId.length;
     else
-    i=300;
+    i=250;
     x= i.toDouble();
     return Scaffold(
       body: SafeArea(
@@ -83,14 +83,25 @@ int i;
                     child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       reverse: true,
-                      itemCount: guessersImage.length,
+                      itemCount: guessersId.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.all(5.0),
-                          child: CircleAvatar(
+                         child:
+                           (playersId.indexOf(
+                                  guessersId[index]
+                                )==-1)?Container():
+                           CircleAvatar(
                             radius: 20.0,
                             backgroundColor: Colors.grey[100],
-                            backgroundImage: NetworkImage(guessersImage[index]),
+                            backgroundImage: NetworkImage(
+                              playersImage[
+                                playersId.indexOf(
+                                  guessersId[index]
+                                )
+                              ]
+                              
+                              ),
                           ),
                         );
                       },
@@ -122,7 +133,7 @@ int i;
   Widget chooseOrDraw() {
     if (word != '*') //this is true when it should not be
     {
-      if (curr > 1 && counter - 1 != guessersImage.length) {
+      if (curr > 1 && counter - 1 != guessersId.length) {
         if (!timerRunning2) {
           print('timer started');
           startTimer();
@@ -194,7 +205,7 @@ Future<void> changeDen() async {
     'wordChosen': false,
     'indices': [0],
     'pointer': 0,
-    'guessersImage': [],
+    'guessersId': [],
     'tempScore': tempScore,
     'round': round
   });

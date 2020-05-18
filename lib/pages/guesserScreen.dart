@@ -17,7 +17,6 @@ bool timerRunning = false;
 final messageHolder = TextEditingController();
 String message = '';
 bool madeIt = false;
-
 double guessCanvasLength;
 bool keyboardState;
 String newMessage;
@@ -152,10 +151,9 @@ class _GuesserScreenState extends State<GuesserScreen> {
                                       String lowerCase = message.toLowerCase();
                                       if (lowerCase.indexOf(word) != -1) {
                                         message = 'd123';
-                                        if (guessersImage.indexOf(playersImage[
-                                                playersId.indexOf(identity)]) ==
+                                        if (guessersId.indexOf(identity) ==
                                             -1) {
-                                          if (guessersImage.length <
+                                          if (guessersId.length <
                                               counter - 2) showPopup(context);
                                           calculateScore();
                                           updateGuesserId();
@@ -218,15 +216,26 @@ class _GuesserScreenState extends State<GuesserScreen> {
                     width: 50.0,
                     child: ListView.builder(
                       reverse: true,
-                      itemCount: guessersImage.length,
+                      itemCount: guessersId.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding:
                               const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                          child: CircleAvatar(
+                          child:
+                           (playersId.indexOf(
+                                  guessersId[index]
+                                )==-1)?Container():
+                           CircleAvatar(
                             radius: 20.0,
                             backgroundColor: Colors.grey[100],
-                            backgroundImage: NetworkImage(guessersImage[index]),
+                            backgroundImage: NetworkImage(
+                              playersImage[
+                                playersId.indexOf(
+                                  guessersId[index]
+                                )
+                              ]
+                              
+                              ),
                           ),
                         );
                       },
@@ -271,7 +280,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
     s1 = (currentTime ~/ 10) + 1;
     s1 = s1 * 10;
     int s2;
-    double per = (guessersImage.length / a['counter']) * 100;
+    double per = (guessersId.length / a['counter']) * 100;
     s2 = per.round();
     s2 = 100 - s2;
     score = s1 + s2;
@@ -283,7 +292,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
 
   Widget guessWaitShow() {
     if (word != '*') {
-      if (currentG > 1 && counter - 1 != guessersImage.length) {
+      if (currentG > 1 && counter - 1 != guessersId.length) {
         if (!timerRunning) {
           madeIt = false;
             startTimer();                         //UNDO
@@ -357,7 +366,7 @@ Future<void> updateScore() async {
   int previousScore = finalScore[place];
   int newScore = previousScore + score;
   finalScore[place] = newScore;
-  guessersImage = guessersImage + [playersImage[place]];
+  guessersId = guessersId + [identity];
   int ind = playersId.indexOf(denId);
   int sum = 0;
   for (int k = 0; k < tempScore.length; k++) {
@@ -371,7 +380,7 @@ Future<void> updateScore() async {
   await Firestore.instance.collection('rooms').document(documentid).updateData({
     'tempScore': tempScore,
     'finalScore': finalScore,
-    'guessersImage': guessersImage
+    'guessersId': guessersId
   });
 }
 
@@ -433,11 +442,16 @@ Widget chatList() {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
+                      (playersId.indexOf(i)==-1)?
+                      Container():
                       CircleAvatar(
                         radius: 14.0,
                         backgroundColor: Colors.grey[100],
                         backgroundImage:
-                            NetworkImage(playersImage[playersId.indexOf(i)]),
+                            NetworkImage(
+                              playersImage[playersId.indexOf(i)
+                              ]
+                              ),
                       ),
                       Bubble(
                         nip: BubbleNip.leftTop,
@@ -494,7 +508,6 @@ class AnimatedAvatar extends StatefulWidget {
 class _AnimatedAvatarState extends State<AnimatedAvatar>
     with TickerProviderStateMixin {
   
-
   @override
   initState() {
     controlAvatar = AnimationController(
@@ -510,8 +523,9 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
   Widget build(BuildContext context) {
     double photoSize  =120.0;
     //double leftPadding= 70.0;
-    double leftPadding = (totalWidth-50/2)- photoSize/2;
-    double topPadding = 20.0;
+    double leftPadding = ((totalWidth/2)-50)- photoSize/2;
+    //double topPadding = 20.0;
+    double topPadding= ((guessCanvasLength/2)/2) - (photoSize/2 );
    
     double denIconSize= 50.0;
     double rightIconPadding = 5.0;
