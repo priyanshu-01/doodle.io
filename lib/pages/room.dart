@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scribbl/pages/loginPage.dart';
-import 'package:scribbl/pages/result.dart';
-import 'package:scribbl/pages/roomCreatingScreen.dart';
 import 'package:scribbl/pages/painterScreen.dart';
 import 'selectRoom.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -11,7 +8,6 @@ import 'gameScreen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:share/share.dart';
 import '../services/authHandler.dart';
-import 'WaitScreen.dart';
 import 'guesserScreen.dart';
 bool game;
 bool wordChosen;
@@ -284,7 +280,7 @@ class CreateRoom extends StatelessWidget {
                 else
                   // waitCurrent=0;
                   // waitSub.cancel();
-                  return GameScreen();
+                  return gameScreen();
                   }
               },
             ),

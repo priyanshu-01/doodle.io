@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:scribbl/pages/selectRoom.dart';
 import 'package:scribbl/pages/wordWas.dart';
 import 'painter.dart';
 import 'room.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'chooseWord.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiver/async.dart';
-import 'guesserScreen.dart';
 import 'guesserScreen.dart';
 
 String choosenWord;

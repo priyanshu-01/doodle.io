@@ -3,6 +3,7 @@ import 'package:quiver/async.dart';
 import 'room.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
+import 'selectRoom.dart';
 class Time extends StatefulWidget {
   @override
   _TimeState createState() => _TimeState();
@@ -118,7 +119,19 @@ int q=0,w=0,e=0,r=0;
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
       //Text('$denner',style: GoogleFonts.notoSans(),),
-      Icon(Icons.access_alarm,color: timerColor,),
+       (guessersImage.indexOf( playersImage[playersId.indexOf(identity)] )==-1)?
+      Icon(Icons.access_alarm,color: timerColor,):
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.green[700],
+          border: Border.all(
+            color: Colors.green[700]
+          ),
+          borderRadius: BorderRadius.circular(30.0)
+        ),
+        child:Icon(Icons.done, color: Colors.white,)
+      ),
+      
       Text('$current', style: GoogleFonts.lexendGiga(),),
       wordHint()
     ],);

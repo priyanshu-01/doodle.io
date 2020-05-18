@@ -15,8 +15,10 @@ class WaitScreen extends StatefulWidget {
 }
 class _WaitScreenState extends State<WaitScreen> {
 String waitDenId;
-  int end = 30+(counter*2);
+  int end = 15+(counter*2);
     void initState() {
+      if(controlAvatar!=null)
+    controlAvatar.value= 0.0;           //makes a big photo
     waitDenId=denId;
     waitCurrent=0;
     startTimer();
@@ -35,7 +37,7 @@ String waitDenId;
     );
     waitSub = countDownTimer.listen(null);
     waitSub.onData((duration) {
-      if (waitCurrent >= 28) {
+      if (waitCurrent >= 13) {
       changeDenIfNeeded2();
       }
       waitCurrent = duration.elapsed.inSeconds;
@@ -62,29 +64,51 @@ String waitDenId;
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Flexible(
-              flex: 5,
-              child: SpinKitPouringHourglass(
+              flex: 4,
+              // child:CircleAvatar(
+              //  // radius: ((guessTotalLength*0.6)-50)* (3/8),
+              //   backgroundColor: Colors.grey[200],
+              //   minRadius: ((guessTotalLength*0.6)-50)* (3/18),
+              //   maxRadius:((guessTotalLength*0.6)-50)* (3/18) ,
+                
+              //   backgroundImage: NetworkImage(playersImage[playersId.indexOf(denId)]),
+              // ),
+              child: Container(),
+            ),
+            Flexible(
+              flex: 2,
+              child: SpinKitWave(
                 //color: Colors.white,
                  color: Color(0xFF9868AC),
                // color: Color(0xFF1A2F77),
-                size: 100.0,
+                //size: 100.0,
               ),
             ),
             Flexible(
-              flex: 5,
+              flex: 2,
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: Text(
-                  '$denner is choosing a word',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.
-                      //quicksand(fontSize: 20.0,
-                      notoSans(
-                          fontSize: 20.0,
-
-                          //color: Colors.white
-                          //color: Color(0xFF775169)
-                          color: Color(0xFF392E40)),
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      '$denner',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.
+                          //quicksand(fontSize: 20.0,
+                          notoSans(
+                              fontSize: 20.0,
+                              color: Color(0xFF392E40)),
+                    ),
+                     Text(
+                      'is choosing a word',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.
+                          //quicksand(fontSize: 20.0,
+                          notoSans(
+                              fontSize: 14.0,
+                              color: Color(0xFF392E40)),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -103,7 +127,7 @@ String waitDenId;
      else{
        distance= counter+ m-d;
      }
-     if(waitCurrent==28+(distance*2)   && resumed && online)
+     if(waitCurrent==13+(distance*2)   && resumed && online)
      changeDen();
   }
 }

@@ -11,17 +11,21 @@ import 'wordWas.dart';
 import 'WaitScreen.dart';
 import 'package:quiver/async.dart';
 import 'package:bubble/bubble.dart';
+import 'package:achievement_view/achievement_view.dart';
 
 bool timerRunning = false;
 final messageHolder = TextEditingController();
 String message = '';
 bool madeIt = false;
-double guessTotalLength;
+
 double guessCanvasLength;
 bool keyboardState;
 String newMessage;
 Color textAndChat = Color(0xFFFFF1E9);
 int score = 0;
+String tempDenId;
+AnimationController controlAvatar;
+
 class GuesserScreen extends StatefulWidget {
   @override
   _GuesserScreenState createState() => _GuesserScreenState();
@@ -33,7 +37,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
   int startG = 90;
   int currentG = 90;
   var subG;
-  
+
   @override
   void initState() {
     guessCanvasLength = (((effectiveLength * 0.6) - 50) * (7 / 8));
@@ -42,18 +46,22 @@ class _GuesserScreenState extends State<GuesserScreen> {
     KeyboardVisibility.onChange.listen((bool visible) {
       setState(() {
         keyboardState = visible;
-        // if (keyboardState)
-        //   effectiveLength = guessTotalLength * 0.6;
-        // else
-        //   effectiveLength = guessTotalLength;
-        // print(keyboardState);
-        // print('effective length: $effectiveLength');
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // if (tempDenId != denId && word != '*') {
+    //   controlAvatar.forward(from: 0.0);
+    //   tempDenId = denId;
+    // }
+    //  if (tempDenId != denId &&tempDenId!=null && word == '*') {
+    // //  controlAvatar.reset();
+    //   controlAvatar.value= 0.0;
+    //   // controlAvatar.forward(from: 0.0);
+    //   // tempDenId = denId;
+    // }
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -70,12 +78,11 @@ class _GuesserScreenState extends State<GuesserScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 10.0),
-                              child:
-                              Image(
-                                image: AssetImage('assets/icons/gift.gif'),)
-                              ),
+                              padding: const EdgeInsets.fromLTRB(
+                                  0.0, 8.0, 0.0, 10.0),
+                              child: Image(
+                                image: AssetImage('assets/icons/gift.gif'),
+                              )),
                           Container(
                             width: totalWidth * 0.7,
                             color: Colors.white,
@@ -142,15 +149,19 @@ class _GuesserScreenState extends State<GuesserScreen> {
                                     if (message != '  ') {
                                       messageHolder.clear();
                                       messageHolder.clearComposing();
-                                      String lowerCase= message.toLowerCase();
+                                      String lowerCase = message.toLowerCase();
                                       if (lowerCase.indexOf(word) != -1) {
                                         message = 'd123';
-                                        if (guessersImage.indexOf( playersImage[playersId.indexOf(identity)] )==-1) {
+                                        if (guessersImage.indexOf(playersImage[
+                                                playersId.indexOf(identity)]) ==
+                                            -1) {
+                                          if (guessersImage.length <
+                                              counter - 2) showPopup(context);
                                           calculateScore();
                                           updateGuesserId();
                                         }
                                       } else {
-                                         newMessage =
+                                        newMessage =
                                             '$identity[$userNam]$message';
                                         chat.add(newMessage);
                                         //Navigator.pop(context);
@@ -199,14 +210,13 @@ class _GuesserScreenState extends State<GuesserScreen> {
               height: guessCanvasLength,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
                     //color: Colors.blue,
                     height: guessCanvasLength - 10,
                     width: 50.0,
                     child: ListView.builder(
-                      //physics: FixedExtentScrollPhysics(),
                       reverse: true,
                       itemCount: guessersImage.length,
                       itemBuilder: (context, index) {
@@ -222,20 +232,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
                       },
                     ),
                   ),
-                  Container(
-                    // color: Colors.blue,
-                    //  height: guessCanvasLength,
-                    //width: 50.0,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 20.0, right: 10.0),
-                      child: CircleAvatar(
-                        radius: 20.0,
-                        backgroundColor: Colors.grey[100],
-                        backgroundImage: NetworkImage(
-                            playersImage[playersId.indexOf(denId)]),
-                      ),
-                    ),
-                  )
+                  AnimatedAvatar()
                 ],
               ),
             )
@@ -245,14 +242,28 @@ class _GuesserScreenState extends State<GuesserScreen> {
     );
   }
 
- 
-  
- Future<void> updateGuesserId() async{
-   await Firestore.instance.collection('rooms').
-    document(documentid).updateData({
-    '$identity': '$denId $round'
+  void showPopup(context) {
+    AchievementView(context,
+        title: "Bingo!",
+        subTitle: '',
+        isCircle: true,
+        icon: Icon(Icons.done),
+        textStyleTitle: TextStyle(color: Colors.white, fontSize: 17.0),
+        alignment: Alignment.topCenter,
+        duration: Duration(seconds: 1),
+        color: Colors.green[700])
+      ..show();
+  }
+
+  Future<void> updateGuesserId() async {
+    await Firestore.instance
+        .collection('rooms')
+        .document(documentid)
+        .updateData({
+      '$identity': '$denId $round',
     });
- }
+  }
+
   void calculateScore() {
     //1 time
     int s1;
@@ -274,13 +285,8 @@ class _GuesserScreenState extends State<GuesserScreen> {
     if (word != '*') {
       if (currentG > 1 && counter - 1 != guessersImage.length) {
         if (!timerRunning) {
-          // if (keyboardState)
-          //   effectiveLength = guessTotalLength * 0.6;
-          // else
-          //   effectiveLength = guessTotalLength;
-          // guessCanvasLength = (((effectiveLength - 70) * 0.6) * (7 / 8));
           madeIt = false;
-           startTimer();
+            startTimer();                         //UNDO
           timerRunning = true;
         }
         return Guesser();
@@ -291,7 +297,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
         // }
         // else {
 
-        subG.cancel();
+         subG.cancel();                        //UNDO
         currentG = 90;
         pointsG = [];
         timerRunning = false;
@@ -337,49 +343,45 @@ class _GuesserScreenState extends State<GuesserScreen> {
     super.dispose();
   }
 }
- Future<void> sendMessage() async {
-    await Firestore.instance
-        .collection('rooms')
-        .document(documentid)
-        .updateData({
-          'chat': chat,
-          '$identity Chat': chat.length-1
-        });
-  }
+
+Future<void> sendMessage() async {
+  await Firestore.instance
+      .collection('rooms')
+      .document(documentid)
+      .updateData({'chat': chat, '$identity Chat': chat.length - 1});
+}
 
 Future<void> updateScore() async {
-    int place = playersId.indexOf(identity);
-    tempScore[place] = score;
-    int previousScore = finalScore[place];
-    int newScore = previousScore + score;
-    finalScore[place] = newScore;
-    guessersImage= guessersImage+[playersImage[place]];
-    int ind = playersId.indexOf(denId);
-    int sum = 0;
-    for (int k = 0; k < tempScore.length; k++) {
-      if (k == ind) continue;
-      sum = sum + tempScore[k];
-    }
-    sum = sum ~/ (counter - 1);
-    tempScore[ind] = sum;
-    finalScore[ind] = finalScore[ind] + sum;
-    madeIt = true;
-    await Firestore.instance
-        .collection('rooms')
-        .document(documentid)
-        .updateData({
-      'tempScore': tempScore,
-      'finalScore': finalScore,
-      'guessersImage': guessersImage
-    });
-    
+  int place = playersId.indexOf(identity);
+  tempScore[place] = score;
+  int previousScore = finalScore[place];
+  int newScore = previousScore + score;
+  finalScore[place] = newScore;
+  guessersImage = guessersImage + [playersImage[place]];
+  int ind = playersId.indexOf(denId);
+  int sum = 0;
+  for (int k = 0; k < tempScore.length; k++) {
+    if (k == ind) continue;
+    sum = sum + tempScore[k];
   }
+  sum = sum ~/ (counter - 1);
+  tempScore[ind] = sum;
+  finalScore[ind] = finalScore[ind] + sum;
+  madeIt = true;
+  await Firestore.instance.collection('rooms').document(documentid).updateData({
+    'tempScore': tempScore,
+    'finalScore': finalScore,
+    'guessersImage': guessersImage
+  });
+}
+
 Widget chatList() {
-   int lastIndex= a['$identity Chat'];
-          if( lastIndex!=null && chat[lastIndex].substring(0,chat[lastIndex].indexOf('[')) != identity    ){
-            chat=chat+[newMessage];
-            sendMessage();
-          }
+  int lastIndex = a['$identity Chat'];
+  if (lastIndex != null &&
+      chat[lastIndex].substring(0, chat[lastIndex].indexOf('[')) != identity) {
+    chat = chat + [newMessage];
+    sendMessage();
+  }
   return ListView.builder(
     //shrinkWrap: true,
     reverse: true,
@@ -482,4 +484,73 @@ Widget nameOfOthers(String iden, String nam) {
               fontSize: 10.0,
               fontWeight: FontWeight.bold)),
     );
+}
+
+class AnimatedAvatar extends StatefulWidget {
+  @override
+  _AnimatedAvatarState createState() => _AnimatedAvatarState();
+}
+
+class _AnimatedAvatarState extends State<AnimatedAvatar>
+    with TickerProviderStateMixin {
+  
+
+  @override
+  initState() {
+    controlAvatar = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 550),
+      lowerBound: 0.0,
+      upperBound: 1.0,
+    );
+    super.initState();
+  }
+ 
+  @override
+  Widget build(BuildContext context) {
+    double photoSize  =120.0;
+    //double leftPadding= 70.0;
+    double leftPadding = (totalWidth-50/2)- photoSize/2;
+    double topPadding = 20.0;
+   
+    double denIconSize= 50.0;
+    double rightIconPadding = 5.0;
+    double topIconPadding = 5.0;
+
+     RelativeRectTween relativeRectTween = RelativeRectTween(
+    begin: RelativeRect.fromLTRB(
+      leftPadding,
+     topPadding,
+     totalWidth-50-leftPadding-photoSize,
+     (guessCanvasLength/2) -topPadding-photoSize  ),
+
+    end: RelativeRect.fromLTRB( 
+      totalWidth-50  - rightIconPadding- denIconSize ,
+       topIconPadding, 
+       rightIconPadding, 
+         (guessCanvasLength/2) -topIconPadding-denIconSize
+           ),
+  );
+    return Container(
+      width: totalWidth-50,
+      height: guessCanvasLength/2,
+      child: Stack(
+        children: <Widget>[
+          PositionedTransition(
+            rect: relativeRectTween.animate(controlAvatar),
+            child: Container(
+              child: ClipOval(
+                child: Image.network(
+                  playersImage[playersId.indexOf(denId)],
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 }

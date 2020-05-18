@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/authService.dart';
@@ -15,6 +14,7 @@ import 'loginPage.dart';
 import '../main.dart';
 import 'package:connectivity/connectivity.dart';
 import 'dart:io';
+
 double effectiveLength = 0;
 String userNam;
 String identity = uid;
@@ -22,24 +22,35 @@ int id;
 bool initialiseDimension = true;
 bool online;
 double totalWidth;
-Map<String,Color> color = {
-  
+double totalLength;
+Map<String, Color> color = {
   //'bg2': Color(0xFF2994b2),
   'bg': Color(0xfffffbe0),
   //'buttonBg': Color(0xFF2d4059),
- // 'buttonBg': Color(0xFF120136),
+  // 'buttonBg': Color(0xFF120136),
   //'bg2': Color(0xFFfde9c9),
 // 'buttonBg': Color(0xFFfcbf1e),
-'buttonBg': Color(0xFFea5455),
+  'buttonBg': Color(0xFFea5455),
 
-
- 
   'bg2': Color(0xfffffbe0),
   'buttonText': Color(0xFFea5455),
-  'blackShade': Color(0xFF343434) 
+  'blackShade': Color(0xFF343434)
 };
-class SelectRoom extends StatefulWidget {
 
+String commas(int n) {
+  String c = n.toString();
+  String r;
+  if (c.length <= 3)
+    r = c;
+  else if (c.length <= 5) {
+    r = c.substring(0, 2) + ',' + c.substring(2);
+  } else if (c.length <= 7) {
+    r = c.substring(0, 2) + ',' + c.substring(2, 4) + ',' + c.substring(4);
+  }
+  return r;
+}
+
+class SelectRoom extends StatefulWidget {
   String userName;
   SelectRoom({Key key, this.userName}) : super(key: key);
   @override
@@ -47,40 +58,41 @@ class SelectRoom extends StatefulWidget {
 }
 
 class _SelectRoomState extends State<SelectRoom> {
-    Map _source = {ConnectivityResult.none: false};
+  Map _source = {ConnectivityResult.none: false};
   MyConnectivity _connectivity = MyConnectivity.instance;
   Widget showDrawer() {
     return Row(
       children: <Widget>[
-  
-             InkWell(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-                  child: CircleAvatar(
-                    radius: 26.0,
-                    backgroundColor: color['buttonBg'],
-                                      child: CircleAvatar(
-                      backgroundColor: Colors.grey[100],
-                      backgroundImage: NetworkImage(
-                        imageUrl,
-                      ),
-                      radius: 25.0,
-                    ),
-                  ),
+        InkWell(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+            child: CircleAvatar(
+              radius: 26.0,
+              backgroundColor: color['buttonBg'],
+              child: CircleAvatar(
+                backgroundColor: Colors.grey[100],
+                backgroundImage: NetworkImage(
+                  imageUrl,
                 ),
-                onTap: () {
-                  _scaffoldKey.currentState.openDrawer();
-                },
+                radius: 25.0,
               ),
-  
+            ),
+          ),
+          onTap: () {
+            _scaffoldKey.currentState.openDrawer();
+          },
+        ),
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Icon(Icons.attach_money),
+              Icon(
+                Icons.attach_money,
+                // color: Colors.yellow,
+              ),
               Text(
-                coins.toString(),
+                commas(coins),
                 style: TextStyle(fontSize: 20.0),
               )
             ],
@@ -96,15 +108,15 @@ class _SelectRoomState extends State<SelectRoom> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    resumed=true;
+    resumed = true;
     print('selectRoom called');
     if (initialiseDimension) {
       effectiveLength = MediaQuery.of(context).size.height;
-      guessTotalLength = MediaQuery.of(context).size.height;
-      print('Total length ' + '$guessTotalLength');
-      guessCanvasLength = ((effectiveLength - 70) * 0.6) * (7 / 8);
+      totalLength = MediaQuery.of(context).size.height;
+      print('Total length ' + '$totalLength');
+      guessCanvasLength = ((effectiveLength - 50) * 0.6) * (7 / 8);
       print('Canvas Length $guessCanvasLength');
-      totalWidth =MediaQuery.of(context).size.width;
+      totalWidth = MediaQuery.of(context).size.width;
       initialiseDimension = false;
     }
     userNam = userName;
@@ -112,17 +124,16 @@ class _SelectRoomState extends State<SelectRoom> {
       userNam = '$userNam ';
     }
     String first = userNam.substring(0, userNam.indexOf(' ') + 1);
-    // String first = userNam;
     userNam = first;
-     switch (_source.keys.toList()[0]) {
+    switch (_source.keys.toList()[0]) {
       case ConnectivityResult.none:
-        online =false;
+        online = false;
         break;
       case ConnectivityResult.mobile:
         online = true;
         break;
       case ConnectivityResult.wifi:
-        online =true;
+        online = true;
     }
     print('connected to internet : $online');
     return Scaffold(
@@ -140,12 +151,10 @@ class _SelectRoomState extends State<SelectRoom> {
                   email,
                   style: TextStyle(color: Colors.black),
                 ),
-                currentAccountPicture: 
-                    CircleAvatar(
-                        backgroundColor: Colors.grey[100],
-                        backgroundImage: NetworkImage(imageUrl),
-                      )
-                   ),
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: Colors.grey[100],
+                  backgroundImage: NetworkImage(imageUrl),
+                )),
             SizedBox(
               height: 10.0,
             ),
@@ -200,90 +209,50 @@ class _SelectRoomState extends State<SelectRoom> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    // Row(
-                    //   children: <Widget>[
-                    //     SizedBox(
-                    //       width: 20.0,
-                    //     ),
-                    //     Text(
-                    //       "Let's Play",
-                    //       style: GoogleFonts.roboto(
-                    //           fontSize: 24.0, fontWeight: FontWeight.bold),
-                    //     ),
-                    //   ],
-                    // ),
-                    // // Divider(
-                    // //   color: Colors.indigo[700],
-                    // //   indent: 60.0,
-                    // //   endIndent: 20.0,
-                    // //   thickness: 2.0,
-                    // //   height: 30.0,
-                    // // ),
-                    // SizedBox(
-                    //   height: 10.0,
-                    // ),
-                    // Row(
-                    //   children: <Widget>[
-                    //     SizedBox(
-                    //       width: 20.0,
-                    //     ),
-                    //     Flexible(
-                    //       child: FractionallySizedBox(
-                    //           widthFactor: 0.8,
-                    //           child:
-                    //               //Text('You have 90 seconds to make it happen. All the Best!', style: TextStyle(color: Colors.grey),softWrap: true,)
-                    //               Text(
-                    //             'Connect with your friends to start Doodling. All the Best!',
-                    //             style: TextStyle(color: Colors.grey),
-                    //             softWrap: true,
-                    //           )),
-                    //     ),
-                    //   ],
-                    // ),
+                   
                     SizedBox(
                       height: 100.0,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(18.0),
                       child: RaisedButton(
-                        onPressed: () {
-                          flag=false;
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      RoomCreatingScreen()));
+                          onPressed: () {
+                            flag = false;
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        RoomCreatingScreen()));
 
-                          Random random = Random();
-                          double randomNumber;
+                            Random random = Random();
+                            double randomNumber;
 
-                          randomNumber = random.nextDouble();
-                          double d = randomNumber * 1000000;
-                          id = d.toInt();
-                          print(id);
-                          addRoom();
-                          Navigator.pop(context);
+                            randomNumber = random.nextDouble();
+                            double d = randomNumber * 1000000;
+                            id = d.toInt();
+                            print(id);
+                            addRoom();
+                            Navigator.pop(context);
 
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CreateRoom(id: id)));
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 18.0, horizontal: 20.0),
-                          child: Text('Create Room',
-                              style: GoogleFonts.notoSans(
-                                  //color: Color(0xFF00008B),
-                                  color: color['bg2'],
-                                   fontSize: 20.0)),
-                        ),
-                        //color: Colors.orange[300],
-                        color: color['buttonBg']
-                      ),
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CreateRoom(id: id)));
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 18.0, horizontal: 20.0),
+                            child: Text('Create Room',
+                                style: GoogleFonts.notoSans(
+                                    //color: Color(0xFF00008B),
+                                    color: color['bg2'],
+                                    fontSize: 20.0)),
+                          ),
+                          //color: Colors.orange[300],
+                          color: color['buttonBg']),
                     ),
                     SizedBox(
                       height: 10.0,
@@ -291,32 +260,32 @@ class _SelectRoomState extends State<SelectRoom> {
                     Padding(
                       padding: const EdgeInsets.all(18.0),
                       child: RaisedButton(
-                          onPressed: () {                
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EnterRoomId()));
-                          },
-                          shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                 // color: Colors.orange[400],
-                                 color: color['buttonBg'],
-                                   width: 2.0),
-                              borderRadius: BorderRadius.circular(18.0)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 18.0, horizontal: 30.0),
-                            child: Text(
-                              'Join Room',
-                              style: GoogleFonts.notoSans(
-                                  //color: Colors.orange[700],
-                                  color: color['bg2'],
-                                   fontSize: 20.0),
-                            ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EnterRoomId()));
+                        },
+                        shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                                // color: Colors.orange[400],
+                                color: color['buttonBg'],
+                                width: 2.0),
+                            borderRadius: BorderRadius.circular(18.0)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 18.0, horizontal: 30.0),
+                          child: Text(
+                            'Join Room',
+                            style: GoogleFonts.notoSans(
+                                //color: Colors.orange[700],
+                                color: color['bg2'],
+                                fontSize: 20.0),
                           ),
+                        ),
                         //  color: Colors.white
                         color: color['buttonBg'],
-                          ),
+                      ),
                     ),
                     SizedBox(
                       height: 20.0,
@@ -330,24 +299,24 @@ class _SelectRoomState extends State<SelectRoom> {
       ),
     );
   }
+
   @override
-  void initState() { 
-        _connectivity.initialise();
+  void initState() {
+    _connectivity.initialise();
     _connectivity.myStream.listen((source) {
       setState(() => _source = source);
     });
     super.initState();
   }
+
   @override
   void dispose() {
-        _connectivity.disposeStream();
+    _connectivity.disposeStream();
     super.dispose();
   }
 }
 
-
 Future<void> addRoom() async {
-  String doc;
   await Firestore.instance.collection('rooms').add({
     'id': id,
     'game': false,
@@ -355,7 +324,7 @@ Future<void> addRoom() async {
     'guessersImage': [],
     'users': [],
     'users_id': [],
-    'usersImage':[],
+    'usersImage': [],
     'host': userNam,
     'host_id': uid,
     'den': userNam,
@@ -372,37 +341,11 @@ Future<void> addRoom() async {
     'length': 0,
     'xpos': {},
     'ypos': {},
-  }).then((value) {
-    doc= value.documentID;
-  }).catchError((e){
+  }).catchError((e) {
     print('error $e');
-  }).whenComplete(()  async{
-   await Firestore.instance.collection('rooms').document(doc).
-     collection('guessers').document().setData({'id':'imagepath'}).catchError((e){
-       print('error $e');
-     });
   });
-
-
-       
-  
-   
-
-
-
-
-    
-
-      //  String subDoc;
-      //  QuerySnapshot qs = await Firestore.instance.collection('rooms').document(doc).collection('guessers').getDocuments().catchError((e){
-      //    print('error $e');
-      //  }); 
-      //  subDoc= qs.documents[0].documentID;
-      // await Firestore.instance.collection('rooms').document(doc).updateData({
-      //  'guessersDocumentId': subDoc
-      // });
-  
 }
+
 class MyConnectivity {
   MyConnectivity._internal();
 

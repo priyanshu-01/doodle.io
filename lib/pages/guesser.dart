@@ -17,6 +17,7 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
   AnimationController controller;
   @override
   void initState(){
+   controlAvatar.forward(from: 0.0);   //animates denner photo
     pointsG=[];
     super.initState();
     controller= AnimationController(

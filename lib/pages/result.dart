@@ -1,14 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:scribbl/pages/loginPage.dart';
 import 'package:scribbl/pages/room.dart';
 import 'gameScreen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'selectRoom.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../services/authHandler.dart';
 class Result extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    if(check==signInMethod.google)
+    updateCoinsGoogle();
+    else
+    updateCoinsAnonymous();
     return  ResultContent();
   }
+}
+Future<void> updateCoinsGoogle()async{
+  QuerySnapshot q= await Firestore.instance.collection('users google').where('uid', isEqualTo: identity).getDocuments();
+  DocumentSnapshot d= q.documents[0];
+  String i = d.documentID;
+  int score = finalScore[playersId.indexOf(identity)];
+  await Firestore.instance.collection('users google').document(i).updateData({
+    'coins': coins+ score
+  });
+}
+Future<void> updateCoinsAnonymous()async{
+  QuerySnapshot q= await Firestore.instance.collection('users anonymous').where('uid', isEqualTo: identity).getDocuments();
+  DocumentSnapshot d= q.documents[0];
+  String i = d.documentID;
+  int score = finalScore[playersId.indexOf(identity)];
+  await Firestore.instance.collection('users anonymous').document(i).updateData({
+    'coins': coins+ score
+  });
 }
 
 class ResultContent extends StatefulWidget {

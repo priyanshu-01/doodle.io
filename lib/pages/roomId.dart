@@ -95,7 +95,7 @@ class _EnterRoomIdState extends State<EnterRoomId> {
               )
             ),
                   ),
-                  ShowWarning(),
+                  showWarning(),
 
                   RaisedButton(onPressed: () {
                     flag=false;
@@ -120,7 +120,7 @@ class _EnterRoomIdState extends State<EnterRoomId> {
           ),
     );
   }
-  Widget ShowWarning(){
+  Widget showWarning(){
     if(mistake==false){
       return  Container();
     }

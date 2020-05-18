@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scribbl/pages/signIn.dart';
 import 'package:scribbl/services/authHandler.dart';
-import 'selectRoom.dart';
 import '../services/anon.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 String enteredName = '';
 double screenHeight;
 DocumentSnapshot av;
