@@ -16,7 +16,7 @@ import 'package:achievement_view/achievement_view.dart';
 bool timerRunning = false;
 final messageHolder = TextEditingController();
 String message = '';
-bool madeIt = false;
+//bool madeIt = false;
 double guessCanvasLength;
 bool keyboardState;
 String newMessage;
@@ -33,8 +33,8 @@ class GuesserScreen extends StatefulWidget {
 class _GuesserScreenState extends State<GuesserScreen> {
   //Color textAndChat= Color(0xFFECC5C0);
   final FocusNode fn = FocusNode();
-  int startG = 90;
-  int currentG = 90;
+  int startG = 92;
+  int currentG = 92;
   var subG;
 
   @override
@@ -153,8 +153,8 @@ class _GuesserScreenState extends State<GuesserScreen> {
                                         message = 'd123';
                                         if (guessersId.indexOf(identity) ==
                                             -1) {
-                                          if (guessersId.length <
-                                              counter - 2) showPopup(context);
+                                          if (guessersId.length < counter - 2)
+                                            showPopup(context);
                                           calculateScore();
                                           updateGuesserId();
                                         }
@@ -221,22 +221,14 @@ class _GuesserScreenState extends State<GuesserScreen> {
                         return Padding(
                           padding:
                               const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                          child:
-                           (playersId.indexOf(
-                                  guessersId[index]
-                                )==-1)?Container():
-                           CircleAvatar(
-                            radius: 20.0,
-                            backgroundColor: Colors.grey[100],
-                            backgroundImage: NetworkImage(
-                              playersImage[
-                                playersId.indexOf(
-                                  guessersId[index]
-                                )
-                              ]
-                              
-                              ),
-                          ),
+                          child: (playersId.indexOf(guessersId[index]) == -1)
+                              ? Container()
+                              : CircleAvatar(
+                                  radius: 20.0,
+                                  backgroundColor: Colors.grey[100],
+                                  backgroundImage: NetworkImage(playersImage[
+                                      playersId.indexOf(guessersId[index])]),
+                                ),
                         );
                       },
                     ),
@@ -292,29 +284,36 @@ class _GuesserScreenState extends State<GuesserScreen> {
 
   Widget guessWaitShow() {
     if (word != '*') {
-      if (currentG > 1 && counter - 1 != guessersId.length) {
-        if (!timerRunning) {
-          madeIt = false;
-            startTimer();                         //UNDO
-          timerRunning = true;
-        }
-        return Guesser();
-      } else {
-        // if (counter - 1 != guesses)
-        // {
-        //    return WordWas();
-        // }
-        // else {
+          if (currentG > 3 && counter - 1 != guessersId.length) {
+                    if (!timerRunning
+                    || tempDenId!= denId
+                    ) {
+                            tempDenId = denId;
+                            startTimer(); 
+                            timerRunning = true;
+                    }
+                    return Guesser();
+            } 
+            else {
+                    timerZero();
+                    return WordWas(); 
+            }
+    }
+    else {
+            if (currentG != 92) {
+              print('timerStoppedForcefully ');
+                   timerZero();
+            }
+            return WaitScreen();
+    }
+  }
 
-         subG.cancel();                        //UNDO
-        currentG = 90;
+  void timerZero(){
+    print('timerZero called');
+        subG.cancel();
+        currentG = 92;
         pointsG = [];
         timerRunning = false;
-        return WordWas(); //change to word was
-        //}
-      }
-    } else
-      return WaitScreen();
   }
 
   void startTimer() {
@@ -325,7 +324,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
 
     subG = countDownTimer.listen(null);
     subG.onData((duration) {
-      if (currentG <= 1)
+      if (currentG <= 3)
         setState(() {
           currentG = startG - duration.elapsed.inSeconds;
         });
@@ -333,21 +332,21 @@ class _GuesserScreenState extends State<GuesserScreen> {
         currentG = startG - duration.elapsed.inSeconds;
     });
 
-    // subG.onDone(() {
-    //   // timerRunning = false;
-    //   // print("Done");
-    //   //  word = '*';
-
-    //   // subG.cancel();
-    //   // currentG=95;
-    // });
+    subG.onDone(() {
+      print('subG.onDone() called');
+      timerRunning = false;
+       //word = '*';
+       pointsG=[];
+      subG.cancel();
+      currentG=92;
+    });
   }
 
   @override
   void dispose() {
     word = '*';
     subG.cancel();
-    currentG = 90;
+    currentG = 92;
     timerRunning = false;
     super.dispose();
   }
@@ -376,7 +375,7 @@ Future<void> updateScore() async {
   sum = sum ~/ (counter - 1);
   tempScore[ind] = sum;
   finalScore[ind] = finalScore[ind] + sum;
-  madeIt = true;
+  //madeIt = true;
   await Firestore.instance.collection('rooms').document(documentid).updateData({
     'tempScore': tempScore,
     'finalScore': finalScore,
@@ -442,17 +441,14 @@ Widget chatList() {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      (playersId.indexOf(i)==-1)?
-                      Container():
-                      CircleAvatar(
-                        radius: 14.0,
-                        backgroundColor: Colors.grey[100],
-                        backgroundImage:
-                            NetworkImage(
-                              playersImage[playersId.indexOf(i)
-                              ]
-                              ),
-                      ),
+                      (playersId.indexOf(i) == -1)
+                          ? Container()
+                          : CircleAvatar(
+                              radius: 14.0,
+                              backgroundColor: Colors.grey[100],
+                              backgroundImage: NetworkImage(
+                                  playersImage[playersId.indexOf(i)]),
+                            ),
                       Bubble(
                         nip: BubbleNip.leftTop,
                         color: Colors.white,
@@ -507,7 +503,6 @@ class AnimatedAvatar extends StatefulWidget {
 
 class _AnimatedAvatarState extends State<AnimatedAvatar>
     with TickerProviderStateMixin {
-  
   @override
   initState() {
     controlAvatar = AnimationController(
@@ -518,36 +513,34 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
     );
     super.initState();
   }
- 
+
   @override
   Widget build(BuildContext context) {
-    double photoSize  =120.0;
+    double photoSize = 120.0;
     //double leftPadding= 70.0;
-    double leftPadding = ((totalWidth/2)-50)- photoSize/2;
+    double leftPadding = ((totalWidth / 2) - 50) - photoSize / 2;
     //double topPadding = 20.0;
-    double topPadding= ((guessCanvasLength/2)/2) - (photoSize/2 );
-   
-    double denIconSize= 50.0;
+    double topPadding = ((guessCanvasLength / 2) / 2) - (photoSize / 2);
+
+    double denIconSize = 50.0;
     double rightIconPadding = 5.0;
     double topIconPadding = 5.0;
 
-     RelativeRectTween relativeRectTween = RelativeRectTween(
-    begin: RelativeRect.fromLTRB(
-      leftPadding,
-     topPadding,
-     totalWidth-50-leftPadding-photoSize,
-     (guessCanvasLength/2) -topPadding-photoSize  ),
-
-    end: RelativeRect.fromLTRB( 
-      totalWidth-50  - rightIconPadding- denIconSize ,
-       topIconPadding, 
-       rightIconPadding, 
-         (guessCanvasLength/2) -topIconPadding-denIconSize
-           ),
-  );
+    RelativeRectTween relativeRectTween = RelativeRectTween(
+      begin: RelativeRect.fromLTRB(
+          leftPadding,
+          topPadding,
+          totalWidth - 50 - leftPadding - photoSize,
+          (guessCanvasLength / 2) - topPadding - photoSize),
+      end: RelativeRect.fromLTRB(
+          totalWidth - 50 - rightIconPadding - denIconSize,
+          topIconPadding,
+          rightIconPadding,
+          (guessCanvasLength / 2) - topIconPadding - denIconSize),
+    );
     return Container(
-      width: totalWidth-50,
-      height: guessCanvasLength/2,
+      width: totalWidth - 50,
+      height: guessCanvasLength / 2,
       child: Stack(
         children: <Widget>[
           PositionedTransition(
