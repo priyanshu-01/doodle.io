@@ -31,6 +31,8 @@ var a;
 List chat = [];
 bool flag = false;
 String documentid;
+List denChangeTrack;
+Map<String,dynamic> record;
 
 class CreateRoom extends StatelessWidget {
   final int id;
@@ -73,6 +75,8 @@ class CreateRoom extends StatelessWidget {
                 tempScore = a['tempScore'];
                 finalScore = a['finalScore'];
                 round = a['round'];
+                (a['$identity denChangeTrack']!=null)?
+                denChangeTrack = a['$identity denChangeTrack']:denChangeTrack=[];
                 denCanvasLength = a['denCanvasLength'];
                 numberOfRounds = a['numberOfRounds'];
                 if (playersId.indexOf(identity) == -1 && !flag) {
@@ -94,8 +98,8 @@ class CreateRoom extends StatelessWidget {
                  
                   updateScore();
                 }
-                if(denner!=players[playersId.indexOf(denId)] && identity==hostId)
-                updateDennerName();
+            //    if(denner!=players[playersId.indexOf(denId)] && identity==hostId)   //error by crashlytics
+              //  updateDennerName();
                 if (game == false)
                   return Center(
                     child: Container(
@@ -427,7 +431,7 @@ class CreateRoom extends StatelessWidget {
                 {'host': playerRemoved[0], 'host_id': identityRemoved[0]});
       }
       if (denId == identity) {
-        changeDen();
+        changeDen('room.dart line 433');
       }
     }
   }

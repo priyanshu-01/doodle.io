@@ -99,9 +99,9 @@ class _EnterRoomIdState extends State<EnterRoomId> {
 
                   RaisedButton(onPressed: () {
                     flag=false;
-                            val = int.parse(enteredId);
-                            print(val);
-
+                    (enteredId!=null)?
+                    val = int.parse(enteredId):val=0;  //error by crashlytics   --got undertesting fix
+                    print(val);
                             getDetails(context);    
                             
                           },

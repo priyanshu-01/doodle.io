@@ -43,7 +43,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
     super.initState();
     keyboardState = KeyboardVisibility.isVisible;
     KeyboardVisibility.onChange.listen((bool visible) {
-      setState(() {
+      setState(() {                     //error by crashlytics
         keyboardState = visible;
       });
     });
@@ -51,16 +51,6 @@ class _GuesserScreenState extends State<GuesserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // if (tempDenId != denId && word != '*') {
-    //   controlAvatar.forward(from: 0.0);
-    //   tempDenId = denId;
-    // }
-    //  if (tempDenId != denId &&tempDenId!=null && word == '*') {
-    // //  controlAvatar.reset();
-    //   controlAvatar.value= 0.0;
-    //   // controlAvatar.forward(from: 0.0);
-    //   // tempDenId = denId;
-    // }
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -162,11 +152,9 @@ class _GuesserScreenState extends State<GuesserScreen> {
                                         newMessage =
                                             '$identity[$userNam]$message';
                                         chat.add(newMessage);
-                                        //Navigator.pop(context);
                                         sendMessage();
                                       }
                                     }
-                                    // this step might give error
                                     message = '';
                                     fn.unfocus();
                                   },
@@ -208,7 +196,6 @@ class _GuesserScreenState extends State<GuesserScreen> {
               height: guessCanvasLength,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
                     //color: Colors.blue,
@@ -345,6 +332,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
   @override
   void dispose() {
     word = '*';
+    if(subG!=null)
     subG.cancel();
     currentG = 92;
     timerRunning = false;

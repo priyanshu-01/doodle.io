@@ -73,7 +73,8 @@ class _WordWasState extends State<WordWas> {
     } else {
       distance = counter + m - d;
     }
-    if (current == 5 + (distance * 3) && resumed && online) changeDen();
+    if (current == 5 + (distance * 3) && resumed && online)
+     changeDen('wordWas.dart line 76 and vlaue of current is $current');
   }
 }
 

@@ -128,7 +128,7 @@ String waitDenId;
        distance= counter+ m-d;
      }
      if(waitCurrent==13+(distance*2)   && resumed && online)
-     changeDen();
+     changeDen('WaitScreen.dart line 131 and value of waitCurrent is $waitCurrent');
   }
 }
 

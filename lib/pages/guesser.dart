@@ -31,7 +31,6 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
   }
   @override
   Widget build(BuildContext context) {
-    // dev.debugger();
      pointsG=[];
       if(a['length']==0){
         pointsG=[];
@@ -60,7 +59,7 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
             if(pStore>pointerVal && a['length']!=0)
             {
               ind1=dex[a['pointer']];
-              ind2=dex[a['pointer']+1];
+              ind2=dex[a['pointer']+1];             //error caught by crashlytics
               controller.reverse(from:1.0);
             }
             else

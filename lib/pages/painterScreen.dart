@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scribbl/pages/selectRoom.dart';
 import 'package:scribbl/pages/wordWas.dart';
 import 'painter.dart';
 import 'room.dart';
@@ -177,14 +178,27 @@ int i;
   }
 
   void dispose() {
-    subs.cancel();
+    if(subs!=null)
+    subs.cancel();                //error caught by crashlytics   -- got undertesting fix
     timerRunning2 = false;
-    //if (denId == identity) changeDen();
     super.dispose();
   }
 }
 
-Future<void> changeDen() async {
+Future<void> changeDen(String source) async {
+   record = {
+    'name': userNam,
+    'beforeChangeDenId': denId,
+    'beforeChangeDenName': players[playersId.indexOf(denId)],
+    'round': round,
+    'myIndex': playersId.indexOf(identity),
+    'indexOfDenner': playersId.indexOf(denId),
+    'word':word,
+    'source':source,
+    'guessersId': guessersId,
+    'no. of guessers': guessersId.length
+  };
+  denChangeTrack=denChangeTrack+[record];
   word = '*';
   int s = playersId.indexOf(denId);
   if (s == players.length - 1) {
@@ -195,6 +209,7 @@ Future<void> changeDen() async {
   for (int k = 0; k < tempScore.length; k++) {
     tempScore[k] = 0;
   }
+ 
   await Firestore.instance.collection('rooms').document(documentid).updateData({
     'den': players[s],
     'den_id': playersId[s],
@@ -207,6 +222,7 @@ Future<void> changeDen() async {
     'pointer': 0,
     'guessersId': [],
     'tempScore': tempScore,
-    'round': round
+    'round': round,
+    '$identity denChangeTrack': denChangeTrack
   });
 }

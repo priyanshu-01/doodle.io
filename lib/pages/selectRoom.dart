@@ -23,6 +23,8 @@ bool initialiseDimension = true;
 bool online;
 double totalWidth;
 double totalLength;
+DocumentSnapshot wordListDocument;
+ 
 Map<String, Color> color = {
   //'bg2': Color(0xFF2994b2),
   'bg': Color(0xfffffbe0),
@@ -67,6 +69,7 @@ class SelectRoom extends StatefulWidget {
 }
 
 class _SelectRoomState extends State<SelectRoom> {
+
   Map _source = {ConnectivityResult.none: false};
   MyConnectivity _connectivity = MyConnectivity.instance;
   Widget showDrawer() {
@@ -374,6 +377,10 @@ class MyConnectivity {
     connectivity.onConnectivityChanged.listen((result) {
       _checkStatus(result);
     });
+       wordListDocument = await Firestore.instance
+        .collection('words')
+        .document('word list')
+        .get();
   }
 
   void _checkStatus(ConnectivityResult result) async {
