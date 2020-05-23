@@ -28,6 +28,8 @@ class PainterState extends State<Painter> {
     listX = [];
     listY = [];
     tempInd = 0;
+    indices=[0];
+    p=0;
     super.initState();
   }
 
@@ -74,7 +76,6 @@ class PainterState extends State<Painter> {
                 indices[p] = tempInd;
               });
             },
-
             onPanEnd: (DragEndDetails details) {
               pointsD.add(null);
               listY.add(null);
@@ -134,25 +135,11 @@ class PainterState extends State<Painter> {
             child: new CustomPaint(
               child: Card(
                 elevation: 10.0,
-                child: Container(
-                    // child: Container(color: Colors.white,),
-                    // height: 350.0,
-                    // width: 400.0,
-                    //         decoration: BoxDecoration(
-                    //           color: Colors.white,
-                    //             border: Border.all(color: Colors.black,width: 4.0),
-                    //             image: new DecorationImage(
-                    //   fit: BoxFit.fitWidth,
-                    //   colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.10), BlendMode.dstATop),
-                    //   image: new AssetImage('assets/images/scibb.jpg')
-                    // )
-                    //             ),
-                    ),
+                child: Container(),
               ),
               foregroundPainter:
                   new Signature(points: pointsD, indices: indices, p: p),
               size: Size.infinite,
-              // size: Size.fromHeight(400.0)
             ),
           ),
         ),
