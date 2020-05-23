@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
 import 'services/authHandler.dart';
 import 'package:screen/screen.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'pages/stateTest.dart';
+import 'dart:async';
 bool resumed=true;
-void main() => runApp(new MaterialApp(
+void main() {
+    Crashlytics.instance.enableInDevMode = true;
+     FlutterError.onError = Crashlytics.instance.recordFlutterError;
+
+       runZoned(() {
+    runApp(new MaterialApp(
       // home: new RoomCreatingScreen(),
       home: new MyHomePage(),
       //home: SignIn(),
       debugShowCheckedModeBanner: false,
      theme: ThemeData(primarySwatch: Colors.red),
     ));
+  }, onError: Crashlytics.instance.recordError);
+
+}
+   //runApp();
+   // }
+
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -61,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
   Widget build(BuildContext context) {
     Screen.keepOn(true);
     return AuthHandler();
-    //return Wid1();
+   // return MyApp();
 
   }
 }
