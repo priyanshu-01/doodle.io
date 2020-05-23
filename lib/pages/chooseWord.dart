@@ -7,24 +7,19 @@ import 'painterScreen.dart';
 import 'selectRoom.dart';
 
 var displayWords = [' ', ' ', ' '];
-bool wc = false;
+//bool wc = false;
 Color wordBack;
 Color wordText;
 
-class ChooseWordDialog extends StatefulWidget {
-  @override
-  _ChooseWordDialogState createState() => _ChooseWordDialogState();
-}
-class _ChooseWordDialogState extends State<ChooseWordDialog> {
-  Color animatedColor = Color(0xFF008000);
-  double animatedWidth = totalWidth * 0.75;
+class ChooseWordDialog extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     //wordBack= Color(0xFFFFE5B4);
     wordBack = null;
     // wordText=Color(0xFF1A2F77);
     wordText = Colors.black;
-    if (wc == false) getWords();
+    getWords();
     return Container(
       // decoration: BoxDecoration(
       //     image: DecorationImage(
@@ -58,12 +53,8 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
                           GoogleFonts.poppins(color: wordText, fontSize: 18.0),
                     ),
                     onPressed: () {
-                      //PainterScreen().startTimer();
                       choosenWord = displayWords[0];
                       updateWord();
-                      wc = false;
-                      animatedColor= Color(0xFF008000);
-                      animatedWidth = totalWidth*0.75;
                     },
                   ),
                   FlatButton(
@@ -78,9 +69,6 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
                     onPressed: () {
                       choosenWord = displayWords[1];
                       updateWord();
-                      wc = false;
-                      animatedColor= Color(0xFF008000);
-                      animatedWidth = totalWidth*0.75;
                     },
                   ),
                   FlatButton(
@@ -95,24 +83,9 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
                     onPressed: () {
                       choosenWord = displayWords[2];
                       updateWord();
-                      wc = false;
-                      animatedColor= Color(0xFF008000);
-                      animatedWidth = totalWidth*0.75;
                     },
                   ),
-                  Container(
-                    width: totalWidth * 0.75,
-                    alignment: Alignment.centerLeft,
-                    child: AnimatedContainer(
-                      duration: Duration(seconds: 15),
-                      height: 12.0,
-                      width: animatedWidth,
-                      decoration: BoxDecoration(
-                          color: animatedColor,
-                          border: Border.all(color: animatedColor),
-                          borderRadius: BorderRadius.circular(15.0)),
-                    ),
-                  )
+                 TimeIndicator()
                 ],
               ))
         ],
@@ -122,30 +95,18 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
     //
   }
 
-  Future<void> getWords() async {
-    var words;
+  void getWords() async {
     int length;
-    words = await Firestore.instance
-        .collection('words')
-        .document('word list')
-        .get();
-    List word = words['list'];
+    List word = wordListDocument['list'];
     length = word.length;
     Random random = Random();
     double randomNumber;
     int index;
-//displayWords=[];
     for (int i = 0; i < 3; i++) {
       randomNumber = random.nextDouble() * (length - 1);
       index = randomNumber.toInt();
       displayWords[i] = (word[index]);
     }
-    setState(() {
-      wc = true;
-      animatedColor = Color(0xFFFF0000);
-      animatedWidth = 0.0;
-    });
-    //await  Firestore.instance.collection('rooms').document(documentid).updateData({'wordChosen':true});
   }
 }
 
@@ -154,4 +115,51 @@ Future<void> updateWord() async {
       .collection('rooms')
       .document(documentid)
       .updateData({'word': choosenWord, 'wordChosen': true});
+}
+
+
+class TimeIndicator extends StatefulWidget {
+  @override
+  TimeIndicatorState createState() => TimeIndicatorState();
+}
+
+class TimeIndicatorState extends State<TimeIndicator> with TickerProviderStateMixin {
+  Color green = Color(0xFF008000);
+  Color red= Color(0xFFFF0000);
+  double width = totalWidth * 0.75;
+  AnimationController timeIndicator;
+  Animation _colorTween;
+  @override
+  void initState() {
+    timeIndicator = AnimationController(
+    vsync: this,
+    duration: Duration(seconds: 15),
+    lowerBound: 0.0,
+    upperBound: 1.0
+    );
+    super.initState();
+    _colorTween = ColorTween(begin: green, end: red)
+        .animate(timeIndicator);
+        timeIndicator.forward(from:0.0);
+  }
+  @override
+  Widget build(BuildContext context) {
+    return   Container(
+                    width:width,
+                    alignment: Alignment.centerLeft,
+                    child: AnimatedBuilder(
+                      animation: timeIndicator,
+                       builder:(context,child){
+                        return Container(                    
+                        height: 12.0,
+                       // width: animatedWidth,
+                       width: (1-timeIndicator.value) *width,
+                        decoration: BoxDecoration(
+                            color: _colorTween.value,
+                            border: Border.all(color: _colorTween.value),
+                            borderRadius: BorderRadius.circular(15.0)),
+                      );}
+                    ),
+                  );
+  }
 }
