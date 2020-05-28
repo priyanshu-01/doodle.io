@@ -9,7 +9,7 @@ List displayNames;
 List displayScores;
 String docId;
 Widget gameScreen ()  {
-   // return PainterScreen();
+    return GuesserScreen();
       if(round<=numberOfRounds){
         if(denId==identity)
           {
