@@ -130,6 +130,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
                                 });
                               },
                               onEditingComplete: () {},
+                              onSubmitted: (String a) => onSend(),
                             ),
                           ),
                           (message == '')
@@ -164,47 +165,24 @@ class _GuesserScreenState extends State<GuesserScreen> {
                                     //   color: Color(0xFFA74AC7),
                                     size: 30.0,
                                   ),
-                                  onPressed: () {
-                                    message = ' $message ';
-                                    if (message != '  ') {
-                                      messageHolder.clear();
-                                      messageHolder.clearComposing();
-                                      String lowerCase = message.toLowerCase();
-                                      if (lowerCase.indexOf(word) != -1) {
-                                        message = 'd123';
-                                        if (guessersId.indexOf(identity) ==
-                                            -1) {
-                                          if (guessersId.length < counter - 2)
-                                            showPopup(context);
-                                          calculateScore();
-                                          updateGuesserId();
-                                        }
-                                      } else {
-                                        newMessage =
-                                            '$identity[$userNam]$message';
-                                        chat.add(newMessage);
-                                        sendMessage();
-                                      }
-                                    }
-                                    message = '';
-                                    fn.unfocus();
-                                  },
+                                  //onPressed:=>onSend(),
+                                  onPressed: () => onSend(),
                                 ),
                         ],
                       ),
                     ),
-                    (keyboardState)
-                        ? Container()
-                        :
+                    // (keyboardState)
+                    //     ? Container()
+                    //     :
                          Flexible(
-                           flex: 4,
+                          // flex: 4,
+                           flex:(keyboardState)?0:4,
                           child: Container(
                           child: Stack(
                                children: <Widget>[
                                  chatBox(),
-                                 FractionallySizedBox(
-                                   heightFactor: 1.0,
-                                   child: AnimatedGift())
+                                 AnimatedGift()
+                                    //)
                                ],
                                 ),
                            ),
@@ -251,12 +229,37 @@ class _GuesserScreenState extends State<GuesserScreen> {
     );
   }
 
-
+void onSend() {
+                                    message = ' $message ';
+                                    if (message != '  ') {
+                                      messageHolder.clear();
+                                     // messageHolder.clearComposing();
+                                      String lowerCase = message.toLowerCase();
+                                      if (lowerCase.indexOf(word) != -1) {
+                                        message = 'd123';
+                                        if (guessersId.indexOf(identity) ==
+                                            -1) {
+                                          if (guessersId.length < counter - 2)
+                                            showPopup(context);
+                                          calculateScore();
+                                          updateGuesserId();
+                                        }
+                                      } else {
+                                        newMessage =
+                                            '$identity[$userNam]$message';
+                                        chat.add(newMessage);
+                                        sendMessage();
+                                      }
+                                    }
+                                    message = '';
+                                    fn.unfocus();
+                                  }
 
 
   Widget chatBox(){
   
-    return FractionallySizedBox(
+    return (keyboardState)?Container():
+    FractionallySizedBox(
                               heightFactor: 1.0,
                               child: Container(
                                 decoration: BoxDecoration(
@@ -570,7 +573,7 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
     );
     super.initState();
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -638,11 +641,10 @@ void initState() {
     );
     // controlGift.addListener(() { });
   super.initState();
-  
 }
   @override
   Widget build(BuildContext context) {
-    return 
+    return (keyboardState)?Container():
      Container(
       // constraints: BoxConstraints.expand(),
       //color: Colors.red,
