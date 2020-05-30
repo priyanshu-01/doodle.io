@@ -143,6 +143,11 @@ class TimeIndicatorState extends State<TimeIndicator> with TickerProviderStateMi
         timeIndicator.forward(from:0.0);
   }
   @override
+  void dispose() {
+    timeIndicator.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return   Container(
                     width:width,

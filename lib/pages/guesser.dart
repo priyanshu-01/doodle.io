@@ -30,10 +30,14 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
       upperBound: 1.0,
     );
   }
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    controller.duration= Duration(seconds: 1);
     pointsG = [];
     if (a['length'] == 0) {
       pointsG = [];
@@ -121,6 +125,7 @@ class Signature extends CustomPainter {
       ..color = Colors.black
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 03.0;
+      // paint..color= Colors.blue;   use this way to add colors later
     int diff = ind2 - ind1;
     double v = animation.value * diff;
     int val = v.toInt();

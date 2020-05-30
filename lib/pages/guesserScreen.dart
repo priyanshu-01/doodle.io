@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
@@ -14,24 +15,21 @@ import 'package:quiver/async.dart';
 import 'package:bubble/bubble.dart';
 import 'package:achievement_view/achievement_view.dart';
 import 'package:flutter/rendering.dart';
+import '../gift/gift_contents.dart';
+
 bool timerRunning = false;
 final messageHolder = TextEditingController();
 String message = '';
-//bool madeIt = false;
 double guessCanvasLength;
 bool keyboardState;
 String newMessage;
 Color textAndChat = Color(0xFFFFF1E9);
 int score = 0;
 String tempDenId;
-AnimationController controlAvatar;
 AnimationController controlGift;
-enum animateAvatar{
-  start,
-  done,
-  reset
-}
+enum animateAvatar { start, done, reset }
 var avatarAnimation;
+
 class GuesserScreen extends StatefulWidget {
   @override
   _GuesserScreenState createState() => _GuesserScreenState();
@@ -43,41 +41,28 @@ class _GuesserScreenState extends State<GuesserScreen> {
   int startG = 92;
   int currentG = 92;
   var subG;
-
+  StreamSubscription subscription;
   @override
   void initState() {
-      // fn.addListener(() {
-      //   if(controlGift.value==1.0)
-      //   controlGift.reverse(from:0.0);
-      //  });
     guessCanvasLength = (((effectiveLength * 0.6) - 50) * (7 / 8));
     super.initState();
     keyboardState = KeyboardVisibility.isVisible;
-    KeyboardVisibility.onChange.listen((bool visible) {
-      setState(() {                     //error by crashlytics
+     subscription=  KeyboardVisibility.onChange.listen((bool visible) {
+      setState(() {
+        //error by crashlytics   --solved and tested
         keyboardState = visible;
-              if(keyboardState && controlGift.value==1.0){
-                controlGift.value=0.0;
-              }
+        if (keyboardState && controlGift.value == 1.0) {
+          controlGift.value = 0.0;
+        }
       });
     });
   }
-  void animateAvatarFunc (BuildContext context) {
-    if(avatarAnimation == animateAvatar.reset)
-          { print('reset');
-                        avatarAnimation = animateAvatar.done;
-            controlAvatar.value=0.0;
-          }
-          else  if(avatarAnimation == animateAvatar.start)
-           {  print('start');
-                       avatarAnimation=animateAvatar.done;
-              controlAvatar.forward(from:0.0);
-            }
-  }
- 
+
+
+
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_){animateAvatarFunc(context);});
+
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -87,15 +72,15 @@ class _GuesserScreenState extends State<GuesserScreen> {
                 constraints: BoxConstraints.expand(),
                 child: Column(
                   children: <Widget>[
-                   Flexible(
-                     flex: 6, 
-                     child: GestureDetector(
-                       onTap: (){
-                         if(controlGift.value==1.0){
-                           controlGift.reverse(from:1.0);
-                         }
-                       },
-                       child: guessWaitShow())),
+                    Flexible(
+                        flex: 6,
+                        child: GestureDetector(
+                            onTap: () {
+                              if (controlGift.value == 1.0) {
+                                controlGift.reverse(from: 1.0);
+                              }
+                            },
+                            child: guessWaitShow())),
                     Container(
                       height: 50.0,
                       child: Row(
@@ -106,17 +91,16 @@ class _GuesserScreenState extends State<GuesserScreen> {
                                   0.0, 8.0, 0.0, 10.0),
                               child: InkWell(
                                 child: Image(
-                                  image: AssetImage(
-                                    'assets/icons/gift.gif'
-                                    ),
+                                  image: AssetImage('assets/icons/gift.gif'),
                                 ),
                                 onTap: () {
-                                  if(fn.hasFocus)
-                                  {fn.unfocus();
-                                  controlGift.forward(from: 0.0);} 
-                                  else{
-                                  (controlGift.value==0.0)?
-                                  controlGift.forward(from: 0.0):controlGift.reverse();
+                                  if (fn.hasFocus) {
+                                    fn.unfocus();
+                                    controlGift.forward(from: 0.0);
+                                  } else {
+                                    (controlGift.value == 0.0)
+                                        ? controlGift.forward(from: 0.0)
+                                        : controlGift.reverse();
                                   }
                                 },
                               )),
@@ -188,81 +172,72 @@ class _GuesserScreenState extends State<GuesserScreen> {
                         ],
                       ),
                     ),
-                    // (keyboardState)
-                    //     ? Container()
-                    //     :
-                         Flexible(
-                          // flex: 4,
-                           flex:(keyboardState)?0:4,
-                          child: Container(
-                          child: Stack(
-                               children: <Widget>[
-                                 chatBox(),
-                                 AnimatedGift()
-                                    //)
-                               ],
-                                ),
-                           ),
-                         ),
+                    Flexible(
+                      flex: (keyboardState) ? 0 : 4,
+                      child: Container(
+                        child: Stack(
+                          children: <Widget>[
+                            chatBox(),
+                            AnimatedGift()
+                            //)
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 )),
-                stackChild('guesser')
+            stackChild('guesser')
           ]),
         ),
       ),
     );
   }
 
-void onSend() {
-                                    message = ' $message ';
-                                    if (message != '  ') {
-                                      messageHolder.clear();
-                                     // messageHolder.clearComposing();
-                                      String lowerCase = message.toLowerCase();
-                                      if (lowerCase.indexOf(word) != -1) {
-                                        message = 'd123';
-                                        if (guessersId.indexOf(identity) ==
-                                            -1) {
-                                          if (guessersId.length < counter - 2)
-                                            showPopup(context);
-                                          calculateScore();
-                                          updateGuesserId();
-                                        }
-                                      } else {
-                                        newMessage =
-                                            '$identity[$userNam]$message';
-                                        chat.add(newMessage);
-                                        sendMessage();
-                                      }
-                                    }
-                                    message = '';
-                                    fn.unfocus();
-                                  }
+  void onSend() {
+    message = ' $message ';
+    if (message != '  ') {
+      messageHolder.clear();
+      // messageHolder.clearComposing();
+      String lowerCase = message.toLowerCase();
+      if (lowerCase.indexOf(word) != -1) {
+        message = 'd123';
+        if (guessersId.indexOf(identity) == -1) {
+          if (guessersId.length < counter - 2) showPopup(context);
+          calculateScore();
+          updateGuesserId();
+        }
+      } else {
+        newMessage = '$identity[$userNam]$message';
+        chat.add(newMessage);
+        sendMessage();
+      }
+    }
+    message = '';
+    fn.unfocus();
+  }
 
-
-  Widget chatBox(){
-  
-    return (keyboardState)?Container():
-    FractionallySizedBox(
-                              heightFactor: 1.0,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 1.0, color: textAndChat),
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(25.0),
-                                        topRight: Radius.circular(25.0)),
-                                    color: textAndChat
-                                    //  color: Color(0xFFFFF1E9)
-                                    //color: Color(0xFFFABBB9),
-                                    // color: Colors.blueAccent[100]
-                                    ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: chatList(),
-                                ),
-                              ),
-                            );
+  Widget chatBox() {
+    return (keyboardState)
+        ? Container()
+        : FractionallySizedBox(
+            heightFactor: 1.0,
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1.0, color: textAndChat),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25.0),
+                      topRight: Radius.circular(25.0)),
+                  color: textAndChat
+                  //  color: Color(0xFFFFF1E9)
+                  //color: Color(0xFFFABBB9),
+                  // color: Colors.blueAccent[100]
+                  ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: chatList(),
+              ),
+            ),
+          );
   }
 
   void showPopup(context) {
@@ -306,36 +281,32 @@ void onSend() {
 
   Widget guessWaitShow() {
     if (word != '*') {
-          if (currentG > 3 && counter - 1 != guessersId.length) {
-                    if (!timerRunning
-                    || tempDenId!= denId
-                    ) {
-                            tempDenId = denId;
-                            startTimer(); 
-                            timerRunning = true;
-                    }
-                    return Guesser();
-            } 
-            else {
-                    timerZero();
-                    return WordWas(); 
-            }
-    }
-    else {
-            if (currentG != 92) {
-              print('timerStoppedForcefully ');
-                   timerZero();
-            }
-            return WaitScreen();
+      if (currentG > 3 && counter - 1 != guessersId.length) {
+        if (!timerRunning || tempDenId != denId) {
+          tempDenId = denId;
+          startTimer();
+          timerRunning = true;
+        }
+        return Guesser();
+      } else {
+        timerZero();
+        return WordWas();
+      }
+    } else {
+      if (currentG != 92) {
+        print('timerStoppedForcefully ');
+        timerZero();
+      }
+      return WaitScreen();
     }
   }
 
-  void timerZero(){
+  void timerZero() {
     print('timerZero called');
-        subG.cancel();
-        currentG = 92;
-        pointsG = [];
-        timerRunning = false;
+    subG.cancel();
+    currentG = 92;
+    pointsG = [];
+    timerRunning = false;
   }
 
   void startTimer() {
@@ -357,75 +328,75 @@ void onSend() {
     subG.onDone(() {
       print('subG.onDone() called');
       timerRunning = false;
-       //word = '*';
-       pointsG=[];
+      //word = '*';
+      pointsG = [];
       subG.cancel();
-      currentG=92;
+      currentG = 92;
     });
   }
 
   @override
   void dispose() {
     word = '*';
-    if(subG!=null)
-    subG.cancel();
+    if (subG != null) subG.cancel();
     currentG = 92;
     timerRunning = false;
+          subscription.cancel();
     super.dispose();
   }
 }
 
-Widget stackChild(String position){
+Widget stackChild(String position) {
   return Container(
-    height: position=='guesser'?guessCanvasLength:denCanvasLength,
+    height: position == 'guesser' ? guessCanvasLength : denCanvasLength,
     child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    alignment: AlignmentDirectional.bottomCenter,
-                    height: position=='guesser'?guessCanvasLength - 10:denCanvasLength-15,
-                    width: 50.0,
-                    child: Container(
-                      height: leftSideContainerHeight,
-                      child: ListView.builder(
-                        reverse: true,
-                        itemCount: guessersId.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.all(5.0),
-                            child: (playersId.indexOf(guessersId[index]) == -1)
-                                ? Container()
-                                : CircleAvatar(
-                                    radius: 20.0,
-                                    backgroundColor: Colors.grey[100],
-                                    backgroundImage: NetworkImage(playersImage[
-                                        playersId.indexOf(guessersId[index])]),
-                                  ),
-                          );
-                        },
-                      ),
-                    ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Container(
+          alignment: AlignmentDirectional.bottomCenter,
+          height: position == 'guesser'
+              ? guessCanvasLength - 10
+              : denCanvasLength - 15,
+          width: 50.0,
+          child: Container(
+            height: leftSideContainerHeight,
+            child: ListView.builder(
+              reverse: true,
+              itemCount: guessersId.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: (playersId.indexOf(guessersId[index]) == -1)
+                      ? Container()
+                      : CircleAvatar(
+                          radius: 20.0,
+                          backgroundColor: Colors.grey[100],
+                          backgroundImage: NetworkImage(playersImage[
+                              playersId.indexOf(guessersId[index])]),
+                        ),
+                );
+              },
+            ),
+          ),
+        ),
+        position == 'guesser'
+            ? AnimatedAvatar()
+            : Container(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20.0, right: 10.0),
+                  child: CircleAvatar(
+                    radius: 20.0,
+                    backgroundColor: Colors.grey[100],
+                    backgroundImage:
+                        NetworkImage(playersImage[playersId.indexOf(denId)]),
                   ),
-                  position=='guesser'?
-                  AnimatedAvatar():
-                   Container(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20.0, right: 10.0),
-                    child: CircleAvatar(
-                      radius: 20.0,
-                      backgroundColor: Colors.grey[100],
-                      backgroundImage:
-                          NetworkImage(playersImage[playersId.indexOf(denId)]),
-                    ),
-                  ),
-                )
-                ],
-              ),
+                ),
+              )
+      ],
+    ),
   );
 }
-
 
 Future<void> sendMessage() async {
   await Firestore.instance
@@ -578,7 +549,8 @@ class AnimatedAvatar extends StatefulWidget {
 
 class _AnimatedAvatarState extends State<AnimatedAvatar>
     with TickerProviderStateMixin {
-      RelativeRectTween relativeRectTween;
+      AnimationController controlAvatar;
+  RelativeRectTween relativeRectTween;
   @override
   initState() {
     controlAvatar = AnimationController(
@@ -587,7 +559,7 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
       lowerBound: 0.0,
       upperBound: 1.0,
     );
-     double photoSize = 120.0;
+    double photoSize = 120.0;
     double leftPadding = ((totalWidth / 2) - 50) - photoSize / 2;
     double topPadding = ((guessCanvasLength / 2) / 2) - (photoSize / 2);
 
@@ -595,7 +567,7 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
     double rightIconPadding = 5.0;
     double topIconPadding = 5.0;
 
-      relativeRectTween = RelativeRectTween(
+    relativeRectTween = RelativeRectTween(
       begin: RelativeRect.fromLTRB(
           leftPadding,
           topPadding,
@@ -609,9 +581,23 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
     );
     super.initState();
   }
- 
+  void animateAvatarFunc(BuildContext context) {
+    if (avatarAnimation == animateAvatar.reset) {
+      print('reset');
+      avatarAnimation = animateAvatar.done;
+      controlAvatar.value = 0.0;
+    } else if (avatarAnimation == animateAvatar.start) {
+      print('start');
+      avatarAnimation = animateAvatar.done;
+      controlAvatar.forward(from: 0.0);
+    }
+  }
   @override
   Widget build(BuildContext context) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+      animateAvatarFunc(context);
+    }); //called each time build gets completed
+
     return Container(
       width: totalWidth - 50,
       height: guessCanvasLength / 2,
@@ -634,98 +620,9 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
       ),
     );
   }
-}
-List reactions = [
-  'assets/reactions/thumbUp.png',
-  'assets/reactions/thumbDown.png',
-  'assets/reactions/middleFinger.png',
-  'assets/reactions/fire.png'
-  ];
-
-
-class AnimatedGift extends StatefulWidget {
   @override
-  _AnimatedGiftState createState() => _AnimatedGiftState();
-}
-
-class _AnimatedGiftState extends State<AnimatedGift> with TickerProviderStateMixin {
-RelativeRectTween relativeRectTween;
-@override
-void initState() { 
-    controlGift = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 150),
-      lowerBound: 0.0,
-      upperBound: 1.0,
-
-    );
-    relativeRectTween= RelativeRectTween(
-         begin: RelativeRect.fromLTRB(
-           0.0,
-           0.0,
-           totalWidth,
-           totalLength*0.4,
-           
-         ),
-         end: RelativeRect.fromLTRB(
-           0.0,
-          0.0,
-           0.0,
-           10.0,
-         )
-
-    );
-    // controlGift.addListener(() { });
-  super.initState();
-}
-  @override
-  Widget build(BuildContext context) {
-    return (keyboardState)?Container():
-     Container(
-      // constraints: BoxConstraints.expand(),
-      //color: Colors.red,
-      child: Stack(
-        children: <Widget>[
-             PositionedTransition(
-          rect: relativeRectTween.animate(controlGift),
-          child: Container(
-            decoration: BoxDecoration(
-                          color: Colors.white,
-             border: Border.all(color: Colors.white),
-             borderRadius: BorderRadius.circular(15.0)
-            ),
-            constraints: BoxConstraints.expand(),
-            width: totalWidth-20,
-           child: 
-          //  SvgPicture.asset('assets/reactions/fire2.svg',
-          //  semanticsLabel: 'fire',
-          //  ),
-          GridView.builder(
-            itemCount: reactions.length,
-             scrollDirection: Axis.horizontal,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2), 
-            itemBuilder: (BuildContext context, int index){
-              return   Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color:Colors.grey[200]),
-                    borderRadius: BorderRadius.circular(10.0),
-                                        color: Colors.grey[100],
-
-                  ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Image(image: AssetImage(reactions[index])),
-                    ),
-                  ),
-              );
-            })
-
-
-          ),
-        ),]
-      ),
-    );
+  void dispose() { 
+    controlAvatar.dispose();
+    super.dispose();
   }
 }
