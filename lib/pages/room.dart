@@ -33,7 +33,7 @@ bool flag = false;
 String documentid;
 List denChangeTrack;
 Map<String,dynamic> record;
-
+  double leftSideContainerHeight;
 class CreateRoom extends StatelessWidget {
   final int id;
    CreateRoom({Key key, this.id}) : super(key: key);

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
 import 'package:scribbl/pages/guesser.dart';
+import 'package:scribbl/pages/painterScreen.dart';
 import 'package:scribbl/pages/selectRoom.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'room.dart';
@@ -12,10 +13,7 @@ import 'WaitScreen.dart';
 import 'package:quiver/async.dart';
 import 'package:bubble/bubble.dart';
 import 'package:achievement_view/achievement_view.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-// import 'package:flutter_svg/avd.dart';
 import 'package:flutter/rendering.dart';
-import 'package:websafe_svg/websafe_svg.dart';
 bool timerRunning = false;
 final messageHolder = TextEditingController();
 String message = '';
@@ -28,6 +26,12 @@ int score = 0;
 String tempDenId;
 AnimationController controlAvatar;
 AnimationController controlGift;
+enum animateAvatar{
+  start,
+  done,
+  reset
+}
+var avatarAnimation;
 class GuesserScreen extends StatefulWidget {
   @override
   _GuesserScreenState createState() => _GuesserScreenState();
@@ -58,9 +62,22 @@ class _GuesserScreenState extends State<GuesserScreen> {
       });
     });
   }
-
+  void animateAvatarFunc (BuildContext context) {
+    if(avatarAnimation == animateAvatar.reset)
+          { print('reset');
+                        avatarAnimation = animateAvatar.done;
+            controlAvatar.value=0.0;
+          }
+          else  if(avatarAnimation == animateAvatar.start)
+           {  print('start');
+                       avatarAnimation=animateAvatar.done;
+              controlAvatar.forward(from:0.0);
+            }
+  }
+ 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_){animateAvatarFunc(context);});
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -189,40 +206,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
                          ),
                   ],
                 )),
-            Container(
-              // color: Colors.red,
-              // constraints: BoxConstraints.expand(),
-              height: guessCanvasLength,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    //color: Colors.blue,
-                    height: guessCanvasLength - 10,
-                    width: 50.0,
-                    child: ListView.builder(
-                      reverse: true,
-                      itemCount: guessersId.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                          child: (playersId.indexOf(guessersId[index]) == -1)
-                              ? Container()
-                              : CircleAvatar(
-                                  radius: 20.0,
-                                  backgroundColor: Colors.grey[100],
-                                  backgroundImage: NetworkImage(playersImage[
-                                      playersId.indexOf(guessersId[index])]),
-                                ),
-                        );
-                      },
-                    ),
-                  ),
-                  AnimatedAvatar()
-                ],
-              ),
-            )
+                stackChild('guesser')
           ]),
         ),
       ),
@@ -390,6 +374,58 @@ void onSend() {
     super.dispose();
   }
 }
+
+Widget stackChild(String position){
+  return Container(
+    height: position=='guesser'?guessCanvasLength:denCanvasLength,
+    child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    height: position=='guesser'?guessCanvasLength - 10:denCanvasLength-15,
+                    width: 50.0,
+                    child: Container(
+                      height: leftSideContainerHeight,
+                      child: ListView.builder(
+                        reverse: true,
+                        itemCount: guessersId.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.all(5.0),
+                            child: (playersId.indexOf(guessersId[index]) == -1)
+                                ? Container()
+                                : CircleAvatar(
+                                    radius: 20.0,
+                                    backgroundColor: Colors.grey[100],
+                                    backgroundImage: NetworkImage(playersImage[
+                                        playersId.indexOf(guessersId[index])]),
+                                  ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  position=='guesser'?
+                  AnimatedAvatar():
+                   Container(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20.0, right: 10.0),
+                    child: CircleAvatar(
+                      radius: 20.0,
+                      backgroundColor: Colors.grey[100],
+                      backgroundImage:
+                          NetworkImage(playersImage[playersId.indexOf(denId)]),
+                    ),
+                  ),
+                )
+                ],
+              ),
+  );
+}
+
 
 Future<void> sendMessage() async {
   await Firestore.instance

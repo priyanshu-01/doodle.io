@@ -7,7 +7,6 @@ import 'chooseWord.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiver/async.dart';
 import 'guesserScreen.dart';
-
 String choosenWord;
 bool timerRunning2 = false;
 //bool madeIt2=false;
@@ -17,18 +16,13 @@ class PainterScreen extends StatefulWidget {
 }
 
 class _PainterScreenState extends State<PainterScreen> {
-  double x;
 int i;
   var subs;
   int curr = 90;
   int star = 90;
   @override
   Widget build(BuildContext context) {
-    if(guessersId.length<=5)
-    i=50* guessersId.length;
-    else
-    i=250;
-    x= i.toDouble();
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -64,68 +58,7 @@ int i;
             ),
           ),
           //stack child 2 down
-          Container(
-            // color: Colors.red,
-            // constraints: BoxConstraints.expand(),
-            height: denCanvasLength,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-               
-                Container(
-                  alignment: Alignment.bottomCenter,
-                  //    color: Colors.blue,
-                  height: denCanvasLength-15,
-                  width: 50.0,
-                  child: Container(
-                  //  color: Colors.blue,
-                    height: x,
-                    child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      reverse: true,
-                      itemCount: guessersId.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(5.0),
-                         child:
-                           (playersId.indexOf(
-                                  guessersId[index]
-                                )==-1)?Container():
-                           CircleAvatar(
-                            radius: 20.0,
-                            backgroundColor: Colors.grey[100],
-                            backgroundImage: NetworkImage(
-                              playersImage[
-                                playersId.indexOf(
-                                  guessersId[index]
-                                )
-                              ]
-                              
-                              ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Container(
-                  // color: Colors.blue,
-                  //  height: guessCanvasLength,
-                  //width: 50.0,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20.0, right: 10.0),
-                    child: CircleAvatar(
-                      radius: 20.0,
-                      backgroundColor: Colors.grey[100],
-                      backgroundImage:
-                          NetworkImage(playersImage[playersId.indexOf(denId)]),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          )
+          stackChild('painter')
         ]),
       ),
     );
@@ -142,14 +75,10 @@ int i;
         }
         return Painter();
       } else {
-        // if (counter - 1 != guesses)
-        //   return WordWas();
-        // else {
         timerRunning2 = false;
         subs.cancel();
         curr = 90;
         return WordWas();
-        //}
       }
     } else
       return ChooseWordDialog();

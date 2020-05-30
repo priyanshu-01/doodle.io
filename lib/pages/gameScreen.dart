@@ -9,7 +9,13 @@ List displayNames;
 List displayScores;
 String docId;
 Widget gameScreen ()  {
-    return GuesserScreen();
+  int i;
+    if(guessersId.length<=5)
+    i=50* guessersId.length;
+    else
+    i=250;
+    leftSideContainerHeight= i.toDouble();
+    // return GuesserScreen();
       if(round<=numberOfRounds){
         if(denId==identity)
           {

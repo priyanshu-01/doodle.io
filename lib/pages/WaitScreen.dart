@@ -17,13 +17,13 @@ class _WaitScreenState extends State<WaitScreen> {
 String waitDenId;
   int end = 15+(counter*2);
     void initState() {
-      if(controlAvatar!=null)
-    controlAvatar.value= 0.0;           //makes a big photo
+    avatarAnimation = animateAvatar.reset;
     waitDenId=denId;
     waitCurrent=0;
     startTimer();
     super.initState();
   }
+
   @override
   void dispose() {
       waitCurrent=0;
