@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 import 'reactionWidget.dart';
+import '../pages/selectRoom.dart';
 class ReactionView{
     BuildContext context;
   Image reaction;
   Image sender;
   double top;
-  double bottom;
-  double right=20;
   OverlayEntry overlayEntry;
   ReactionView(
     this.context,
     {
     this.reaction,
     this.sender,
-    this.right,
-    this.bottom,
     this.top,
-
   });
   
    OverlayEntry buildOverlay(){
@@ -24,10 +20,14 @@ class ReactionView{
         return Stack(
        children: <Widget>[
              Positioned(
+           height: totalLength* 0.065,
+           right: 10.0,
            top: top,
-           bottom: bottom,
-           right: right,
-         child: ReactionWidget(reaction:reaction, sender: sender),
+         child: ReactionWidget(
+           reaction:reaction,
+            sender: sender,
+            hide: hide,
+            ),
        ),]
      );
     },);

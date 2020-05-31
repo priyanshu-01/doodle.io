@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:scribbl/reactions/reaction_view.dart';
+import 'package:scribbl/services/authHandler.dart';
 import '../pages/selectRoom.dart';
 import '../pages/guesserScreen.dart';
 List reactions = [
@@ -15,6 +17,10 @@ class AnimatedGift extends StatefulWidget {
 
 class _AnimatedGiftState extends State<AnimatedGift> with TickerProviderStateMixin {
 RelativeRectTween relativeRectTween;
+
+AnimationController controllerGiftSize;
+CurvedAnimation curvedAnimationGiftSize;
+
 @override
 void initState() { 
     controlGift = AnimationController(
@@ -23,14 +29,23 @@ void initState() {
       lowerBound: 0.0,
       upperBound: 1.0,
 
-    );
+    )..addStatusListener((status) {
+          if(status==AnimationStatus.completed)
+          controllerGiftSize.forward();
+          if(status==AnimationStatus.dismissed)
+          controllerGiftSize.reset();
+     });
+
+   
+    controllerGiftSize=AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    curvedAnimationGiftSize= CurvedAnimation(parent: controllerGiftSize,curve: Curves.easeInOutBack);
+
     relativeRectTween= RelativeRectTween(
          begin: RelativeRect.fromLTRB(
            0.0,
            0.0,
            totalWidth,
            totalLength*0.4,
-           
          ),
          end: RelativeRect.fromLTRB(
            0.0,
@@ -40,9 +55,14 @@ void initState() {
          )
 
     );
-    // controlGift.addListener(() { });
   super.initState();
 }
+
+@override
+  void dispose() {
+    controllerGiftSize.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return (keyboardState)?Container():
@@ -62,28 +82,40 @@ void initState() {
             constraints: BoxConstraints.expand(),
             width: totalWidth-20,
            child: 
-          //  SvgPicture.asset('assets/reactions/fire2.svg',
-          //  semanticsLabel: 'fire',
-          //  ),
           GridView.builder(
             itemCount: reactions.length,
              scrollDirection: Axis.horizontal,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2), 
             itemBuilder: (BuildContext context, int index){
-              return   Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color:Colors.grey[200]),
-                    borderRadius: BorderRadius.circular(10.0),
-                                        color: Colors.grey[100],
+              return   InkWell(
+                onTap: (){
+                  ReactionView(context,
+                  top: totalLength*0.3,
+                  sender: Image(image: NetworkImage(imageUrl)),
+                  reaction: Image(image: AssetImage(reactions[index]),),
+                  )
+                  ..show();
+                  controlGift.reverse();
+                },
+                
+                   child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: ScaleTransition(
+                    scale: curvedAnimationGiftSize,
+                                      child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color:Colors.grey[200]),
+                        borderRadius: BorderRadius.circular(40.0),
+                                            color: Colors.grey[100],
 
+                      ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Image(image: AssetImage(reactions[index])),
+                        ),
+                      ),
                   ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Image(image: AssetImage(reactions[index])),
-                    ),
-                  ),
+                ),
               );
             })
 
