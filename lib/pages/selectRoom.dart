@@ -14,7 +14,8 @@ import 'loginPage.dart';
 import '../main.dart';
 import 'package:connectivity/connectivity.dart';
 import 'dart:io';
-
+import '../reactions/listenReactions.dart';
+ReactionListener reactionListener;
 double effectiveLength = 0;
 String userNam;
 String identity = uid;
@@ -314,6 +315,9 @@ class _SelectRoomState extends State<SelectRoom> {
 
   @override
   void initState() {
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+              reactionListener=ReactionListener();
+    });
     _connectivity.initialise();
     _connectivity.myStream.listen((source) {
       setState(() => _source = source);

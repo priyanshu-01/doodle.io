@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'reactionWidget.dart';
 import '../pages/selectRoom.dart';
 class ReactionView{
-    BuildContext context;
+  int placeHolder;
+  BuildContext context;
   Image reaction;
   Image sender;
   double top;
@@ -12,7 +13,6 @@ class ReactionView{
     {
     this.reaction,
     this.sender,
-    this.top,
   });
   
    OverlayEntry buildOverlay(){
@@ -32,7 +32,10 @@ class ReactionView{
      );
     },);
    }
- void show(){
+ void show(int i){
+   placeHolder=i;
+   top=reactionListener.vacantSpaces[i];
+   
    if (overlayEntry == null) {
       overlayEntry = buildOverlay();
    Overlay.of(context).insert(overlayEntry);
@@ -41,5 +44,6 @@ class ReactionView{
   void hide() {
     overlayEntry?.remove();
     overlayEntry = null;
+    reactionListener.spaces[placeHolder]=false;
   }
 }

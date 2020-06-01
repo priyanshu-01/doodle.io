@@ -9,6 +9,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:share/share.dart';
 import '../services/authHandler.dart';
 import 'guesserScreen.dart';
+import '../reactions/listenReactions.dart';
 bool game;
 bool wordChosen;
 String host;
@@ -27,13 +28,13 @@ List finalScore = new List();
 int round = 1;
 double denCanvasLength;
 int numberOfRounds = 3;
-var a;
+Map a={};
 List chat = [];
 bool flag = false;
 String documentid;
 List denChangeTrack;
 Map<String,dynamic> record;
-  double leftSideContainerHeight;
+double leftSideContainerHeight;
 class CreateRoom extends StatelessWidget {
   final int id;
    CreateRoom({Key key, this.id}) : super(key: key);
@@ -55,6 +56,9 @@ class CreateRoom extends StatelessWidget {
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                   reactionListener.listenReactions(context);
+                  });
                 if (snapshot.connectionState==ConnectionState.waiting || snapshot == null  ) return Container();
                  else{
                 a = snapshot.data.documents[0].data;
@@ -280,8 +284,10 @@ class CreateRoom extends StatelessWidget {
                       ),
                     ),
                   );
-                else
-                  return gameScreen();
+                else{
+                   return gameScreen();
+
+                }
                   }
               },
             ),

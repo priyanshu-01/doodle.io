@@ -3,6 +3,8 @@ import 'package:scribbl/reactions/reaction_view.dart';
 import 'package:scribbl/services/authHandler.dart';
 import '../pages/selectRoom.dart';
 import '../pages/guesserScreen.dart';
+import '../pages/room.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 List reactions = [
   'assets/reactions/thumbUp.png',
   'assets/reactions/thumbDown.png',
@@ -16,6 +18,7 @@ class AnimatedGift extends StatefulWidget {
 }
 
 class _AnimatedGiftState extends State<AnimatedGift> with TickerProviderStateMixin {
+bool switcher= false;  
 RelativeRectTween relativeRectTween;
 
 AnimationController controllerGiftSize;
@@ -89,12 +92,8 @@ void initState() {
             itemBuilder: (BuildContext context, int index){
               return   InkWell(
                 onTap: (){
-                  ReactionView(context,
-                  top: totalLength*0.3,
-                  sender: Image(image: NetworkImage(imageUrl)),
-                  reaction: Image(image: AssetImage(reactions[index]),),
-                  )
-                  ..show();
+                  switcher=!switcher;
+                  addReaction(index);
                   controlGift.reverse();
                 },
                 
@@ -125,4 +124,14 @@ void initState() {
       ),
     );
   }
+  
+   Future<void> addReaction(int index) async{
+     await Firestore.instance
+     .collection('rooms')
+     .document(documentid)
+     .updateData({
+       '$identity reaction': '$index $switcher'
+     });
+   }
+   
 }
