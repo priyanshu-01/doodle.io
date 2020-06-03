@@ -354,27 +354,58 @@ Widget stackChild(String position) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Container(
-          alignment: AlignmentDirectional.bottomCenter,
+          alignment: AlignmentDirectional.topCenter,
           height: position == 'guesser'
-              ? guessCanvasLength - 10
+              ? guessCanvasLength - 15
               : denCanvasLength - 15,
           width: 50.0,
           child: Container(
-            height: leftSideContainerHeight,
+            height: checkLeftSideContainerHeight(position),
             child: ListView.builder(
-              reverse: true,
-              itemCount: guessersId.length,
+              reverse: false,
+              itemCount: playersId.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.all(5.0),
-                  child: (playersId.indexOf(guessersId[index]) == -1)
-                      ? Container()
-                      : CircleAvatar(
+                  child: (guessersId.indexOf(playersId[index]) == -1)
+                      ? 
+
+                     (denId==playersId[index])?
+                              CircleAvatar(
+                                  radius: 20.0,
+                                  backgroundColor: Colors.black,
+                                  child: CircleAvatar(
+                                    radius: 18.5,
+                                    backgroundImage: NetworkImage(playersImage[
+                                    // playersId.indexOf(guessersId[index])
+                                    index
+                                      ]),
+                                      backgroundColor: Colors.grey[100],
+                                  ),
+                                ):
+                              CircleAvatar(
+                                  radius: 20.0,
+                                  backgroundColor: Colors.grey[100],
+                                  backgroundImage: NetworkImage(playersImage[
+                                    // playersId.indexOf(guessersId[index])
+                                    index
+                                      ]),
+                                )
+
+
+                        :CircleAvatar(
                           radius: 20.0,
-                          backgroundColor: Colors.grey[100],
-                          backgroundImage: NetworkImage(playersImage[
-                              playersId.indexOf(guessersId[index])]),
-                        ),
+                          backgroundColor: Colors.green[600],
+                          child: CircleAvatar(
+                            radius: 18.5,
+                            backgroundImage: NetworkImage(playersImage[
+                             // playersId.indexOf(guessersId[index])
+                             index
+                              ]),
+                              backgroundColor: Colors.grey[100],
+                          ),
+                        )
+                      
                 );
               },
             ),
@@ -397,6 +428,18 @@ Widget stackChild(String position) {
     ),
   );
 }
+ 
+double checkLeftSideContainerHeight(String position){
+  double tempHeight;
+  int len;
+  (position=='guesser')?tempHeight=guessCanvasLength-15:tempHeight=denCanvasLength-15;
+  int i = (tempHeight~/50);
+  if(i<playersId.length)
+  len= i*50;
+  else
+  len= playersId.length*50;
+  return len.toDouble();
+} 
 
 Future<void> sendMessage() async {
   await Firestore.instance
