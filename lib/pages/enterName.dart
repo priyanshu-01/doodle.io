@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,16 +15,22 @@ class EnterName extends StatefulWidget {
   _EnterNameState createState() => _EnterNameState();
 }
 class _EnterNameState extends State<EnterName> {
+  StreamSubscription subscription;
   @override
   void initState() { 
     super.initState();
     keyboard = KeyboardVisibility.isVisible;
-    KeyboardVisibility.onChange.listen((bool visible) {
+    subscription=KeyboardVisibility.onChange.listen((bool visible) {
       setState(() {
         keyboard = visible;
       });
     });
     getAvatars();
+  }
+  @override
+  void dispose() { 
+    subscription.cancel();
+    super.dispose();
   }
   Future<void> getAvatars() async{
     av = await Firestore.instance

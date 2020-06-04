@@ -315,9 +315,7 @@ class _SelectRoomState extends State<SelectRoom> {
 
   @override
   void initState() {
-     WidgetsBinding.instance.addPostFrameCallback((_) {
-              reactionListener=ReactionListener();
-    });
+     
     _connectivity.initialise();
     _connectivity.myStream.listen((source) {
       setState(() => _source = source);

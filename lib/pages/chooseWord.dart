@@ -6,20 +6,30 @@ import 'dart:math';
 import 'painterScreen.dart';
 import 'selectRoom.dart';
 
-var displayWords = [' ', ' ', ' '];
 //bool wc = false;
+
+class ChooseWordDialog extends StatefulWidget {
+  @override
+  _ChooseWordDialogState createState() => _ChooseWordDialogState();
+}
+
+class _ChooseWordDialogState extends State<ChooseWordDialog> {
+List displayWords = [' ', ' ', ' '];
+
 Color wordBack;
+
 Color wordText;
-
-class ChooseWordDialog extends StatelessWidget {
-
+@override
+  void initState() {
+        getWords();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     //wordBack= Color(0xFFFFE5B4);
     wordBack = null;
     // wordText=Color(0xFF1A2F77);
     wordText = Colors.black;
-    getWords();
     return Container(
       // decoration: BoxDecoration(
       //     image: DecorationImage(

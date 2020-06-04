@@ -520,7 +520,7 @@ Widget chatList() {
                         radius: 14.0,
                         backgroundColor: Colors.grey[100],
                         backgroundImage:
-                            NetworkImage(playersImage[playersId.indexOf(i)]),
+                            NetworkImage(playersImage[playersId.indexOf(i)]), //error by crashlytics
                       )
                     ],
                   ),

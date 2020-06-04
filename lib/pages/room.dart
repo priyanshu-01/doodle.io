@@ -10,6 +10,7 @@ import 'package:share/share.dart';
 import '../services/authHandler.dart';
 import 'guesserScreen.dart';
 import '../reactions/listenReactions.dart';
+import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 bool game;
 bool wordChosen;
 String host;
@@ -34,12 +35,23 @@ bool flag = false;
 String documentid;
 List denChangeTrack;
 Map<String,dynamic> record;
-class CreateRoom extends StatelessWidget {
+class CreateRoom extends StatefulWidget {
   final int id;
    CreateRoom({Key key, this.id}) : super(key: key);
+
+  @override
+  _CreateRoomState createState() => _CreateRoomState();
+}
+
+class _CreateRoomState extends State<CreateRoom> {
+  @override
+void initState() { 
+  reactionListener=ReactionListener();
+  super.initState();
+}
   @override
   Widget build(BuildContext context) {
-    roomID = id;
+    roomID = widget.id;
     // if(round>numberOfRounds)
     // {print('should return result');
     // return Result();}
@@ -51,7 +63,7 @@ class CreateRoom extends StatelessWidget {
             child: StreamBuilder<QuerySnapshot>(
               stream: Firestore.instance
                   .collection('rooms')
-                  .where('id', isEqualTo: id)
+                  .where('id', isEqualTo: widget.id)
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -126,7 +138,7 @@ class CreateRoom extends StatelessWidget {
                                         padding: const EdgeInsets.only(
                                             left: 12.0, right: 12.0),
                                         child: Text(
-                                          'Room id : $id',
+                                          'Room id : ${widget.id}',
                                           style: GoogleFonts.quicksand(
                                               fontSize: 25.0,
                                               color: Colors.black),
@@ -459,7 +471,23 @@ int r = 3;
 class _DisplayRoundState extends State<DisplayRound> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Center(
+          child: StepperSwipe(
+        initialValue: r,
+       onChanged: (int val){r=val;},
+       direction: Axis.horizontal,
+       secondIncrementDuration: Duration(milliseconds: 500),
+       withPlusMinus: true,
+      dragButtonColor: Colors.pink,
+       iconsColor: Colors.pink,
+       speedTransitionLimitCount: 3,
+       ),
+    );
+    
+    
+    
+    
+    Container(
       alignment: Alignment.center,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
