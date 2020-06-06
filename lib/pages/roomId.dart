@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'room.dart';
+import 'room/room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'roomCreatingScreen.dart';
 bool mistake = false;

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'painterScreen.dart';
 import 'guesserScreen.dart';
-import 'room.dart';
+import 'room/room.dart';
 import 'selectRoom.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'result.dart';
 List displayNames;
 List displayScores;
 String docId;
-Widget gameScreen ()  {
-  
+class GameScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    
     // return GuesserScreen();
       if(round<=numberOfRounds){
         if(denId==identity)
@@ -35,6 +37,7 @@ Widget gameScreen ()  {
         print('still in gameScreen');
         return Result();
       }
+  }
 }
 Future<void> delDoc() async{
      await Firestore.instance.collection('rooms').document(docId).delete().catchError((e){
@@ -43,7 +46,7 @@ Future<void> delDoc() async{
          });
 }
 Future<void> updateDimension() async{
-            if(a['denCanvasLength']!=denCanvasLength)
+            if(roomData['denCanvasLength']!=denCanvasLength)
                       await Firestore.instance
                       .collection('rooms')
                         .document(documentid)

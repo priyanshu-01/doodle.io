@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scribbl/pages/painterScreen.dart';
-import 'room.dart';
+import 'room/room.dart';
 import 'package:quiver/async.dart';
 import 'selectRoom.dart';
 import 'package:google_fonts/google_fonts.dart';

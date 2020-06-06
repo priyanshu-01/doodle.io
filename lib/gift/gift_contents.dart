@@ -3,7 +3,7 @@ import 'package:scribbl/reactions/reaction_view.dart';
 import 'package:scribbl/services/authHandler.dart';
 import '../pages/selectRoom.dart';
 import '../pages/guesserScreen.dart';
-import '../pages/room.dart';
+import '../pages/room/room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 List reactions = [
   'assets/reactions/thumbUp.png',

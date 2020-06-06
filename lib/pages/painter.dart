@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'room.dart';
+import 'room/room.dart';
 import 'timer.dart';
 import 'package:google_fonts/google_fonts.dart';
 

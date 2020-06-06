@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../services/authService.dart';
 import '../services/authHandler.dart';
 import 'roomId.dart';
-import 'room.dart';
+import 'room/room.dart';
 import 'dart:math';
 import 'roomCreatingScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -396,7 +396,12 @@ class MyConnectivity {
     } on SocketException catch (_) {
       isOnline = false;
     }
+    try{
     controller.sink.add({result: isOnline});
+    }
+    catch(Exception){
+      print(Exception);
+    }
   }
 
   void disposeStream() => controller.close();

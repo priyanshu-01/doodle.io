@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../pages/room.dart';
+import '../pages/room/room.dart';
 import 'reaction_view.dart';
 import '../pages/selectRoom.dart';
 import '../gift/gift_contents.dart';
@@ -25,7 +25,7 @@ void listenReactions(BuildContext context){
   if(reactionRecord.length!=playersId.length)
   initialiseRecord();
 
-  a.forEach((key,value){
+  roomData.forEach((key,value){
     if(reactionRecord.containsKey(key) && value !=reactionRecord[key]  )
     { 
      String keyStr= key.toString();

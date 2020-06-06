@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'room.dart';
+import 'room/room.dart';
 import 'timer.dart';
 import 'guesserScreen.dart';
 int ind1 = 0, ind2 = 0;
@@ -39,25 +39,25 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     pointsG = [];
-    if (a['length'] == 0) {
+    if (roomData['length'] == 0) {
       pointsG = [];
       ind1 = 0;
       ind2 = 0;
     }
     pStore = pointerVal;
-    List dex = a['indices'];
-    if (a['pointer'] == 0)
+    List dex = roomData['indices'];
+    if (roomData['pointer'] == 0)
       ind1 = 0;
     else
-       ind1 = dex[a['pointer'] - 1];
-    ind2 = dex[a['pointer']];
-    pointerVal = a['pointer'];
+       ind1 = dex[roomData['pointer'] - 1];
+    ind2 = dex[roomData['pointer']];
+    pointerVal = roomData['pointer'];
     refactor();
     if (pStore != pointerVal) //undertesting if
     {
-      if (pStore > pointerVal && a['length'] != 0) {
-        ind1 = dex[a['pointer']];
-        ind2 = dex[a['pointer'] + 1]; //error caught by crashlytics
+      if (pStore > pointerVal && roomData['length'] != 0) {
+        ind1 = dex[roomData['pointer']];
+        ind2 = dex[roomData['pointer'] + 1]; //error caught by crashlytics
         controller.duration= Duration(milliseconds: (ind2-ind1)*17);
         controller.reverse(from: 1.0);
       } 
@@ -155,13 +155,13 @@ class Signature extends CustomPainter {
 }
 
 void refactor() {
-  for (int i = 0; i < a['length']; i++) {
-    if (a['xpos'][i] == null) {
+  for (int i = 0; i < roomData['length']; i++) {
+    if (roomData['xpos'][i] == null) {
       pointsG = pointsG + [null];
       continue;
     }
     pointsG =
-        pointsG + [Offset(alterValue2(a['xpos'][i]), alterValue(a['ypos'][i]))];
+        pointsG + [Offset(alterValue2(roomData['xpos'][i]), alterValue(roomData['ypos'][i]))];
   }
 }
 
