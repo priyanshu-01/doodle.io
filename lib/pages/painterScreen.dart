@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:scribbl/pages/Guesser_Page/Widgets/chat.dart';
 import 'package:scribbl/pages/selectRoom.dart';
 import 'package:scribbl/pages/wordWas.dart';
+import 'Guesser_Page/Widgets/stackContent.dart';
 import 'painter.dart';
 import 'room/room.dart';
 import 'chooseWord.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiver/async.dart';
-import 'guesserScreen.dart';
 String choosenWord;
 bool timerRunning2 = false;
 //bool madeIt2=false;
@@ -39,26 +40,13 @@ int i;
                 ),
                 Flexible(
                   flex: 4,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 1.0, color: textAndChat),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(35),
-                          topRight: Radius.circular(35),
-                        ),
-                        // color: Colors.white
-                        //  color: Color(0xFF4BCFFA),
-                        color: textAndChat
-                        // color: Colors.blueAccent[100]
-                        ),
-                    child: chatList(),
-                  ),
+                  child: ChatBox(),
                 )
               ],
             ),
           ),
           //stack child 2 down
-          stackChild('painter')
+          StackContent(position: 'painter',)
         ]),
       ),
     );

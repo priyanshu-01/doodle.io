@@ -7,209 +7,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../selectRoom.dart';
 import 'room.dart';
 int roundsLimit = 3;
-class DisplayRound extends StatefulWidget {
-  @override
-  _DisplayRoundState createState() => _DisplayRoundState();
-}
-
-class _DisplayRoundState extends State<DisplayRound> {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: StepperSwipe(
-        initialValue: roundsLimit,
-        onChanged: (int val) {
-          roundsLimit = val;
-        },
-        direction: Axis.horizontal,
-        secondIncrementDuration: Duration(milliseconds: 500),
-        withPlusMinus: true,
-        dragButtonColor: Colors.pink,
-        iconsColor: Colors.pink,
-        speedTransitionLimitCount: 3,
-      ),
-    );
-
-    Container(
-      alignment: Alignment.center,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.chevron_left,
-              size: 45.0,
-            ),
-            onPressed: () {
-              (roundsLimit == 1)
-                  ? null
-                  : setState(() {
-                      roundsLimit = roundsLimit - 1;
-                    });
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(
-              '$roundsLimit',
-              style: TextStyle(
-                fontSize: 20.0,
-              ),
-            ),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.chevron_right,
-              size: 45.0,
-            ),
-            onPressed: () {
-              (roundsLimit == 5)
-                  ? null
-                  : setState(() {
-                      roundsLimit = roundsLimit + 1;
-                    });
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text('Rounds',
-                style: TextStyle(
-                  fontSize: 20.0,
-                )),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class WaitingForFriends extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text(
-              'Waiting for friends to join...',
-              style: TextStyle(color: Color(0xFF45454D)),
-            ),
-            SpinKitThreeBounce(
-                  color: Colors.black,
-                  size: 20.0,
-                ),
-          ],
-        ),
-      );
-  }
-}
-
-class StartStatus extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    if (identity == hostId)
-      return RaisedButton(
-        onPressed: (counter > 1)
-            ? () {
-                startGame();
-              }
-            : null,
-        disabledColor: Colors.pink[100],
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 25.0),
-          child: Text('Start Game',
-              style: GoogleFonts.notoSans(
-                  color: Color(0xFFFFF1E9), fontSize: 20.0)),
-        ),
-        color: Color(0xFFFF4893),
-      );
-    else
-      return Padding(
-       padding: const EdgeInsets.only(top: 14.0, bottom: 12.0),
-        child: FractionallySizedBox(
-          widthFactor: 0.7,
-          child: Text('$host will start the Game',
-              textAlign: TextAlign.center,
-              style:
-                  GoogleFonts.notoSans(color: Color(0xFFFF4893), fontSize: 20.0)),
-        ),
-      );
-  }
-
-  Future<void> startGame() async {
-    await Firestore.instance
-        .collection('rooms')
-        .document(documentid)
-        .updateData({'game': true, 'numberOfRounds': roundsLimit});
-  }
-}
-
-class JoiningList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 18.0),
-      child: Container(
-        width: totalWidth * 0.7,
-        child: Card(
-          elevation: 15.0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12.0),
-            child: ListView.builder(
-                itemCount: counter,
-                itemBuilder: (BuildContext context, int a) {
-                  return Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 4.0, left: 4.0, right: 4.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xFFFFD5D5)),
-                            borderRadius: BorderRadius.circular(12.0),
-                            color: Color(0xFFFFD5D5),
-                          ),
-                          child: Row(
-                            // mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 9.0),
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.grey[100],
-                                    backgroundImage:
-                                        NetworkImage(playersImage[a]),
-                                    radius: 20.0,
-                                  )),
-                              Text(
-                                players[a],
-                                style: GoogleFonts.notoSans(
-                                    fontSize: 20.0, color: Color(0xFF45454D)),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      //  Divider(color: Color(0xFFFFEBCD),
-                      //  thickness: 2.0,
-                      //  indent: 60.0,
-                      //  )
-                    ],
-                  );
-                }),
-          ),
-        ),
-      ),
-    );
-  }
-}
+// class DisplayRound extends StatefulWidget {
+//   @override
+//   _DisplayRoundState createState() => _DisplayRoundState();
+// }
 
 class RoomIdentity extends StatelessWidget {
   @override
@@ -279,6 +80,210 @@ class RoomIdentity extends StatelessWidget {
 }
 
 
+class JoiningList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 18.0),
+      child: Container(
+        width: totalWidth * 0.7,
+        child: Card(
+          elevation: 15.0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 12.0),
+            child: ListView.builder(
+                itemCount: counter,
+                itemBuilder: (BuildContext context, int a) {
+                  return Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 4.0, left: 4.0, right: 4.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Color(0xFFFFD5D5)),
+                            borderRadius: BorderRadius.circular(12.0),
+                            color: Color(0xFFFFD5D5),
+                          ),
+                          child: Row(
+                            // mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 9.0),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.grey[100],
+                                    backgroundImage:
+                                        NetworkImage(playersImage[a]),
+                                    radius: 20.0,
+                                  )),
+                              Text(
+                                players[a],
+                                style: GoogleFonts.notoSans(
+                                    fontSize: 20.0, color: Color(0xFF45454D)),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      //  Divider(color: Color(0xFFFFEBCD),
+                      //  thickness: 2.0,
+                      //  indent: 60.0,
+                      //  )
+                    ],
+                  );
+                }),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class DisplayRound extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: StepperSwipe(
+        initialValue: roundsLimit,
+        onChanged: (int val) {
+          roundsLimit = val;
+        },
+        direction: Axis.horizontal,
+        secondIncrementDuration: Duration(milliseconds: 500),
+        withPlusMinus: true,
+        dragButtonColor: Colors.pink,
+        iconsColor: Colors.pink,
+        speedTransitionLimitCount: 3,
+      ),
+    );
+
+    // Container(
+    //   alignment: Alignment.center,
+    //   child: Row(
+    //     crossAxisAlignment: CrossAxisAlignment.center,
+    //     mainAxisSize: MainAxisSize.min,
+    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //     children: <Widget>[
+    //       IconButton(
+    //         icon: Icon(
+    //           Icons.chevron_left,
+    //           size: 45.0,
+    //         ),
+    //         onPressed: () {
+    //           (roundsLimit == 1)
+    //               ? null
+    //               : setState(() {
+    //                   roundsLimit = roundsLimit - 1;
+    //                 });
+    //         },
+    //       ),
+    //       Padding(
+    //         padding: const EdgeInsets.only(top: 8.0),
+    //         child: Text(
+    //           '$roundsLimit',
+    //           style: TextStyle(
+    //             fontSize: 20.0,
+    //           ),
+    //         ),
+    //       ),
+    //       IconButton(
+    //         icon: Icon(
+    //           Icons.chevron_right,
+    //           size: 45.0,
+    //         ),
+    //         onPressed: () {
+    //           (roundsLimit == 5)
+    //               ? null
+    //               : setState(() {
+    //                   roundsLimit = roundsLimit + 1;
+    //                 });
+    //         },
+    //       ),
+    //       Padding(
+    //         padding: const EdgeInsets.only(top: 8.0),
+    //         child: Text('Rounds',
+    //             style: TextStyle(
+    //               fontSize: 20.0,
+    //             )),
+    //       ),
+    //     ],
+    //   ),
+    // );
+  }
+}
+
+class WaitingForFriends extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Text(
+              'Waiting for friends to join...',
+              style: TextStyle(color: Color(0xFF45454D)),
+            ),
+            SpinKitThreeBounce(
+                  color: Colors.black,
+                  size: 20.0,
+                ),
+          ],
+        ),
+      );
+  }
+}
+
+
+class StartButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+        onPressed: (counter > 1)
+            ? () {
+                startGame();
+              }
+            : null,
+        disabledColor: Colors.pink[100],
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 25.0),
+          child: Text('Start Game',
+              style: GoogleFonts.notoSans(
+                  color: Color(0xFFFFF1E9), fontSize: 20.0)),
+        ),
+        color: Color(0xFFFF4893),
+      );
+  }
+  Future<void> startGame() async {
+    await Firestore.instance
+        .collection('rooms')
+        .document(documentid)
+        .updateData({'game': true, 'numberOfRounds': roundsLimit});
+  }
+}
+
+class StartInformation extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+       padding: const EdgeInsets.only(top: 14.0, bottom: 12.0),
+        child: FractionallySizedBox(
+          widthFactor: 0.7,
+          child: Text('$host will start the Game',
+              textAlign: TextAlign.center,
+              style:
+                  GoogleFonts.notoSans(color: Color(0xFFFF4893), fontSize: 20.0)),
+        ),
+      );
+  }
+}
+
 
 class MeetingPage extends StatelessWidget {
   @override
@@ -292,7 +297,7 @@ class MeetingPage extends StatelessWidget {
               Flexible(flex: 2,child: RoomIdentity()),
               Flexible(flex: 4, child: JoiningList()),
               Flexible(child:   (identity == hostId)?DisplayRound():WaitingForFriends()),
-              Flexible(flex: 2,child: StartStatus()),
+              Flexible(flex: 2,child: (identity == hostId)?StartButton():StartInformation()),
             ],
           ),
         ),

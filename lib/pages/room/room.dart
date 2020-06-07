@@ -5,7 +5,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import '../gameScreen.dart';
 import '../selectRoom.dart';
 import '../../services/authHandler.dart';
-import '../guesserScreen.dart';
+import '../Guesser_Page/guesserScreen.dart';
 import '../../reactions/listenReactions.dart';
 import 'meetingPage.dart';
 bool game;

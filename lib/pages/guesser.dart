@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'room/room.dart';
 import 'timer.dart';
-import 'guesserScreen.dart';
+import 'Guesser_Page/guesserScreen.dart';
 int ind1 = 0, ind2 = 0;
 List<Offset> pointsG = <Offset>[];
 int indStore;
