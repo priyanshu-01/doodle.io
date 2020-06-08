@@ -133,10 +133,9 @@ class PainterState extends State<Painter> {
             //         });
             //       },
             child: new CustomPaint(
-              child: Card(
-                elevation: 10.0,
-                child: Container(),
-              ),
+              child: Container(
+                color: Colors.white,
+                constraints: BoxConstraints.expand(),),
               foregroundPainter:
                   new Signature(points: pointsD, indices: indices, p: p),
               size: Size.infinite,
