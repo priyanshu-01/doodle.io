@@ -83,19 +83,15 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
                         points: pointsG,
                         animation: controller,
                       ),
-                      child: Card(
-                        shadowColor: Colors.white,
-                        elevation: 20.0,
-                        child: Container(
-                            //                     decoration: BoxDecoration(
-                            //                     border: Border.all(color: Colors.black,width: 3.0) ,
-                            //                     image: new DecorationImage(
-                            //   fit: BoxFit.fitWidth,
-                            //   colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.10), BlendMode.dstATop),
-                            //   image: new AssetImage('assets/images/scibb.jpg')
-                            // ),)
-                            ),
-                      ),
+                      child: Container(
+                          //                     decoration: BoxDecoration(
+                          //                     border: Border.all(color: Colors.black,width: 3.0) ,
+                          //                     image: new DecorationImage(
+                          //   fit: BoxFit.fitWidth,
+                          //   colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.10), BlendMode.dstATop),
+                          //   image: new AssetImage('assets/images/scibb.jpg')
+                          // ),)
+                          ),
                     ),
                   );
                 }),
