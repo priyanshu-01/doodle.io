@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'painterScreen.dart';
-import 'Guesser_page/guesserScreen.dart';
+import 'guesserScreen.dart';
 import 'room/room.dart';
 import 'selectRoom.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
