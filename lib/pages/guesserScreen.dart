@@ -109,9 +109,9 @@ class _GuesserScreenState extends State<GuesserScreen> {
             child: Container(
               decoration: BoxDecoration(
                   border: Border.all(width: 1.0, color: textAndChat),
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25.0),
-                      topRight: Radius.circular(25.0)),
+                  // borderRadius: BorderRadius.only(
+                  //     topLeft: Radius.circular(25.0),
+                  //     topRight: Radius.circular(25.0)),
                   color: textAndChat
                   //  color: Color(0xFFFFF1E9)
                   //color: Color(0xFFFABBB9),

@@ -42,10 +42,10 @@ int i;
                   child: Container(
                     decoration: BoxDecoration(
                         border: Border.all(width: 1.0, color: textAndChat),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(35),
-                          topRight: Radius.circular(35),
-                        ),
+                        // borderRadius: BorderRadius.only(
+                        //   topLeft: Radius.circular(35),
+                        //   topRight: Radius.circular(35),
+                        // ),
                         // color: Colors.white
                         //  color: Color(0xFF4BCFFA),
                         color: textAndChat

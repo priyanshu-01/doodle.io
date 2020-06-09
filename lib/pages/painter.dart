@@ -39,106 +39,108 @@ class PainterState extends State<Painter> {
       children: <Widget>[
         Flexible(
           flex: 7,
-          child: new GestureDetector(
-            onPanStart: (DragStartDetails details) {
-              setState(() {
-                RenderBox object = context.findRenderObject();
-                Offset _localPosition =
-                    object.globalToLocal(details.globalPosition);
-                if (indices[p] != tempInd) {
-                  print('success');
-                  listX = truncate3(listX, indices[p]);
-                  listY = truncate3(listY, indices[p]);
-                  pointsD = truncate2(pointsD, indices[p]);
-                  indices = truncate(indices, p);
-                  pointsD.add(null);
-                  listY.add(null);
-                  listX.add(null);
-                  tempInd = indices[p] + 1;
-                }
-                pointsD = new List.from(pointsD)..add(_localPosition);
-                listY.add(_localPosition.dy);
-                listX.add(_localPosition.dx);
-                tempInd++;
-                indices.add(tempInd);
-                p = p + 1;
-              });
-            },
-            onPanUpdate: (DragUpdateDetails details) {
-              setState(() {
-                RenderBox object = context.findRenderObject();
-                Offset _localPosition =
-                    object.globalToLocal(details.globalPosition);
-                pointsD = new List.from(pointsD)..add(_localPosition);
-                listY.add(_localPosition.dy);
-                listX.add(_localPosition.dx);
+          child: RepaintBoundary(
+                      child: new GestureDetector(
+              onPanStart: (DragStartDetails details) {
+                setState(() {
+                  RenderBox object = context.findRenderObject();
+                  Offset _localPosition =
+                      object.globalToLocal(details.globalPosition);
+                  if (indices[p] != tempInd) {
+                    print('success');
+                    listX = truncate3(listX, indices[p]);
+                    listY = truncate3(listY, indices[p]);
+                    pointsD = truncate2(pointsD, indices[p]);
+                    indices = truncate(indices, p);
+                    pointsD.add(null);
+                    listY.add(null);
+                    listX.add(null);
+                    tempInd = indices[p] + 1;
+                  }
+                  pointsD = new List.from(pointsD)..add(_localPosition);
+                  listY.add(_localPosition.dy);
+                  listX.add(_localPosition.dx);
+                  tempInd++;
+                  indices.add(tempInd);
+                  p = p + 1;
+                });
+              },
+              onPanUpdate: (DragUpdateDetails details) {
+                setState(() {
+                  RenderBox object = context.findRenderObject();
+                  Offset _localPosition =
+                      object.globalToLocal(details.globalPosition);
+                  pointsD = new List.from(pointsD)..add(_localPosition);
+                  listY.add(_localPosition.dy);
+                  listX.add(_localPosition.dx);
+                  tempInd++;
+                  indices[p] = tempInd;
+                });
+              },
+              onPanEnd: (DragEndDetails details) {
+                pointsD.add(null);
+                listY.add(null);
+                listX.add(null);
                 tempInd++;
                 indices[p] = tempInd;
-              });
-            },
-            onPanEnd: (DragEndDetails details) {
-              pointsD.add(null);
-              listY.add(null);
-              listX.add(null);
-              tempInd++;
-              indices[p] = tempInd;
-              Firestore.instance
-                  .collection('rooms')
-                  .document(documentid)
-                  .updateData({
-                'xpos': listX,
-                'ypos': listY,
-                'length': tempInd,
-                'indices': indices,
-                'pointer': p
-              });
-            },
-            //  onTapUp: (TapUpDetails details){
-            //     print('point drawn');
-            //         setState(() {
-            //           RenderBox obj = context.findRenderObject();
-            //           Offset _localP =
-            //   obj.globalToLocal(details.globalPosition);
-            //                if(indices[p]!=tempInd){
-            //       listX= truncate3(listX,indices[p]);
-            //       listY= truncate3(listY,indices[p]);
-            //       pointsD= truncate2(pointsD,indices[p]);
-            //        indices=truncate(indices, p);
-            //   }
-            //           pointsD.add(Offset(-1.0,-1.0));
-            //           listY.add(-1.0);
-            //           listX.add(-1.0);
-            //           tempInd=indices[p]+1;
-            //           pointsD = new List.from(pointsD)..add(_localP);
-            //           listY.add(_localP.dy);
-            //           listX.add(_localP.dx);
-            //           tempInd++;
-            //           pointsD.add(null);
-            //         listY.add(null);
-            //           listX.add(null);
-            //           tempInd++;
-            //           indices.add(tempInd);
-            //           p=p+1;
-            //           indices[p]= tempInd;
-            //           Firestore.instance
-            //           .collection('rooms')
-            //             .document(documentid)
-            //   .updateData({
-            //     'xpos': listX,
-            //     'ypos': listY,
-            //     'length' : tempInd,
-            //     'indices':indices,
-            //     'pointer': p
-            //   });
-            //         });
-            //       },
-            child: new CustomPaint(
-              child: Container(
-                color: Colors.white,
-                constraints: BoxConstraints.expand(),),
-              foregroundPainter:
-                  new Signature(points: pointsD, indices: indices, p: p),
-              size: Size.infinite,
+                Firestore.instance
+                    .collection('rooms')
+                    .document(documentid)
+                    .updateData({
+                  'xpos': listX,
+                  'ypos': listY,
+                  'length': tempInd,
+                  'indices': indices,
+                  'pointer': p
+                });
+              },
+              //  onTapUp: (TapUpDetails details){
+              //     print('point drawn');
+              //         setState(() {
+              //           RenderBox obj = context.findRenderObject();
+              //           Offset _localP =
+              //   obj.globalToLocal(details.globalPosition);
+              //                if(indices[p]!=tempInd){
+              //       listX= truncate3(listX,indices[p]);
+              //       listY= truncate3(listY,indices[p]);
+              //       pointsD= truncate2(pointsD,indices[p]);
+              //        indices=truncate(indices, p);
+              //   }
+              //           pointsD.add(Offset(-1.0,-1.0));
+              //           listY.add(-1.0);
+              //           listX.add(-1.0);
+              //           tempInd=indices[p]+1;
+              //           pointsD = new List.from(pointsD)..add(_localP);
+              //           listY.add(_localP.dy);
+              //           listX.add(_localP.dx);
+              //           tempInd++;
+              //           pointsD.add(null);
+              //         listY.add(null);
+              //           listX.add(null);
+              //           tempInd++;
+              //           indices.add(tempInd);
+              //           p=p+1;
+              //           indices[p]= tempInd;
+              //           Firestore.instance
+              //           .collection('rooms')
+              //             .document(documentid)
+              //   .updateData({
+              //     'xpos': listX,
+              //     'ypos': listY,
+              //     'length' : tempInd,
+              //     'indices':indices,
+              //     'pointer': p
+              //   });
+              //         });
+              //       },
+              child: new CustomPaint(
+                child: Container(
+                  color: Colors.white,
+                  constraints: BoxConstraints.expand(),),
+                foregroundPainter:
+                    new Signature(points: pointsD, indices: indices, p: p),
+                size: Size.infinite,
+              ),
             ),
           ),
         ),
@@ -154,40 +156,44 @@ class PainterState extends State<Painter> {
                   '$word',
                   style: GoogleFonts.lexendGiga(),
                 ),
-                Time(),
+                 Time(),
                 Row(
                   children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.settings_backup_restore,
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: InkWell(
+                        child:Image(image:  AssetImage('assets/icons/arrow_left.png'),),
+                        onTap: () {
+                          if (p != 0) {
+                            setState(() {
+                              p = p - 1;
+                            });
+                            Firestore.instance
+                                .collection('rooms')
+                                .document(documentid)
+                                .updateData({'pointer': p});
+                          }
+                        },
                       ),
-                      onPressed: () {
-                        if (p != 0) {
-                          setState(() {
-                            p = p - 1;
-                          });
-                          Firestore.instance
-                              .collection('rooms')
-                              .document(documentid)
-                              .updateData({'pointer': p});
-                        }
-                      },
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.forward_5,
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: InkWell(
+                        onTap: () {
+                          if (p != indices.length - 1) {
+                            setState(() {
+                              p = p + 1;
+                            });
+                            Firestore.instance
+                                .collection('rooms')
+                                .document(documentid)
+                                .updateData({'pointer': p});
+                          }
+                        },
+                        child: Image(
+                          image: AssetImage('assets/icons/arrow_right.png'),
+                        ),
                       ),
-                      onPressed: () {
-                        if (p != indices.length - 1) {
-                          setState(() {
-                            p = p + 1;
-                          });
-                          Firestore.instance
-                              .collection('rooms')
-                              .document(documentid)
-                              .updateData({'pointer': p});
-                        }
-                      },
                     ),
                     IconButton(
                       icon: Icon(
@@ -195,7 +201,6 @@ class PainterState extends State<Painter> {
                         size: 30.0,
                         color: Colors.black,
                       ),
-                      // alignment: Alignment.bottomRight,
                       onPressed: () {
                         clearPoints();
                         listX = [];
@@ -217,10 +222,6 @@ class PainterState extends State<Painter> {
                     ),
                   ],
                 )
-
-                // IconButton(icon: Icon(Icons.refre),)
-
-                // Text('67'),
               ],
             ),
           ),
