@@ -11,7 +11,7 @@ class Guesser extends StatefulWidget {
   _GuesserState createState() => _GuesserState();
 }
 
-class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
+class _GuesserState extends State<Guesser> with SingleTickerProviderStateMixin {
   int pStore;
   int pointerVal = 0;
   AnimationController controller;
@@ -38,6 +38,7 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print('guesser widget is rebuilding');
     pointsG = [];
     if (roomData['length'] == 0) {
       pointsG = [];
@@ -73,28 +74,19 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
         //color: textAndChat,
         child: Column(
           children: <Widget>[
-            AnimatedBuilder(
-                animation: controller,
-                builder: (BuildContext context, Widget child) {
-                  return Flexible(
+            Flexible(
                     flex: 7,
-                    child: new CustomPaint(
-                      foregroundPainter: Signature(
-                        points: pointsG,
-                        animation: controller,
+                    child: RepaintBoundary(
+
+                                          child: new CustomPaint(
+                        foregroundPainter: Signature(
+                          points: pointsG,
+                          animation: controller,
+                        ),
+                        child: Container(),
                       ),
-                      child: Container(
-                          //                     decoration: BoxDecoration(
-                          //                     border: Border.all(color: Colors.black,width: 3.0) ,
-                          //                     image: new DecorationImage(
-                          //   fit: BoxFit.fitWidth,
-                          //   colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.10), BlendMode.dstATop),
-                          //   image: new AssetImage('assets/images/scibb.jpg')
-                          // ),)
-                          ),
                     ),
-                  );
-                }),
+                  ),
             Flexible(
               flex: 1,
               child: Container(
@@ -113,8 +105,8 @@ class _GuesserState extends State<Guesser> with TickerProviderStateMixin {
 
 class Signature extends CustomPainter {
   List<Offset> points;
-  Signature({this.points, this.animation}) : super(repaint: animation);
   Animation<double> animation;
+  Signature({this.points, this.animation}) : super(repaint: animation);
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = new Paint()
@@ -143,11 +135,16 @@ class Signature extends CustomPainter {
       }
     }
   }
-
   @override
-  bool shouldRepaint(Signature oldDelegate) =>
-      animation.value != oldDelegate.animation.value ||
-      oldDelegate.points != points;
+  bool shouldRepaint(Signature oldDelegate) {
+     if(animation.value != oldDelegate.animation.value ||
+      oldDelegate.points != points){
+        return true;
+      }
+      else
+      return false;
+  }
+      
 }
 
 void refactor() {
