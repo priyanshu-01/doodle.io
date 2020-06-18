@@ -42,19 +42,19 @@ class PainterState extends State<Painter> {
           child: Stack(
             children: [
               
-              // RepaintBoundary(
-              //   child: CustomPaint(
-              //   child: Container(
-              //     color: Colors.white,
-              //     constraints: BoxConstraints.expand(),),
-              //   foregroundPainter:
-              //       new CacheDrawing(
-              //         points: pointsD,
-              //          indices: indices,
-              //           p: p),
-              //   size: Size.infinite,
-              // ),
-              // ),
+              RepaintBoundary(
+                child: CustomPaint(
+                child: Container(
+                  color: Colors.white,
+                  constraints: BoxConstraints.expand(),),
+                foregroundPainter:
+                    new CacheDrawing(
+                      points: pointsD,
+                       indices: indices,
+                        p: p),
+                size: Size.infinite,
+              ),
+              ),
 
               RepaintBoundary(
                       child: new GestureDetector(
@@ -114,9 +114,9 @@ class PainterState extends State<Painter> {
               //onTapUp: (TapUpDetails details){tapFunction(details);},
               child: new CustomPaint(
                 child: Container(
-                  color: Colors.white,
+                  // color: Colors.pink,
                   constraints: BoxConstraints.expand(),),
-                foregroundPainter:
+                painter:
                     new Signature(points: pointsD, indices: indices, p: p),
                 size: Size.infinite,
               ),
@@ -264,7 +264,7 @@ class Signature extends CustomPainter {
       ..color = Colors.black
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 03.0;
-    for (int i = 0; i < indices[p] - 1; i++) {
+    for (int i = (p==0)?0:indices[p-1] ; i < indices[p] - 1; i++) {
       if ((points[i] != null && points[i] != Offset(-1, -1)) &&
           (points[i + 1] != null && points[i + 1] != Offset(-1, -1))) {
         canvas.drawLine(points[i], points[i + 1], paint);
@@ -291,7 +291,7 @@ class CacheDrawing extends CustomPainter{
       ..color = Colors.black
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 03.0;
-    for (int i = 0; i < indices[p] - 1; i++) {
+    for (int i =  0    ; i <  ((p==0)? 0: indices[p-1]) - 1; i++) {
       if ((points[i] != null && points[i] != Offset(-1, -1)) &&
           (points[i + 1] != null && points[i + 1] != Offset(-1, -1))) {
         canvas.drawLine(points[i], points[i + 1], paint);
