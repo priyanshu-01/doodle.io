@@ -15,6 +15,8 @@ import '../main.dart';
 import 'package:connectivity/connectivity.dart';
 import 'dart:io';
 import '../reactions/listenReactions.dart';
+import 'package:spring_button/spring_button.dart';
+
 ReactionListener reactionListener;
 double effectiveLength = 0;
 String userNam;
@@ -25,7 +27,7 @@ bool online;
 double totalWidth;
 double totalLength;
 DocumentSnapshot wordListDocument;
- 
+
 Map<String, Color> color = {
   //'bg2': Color(0xFF2994b2),
   'bg': Color(0xfffffbe0),
@@ -45,20 +47,16 @@ String commas(int n) {
   String r;
   if (c.length <= 3)
     r = c;
-    else if (c.length == 4) {
+  else if (c.length == 4) {
     r = c.substring(0, 1) + ',' + c.substring(1);
-  }
-  else if (c.length == 5) {
+  } else if (c.length == 5) {
     r = c.substring(0, 2) + ',' + c.substring(2);
-  }
-    else if (c.length == 6) {
+  } else if (c.length == 6) {
     r = c.substring(0, 1) + ',' + c.substring(1, 3) + ',' + c.substring(3);
-  }
-   else if (c.length == 7) {
+  } else if (c.length == 7) {
     r = c.substring(0, 2) + ',' + c.substring(2, 4) + ',' + c.substring(4);
-  }
-  else
-  r=c;
+  } else
+    r = c;
   return r;
 }
 
@@ -70,7 +68,6 @@ class SelectRoom extends StatefulWidget {
 }
 
 class _SelectRoomState extends State<SelectRoom> {
-
   Map _source = {ConnectivityResult.none: false};
   MyConnectivity _connectivity = MyConnectivity.instance;
   Widget showDrawer() {
@@ -222,82 +219,60 @@ class _SelectRoomState extends State<SelectRoom> {
                     SizedBox(
                       height: 20.0,
                     ),
-                   
                     SizedBox(
                       height: 100.0,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(18.0),
-                      child: RaisedButton(
-                          onPressed: () {
-                            flag = false;
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        RoomCreatingScreen()));
-
-                            Random random = Random();
-                            double randomNumber;
-
-                            randomNumber = random.nextDouble();
-                            double d = randomNumber * 1000000;
-                            id = d.toInt();
-                            print(id);
-                            addRoom();
-                            Navigator.pop(context);
-
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CreateRoom(id: id)));
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ),
+                      child: SpringButton(
+                        SpringButtonType.OnlyScale,
+                        Container(
+                          decoration: BoxDecoration(
+                              color: color['buttonBg'],
+                              border: Border.all(color: color['buttonBg']),
+                              borderRadius: BorderRadius.circular(18.0)),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                vertical: 18.0, horizontal: 20.0),
+                                vertical: 18.0, horizontal: 30.0),
                             child: Text('Create Room',
                                 style: GoogleFonts.notoSans(
                                     //color: Color(0xFF00008B),
                                     color: color['bg2'],
                                     fontSize: 20.0)),
                           ),
-                          //color: Colors.orange[300],
-                          color: color['buttonBg']),
+                        ),
+                        alignment: Alignment.center,
+                        onTap: () => onPressedCreateRoom(),
+                        useCache: true,
+                        scaleCoefficient: 0.75,
+                      ),
                     ),
                     SizedBox(
                       height: 10.0,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(18.0),
-                      child: RaisedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EnterRoomId()));
-                        },
-                        shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                                // color: Colors.orange[400],
-                                color: color['buttonBg'],
-                                width: 2.0),
-                            borderRadius: BorderRadius.circular(18.0)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 18.0, horizontal: 30.0),
-                          child: Text(
-                            'Join Room',
-                            style: GoogleFonts.notoSans(
-                                //color: Colors.orange[700],
-                                color: color['bg2'],
-                                fontSize: 20.0),
+                      child: SpringButton(
+                        SpringButtonType.OnlyScale,
+                        Container(
+                          decoration: BoxDecoration(
+                              color: color['buttonBg'],
+                              border: Border.all(color: color['buttonBg']),
+                              borderRadius: BorderRadius.circular(18.0)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 18.0, horizontal: 40.0),
+                            child: Text(
+                              'Join Room',
+                              style: GoogleFonts.notoSans(
+                                  //color: Colors.orange[700],
+                                  color: color['bg2'],
+                                  fontSize: 20.0),
+                            ),
                           ),
                         ),
-                        //  color: Colors.white
-                        color: color['buttonBg'],
+                        scaleCoefficient: 0.75,
+                        onTap: () => onPressedJoinRoom(),
                       ),
                     ),
                     SizedBox(
@@ -313,9 +288,35 @@ class _SelectRoomState extends State<SelectRoom> {
     );
   }
 
+  void onPressedCreateRoom() {
+    flag = false;
+    Random random = Random();
+    double randomNumber;
+    randomNumber = random.nextDouble();
+    double d = randomNumber * 1000000;
+    id = d.toInt();
+    print(id);
+    addRoom();
+    // Navigator.pop(context);
+    Timer(Duration(milliseconds: 500), () {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => CreateRoom(id: id)));
+    });
+    // Future.delayed(Duration(milliseconds: 10000));
+  }
+
+  void onPressedJoinRoom() {
+    Timer(
+        Duration(
+          milliseconds: 200,
+        ), () {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => EnterRoomId()));
+    });
+  }
+
   @override
   void initState() {
-     
     _connectivity.initialise();
     _connectivity.myStream.listen((source) {
       setState(() => _source = source);
@@ -379,7 +380,7 @@ class MyConnectivity {
     connectivity.onConnectivityChanged.listen((result) {
       _checkStatus(result);
     });
-       wordListDocument = await Firestore.instance
+    wordListDocument = await Firestore.instance
         .collection('words')
         .document('word list')
         .get();
@@ -396,10 +397,9 @@ class MyConnectivity {
     } on SocketException catch (_) {
       isOnline = false;
     }
-    try{
-    controller.sink.add({result: isOnline});
-    }
-    catch(Exception){
+    try {
+      controller.sink.add({result: isOnline});
+    } catch (Exception) {
       print(Exception);
     }
   }
