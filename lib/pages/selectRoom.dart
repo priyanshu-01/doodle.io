@@ -5,7 +5,6 @@ import '../services/authHandler.dart';
 import 'roomId.dart';
 import 'room/room.dart';
 import 'dart:math';
-import 'roomCreatingScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'guesserScreen.dart';
@@ -16,7 +15,7 @@ import 'package:connectivity/connectivity.dart';
 import 'dart:io';
 import '../reactions/listenReactions.dart';
 import 'package:spring_button/spring_button.dart';
-
+import 'package:rflutter_alert/rflutter_alert.dart';
 ReactionListener reactionListener;
 double effectiveLength = 0;
 String userNam;
@@ -272,7 +271,7 @@ class _SelectRoomState extends State<SelectRoom> {
                           ),
                         ),
                         scaleCoefficient: 0.75,
-                        onTap: () => onPressedJoinRoom(),
+                        onTap: () => onPressedJoinRoom(context),
                       ),
                     ),
                     SizedBox(
@@ -298,20 +297,29 @@ class _SelectRoomState extends State<SelectRoom> {
     print(id);
     addRoom();
     // Navigator.pop(context);
-    Timer(Duration(milliseconds: 500), () {
+    Timer(Duration(milliseconds: 200), () {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => CreateRoom(id: id)));
     });
     // Future.delayed(Duration(milliseconds: 10000));
   }
 
-  void onPressedJoinRoom() {
+  void onPressedJoinRoom(BuildContext context) {
     Timer(
         Duration(
           milliseconds: 200,
         ), () {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => EnterRoomId()));
+
+
+      // Navigator.push(
+      //     context, MaterialPageRoute(builder: (context) => EnterRoomId()));
+      Alert(
+        desc: 'Enter Room Id',
+        context: context,
+        content: EnterRoomId(),
+        buttons: [],
+        image: Image(image:AssetImage('assets/icons/gift.gif',),height: 30.0,)
+      ).show();
     });
   }
 

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scribbl/pages/selectRoom.dart';
 import 'room/room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'roomCreatingScreen.dart';
+import 'package:beauty_textfield/beauty_textfield.dart';
 bool mistake = false;
 String enteredId;
 var details;
@@ -18,91 +20,89 @@ class _EnterRoomIdState extends State<EnterRoomId> {
   Widget build(BuildContext context) {
 
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-          body: Center(
-            child: Container(
-              height: 500.0,
+    return 
+             Container(
+              height: totalLength*0.4,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.all(25.0),
-                    child: TextField(
-                      style: TextStyle(color: Colors.white),
-                      keyboardType: TextInputType.number,
-              
-
+                    padding: const EdgeInsets.all(15.0),
+                    child: BeautyTextfield(
+                      width: totalWidth*0.7,
+                      prefixIcon: Icon(Icons.vpn_key, color: Colors.white,),
+                      height: 60.0,
+                      inputType: TextInputType.number,
+                      placeholder: 'Room ID',
+                      margin: EdgeInsets.all(10.0),
+                      accentColor: Colors.black,
+                      textColor: Colors.white,
+                      enabled: true,
+                      autofocus: true,
               onChanged: (str){
                enteredId =str;
                setState(() {
                  mistake=false;
                });
-                //git = str;
               },
-              onEditingComplete: () {
-                
-              },
-              decoration: new InputDecoration(
-                
+              // decoration: new InputDecoration(
+              //         labelText: 'Room ID',
+              //         labelStyle: TextStyle(color: Colors.white),
+              //         disabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 10.0,style: BorderStyle.solid,
+              //         color: Colors.white
+              //         )),
+              //         //fillColor: Colors.white,
+              //         prefixIcon: Icon(Icons.vpn_key, color: Colors.red[800],),
+              //         border: new OutlineInputBorder(
 
-                      labelText: 'Room ID',
-                      labelStyle: TextStyle(color: Colors.white),
-                      disabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 10.0,style: BorderStyle.solid,
-                      color: Colors.white
-                      )),
-                      //fillColor: Colors.white,
-                      prefixIcon: Icon(Icons.vpn_key, color: Colors.red[800],),
-                      border: new OutlineInputBorder(
+              //           borderRadius: new BorderRadius.circular(25.0),
+              //           borderSide: new BorderSide(
+              //             color: Colors.white,
+              //             // width: 16.0,style: BorderStyle.solid
+              //           ),
 
-                        borderRadius: new BorderRadius.circular(25.0),
-                        borderSide: new BorderSide(
-                          color: Colors.white,
-                          // width: 16.0,style: BorderStyle.solid
-                        ),
+              //         ),
+              //         enabledBorder: OutlineInputBorder(
 
-                      ),
-                      enabledBorder: OutlineInputBorder(
+              //           borderRadius: new BorderRadius.circular(25.0),
+              //           borderSide: new BorderSide(
+              //             color: Colors.white,
+              //             // width: 16.0,style: BorderStyle.solid
+              //           ),
 
-                        borderRadius: new BorderRadius.circular(25.0),
-                        borderSide: new BorderSide(
-                          color: Colors.white,
-                          // width: 16.0,style: BorderStyle.solid
-                        ),
+              //         ),
+              //         focusedBorder: OutlineInputBorder(
+              //           borderRadius: new BorderRadius.circular(25.0),
+              //           borderSide: new BorderSide(
+              //             color: Colors.red[800],
+              //             // width: 16.0,style: BorderStyle.solid
+              //           ),
 
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(25.0),
-                        borderSide: new BorderSide(
-                          color: Colors.red[800],
-                          // width: 16.0,style: BorderStyle.solid
-                        ),
-
-                      ),
-                      focusColor: Colors.red[800],
-                      //filled: true,
+              //         ),
+              //         focusColor: Colors.red[800],
+              //         //filled: true,
                       
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(25.0),
-                        borderSide: new BorderSide(
-                          color: Colors.red[800],
-                          // width: 16.0,style: BorderStyle.solid
-                        ),
+              //         errorBorder: OutlineInputBorder(
+              //           borderRadius: new BorderRadius.circular(25.0),
+              //           borderSide: new BorderSide(
+              //             color: Colors.red[800],
+              //             // width: 16.0,style: BorderStyle.solid
+              //           ),
 
-                      ),
+              //         ),
 
 
-              )
+              // )
             ),
                   ),
                   showWarning(),
 
-                  RaisedButton(onPressed: () {
+                RaisedButton(onPressed: () {
                     flag=false;
                     (enteredId!=null)?
                     val = int.parse(enteredId):val=0;  //error by crashlytics   --got undertesting fix
                     print(val);
-                            getDetails(context);    
+                    getDetails(context);    
                             
                           },
                           shape: RoundedRectangleBorder(
@@ -113,25 +113,25 @@ class _EnterRoomIdState extends State<EnterRoomId> {
                             fontSize: 35.0),),
                           ),
                           color: Colors.red[800],)
+                  
                 ],
               ),
         
-      ),
-          ),
-    );
+      );
+    
   }
   Widget showWarning(){
     if(mistake==false){
       return  Container();
     }
     else{
-      return Padding(padding: EdgeInsets.all(8.0),
-      child: Text('It seems you made a mistake, Try Again!',
-      style: GoogleFonts.quicksand(color: Colors.white
+      return Text('It seems you made a mistake, Try Again!',
+      style: GoogleFonts.quicksand(color: Colors.black
       ),
-      ));
+      );
     }
   }
+
 
 Future<void> getDetails(BuildContext context) async{
   Navigator.push(context, MaterialPageRoute(builder: (context) => RoomCreatingScreen(
