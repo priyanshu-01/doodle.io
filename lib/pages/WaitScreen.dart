@@ -13,13 +13,25 @@ class WaitScreen extends StatefulWidget {
   @override
   _WaitScreenState createState() => _WaitScreenState();
 }
-class _WaitScreenState extends State<WaitScreen> {
+class _WaitScreenState extends State<WaitScreen> with TickerProviderStateMixin {
 String waitDenId;
   int end = 15+(counter*2);
+  double topPadding=totalLength*0.5;
+   
+ AnimationController spinKitController;
     void initState() {
     avatarAnimation = animateAvatar.reset;
     waitDenId=denId;
     waitCurrent=0;
+     spinKitController= AnimationController(
+       vsync: this,
+       duration: Duration(seconds: 1),
+     );
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+       setState(() {
+         topPadding=0.0;
+       });
+                });
     startTimer();
     super.initState();
   }
@@ -28,6 +40,7 @@ String waitDenId;
   void dispose() {
       waitCurrent=0;
     waitSub.cancel();
+    spinKitController.dispose();
     super.dispose();
   }
   void startTimer() {
@@ -55,38 +68,33 @@ String waitDenId;
           waitSub.cancel();
           startTimer();
     }
-    return Center(
-      child: Container(
-        // color: textAndChat,
-        color: Colors.white,
-        // height: 400.0,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Flexible(
-              flex: 4,
-              // child:CircleAvatar(
-              //  // radius: ((guessTotalLength*0.6)-50)* (3/8),
-              //   backgroundColor: Colors.grey[200],
-              //   minRadius: ((guessTotalLength*0.6)-50)* (3/18),
-              //   maxRadius:((guessTotalLength*0.6)-50)* (3/18) ,
-                
-              //   backgroundImage: NetworkImage(playersImage[playersId.indexOf(denId)]),
-              // ),
-              child: Container(),
-            ),
-            Flexible(
-              flex: 2,
-              child: SpinKitWave(
+    return Stack(
+      children: [
+        Container(
+          color: Colors.white,
+          constraints: BoxConstraints.expand(),
+        ),
+        AnimatedPositioned(
+          duration: Duration(milliseconds: 1000),
+          curve: Curves.elasticInOut,
+          left: totalWidth*0.27,
+          top: topPadding,
+          onEnd: (){
+            spinKitController.repeat();
+          },
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: totalLength*0.25,),
+              SpinKitWave(
+                controller: spinKitController,
                 //color: Colors.white,
                  color: Color(0xFF9868AC),
                // color: Color(0xFF1A2F77),
                 //size: 100.0,
               ),
-            ),
-            Flexible(
-              flex: 2,
-              child: Padding(
+              Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
                   children: <Widget>[
@@ -111,10 +119,11 @@ String waitDenId;
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
       ),
+        ),
+      ],
     );
   }
   void changeDenIfNeeded2(){
