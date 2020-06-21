@@ -24,8 +24,10 @@ int start=90;
   }
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('$current', style: GoogleFonts.lexendGiga(),),
+    return RepaintBoundary(
+          child: Container(
+        child: Text('$current', style: GoogleFonts.lexendGiga(),),
+      ),
     );
   }
   void startTimer() {
@@ -134,47 +136,8 @@ int q=0,w=0,e=0,r=0;
         ),
         
         Text('$current', style: GoogleFonts.lexendGiga(),),
-        wordHint()
+        WordHint(revealed: revealed,)
       ],),
-    );
-  }
-
-  Widget wordHint(){
-    
-          return Flexible(
-            child: FractionallySizedBox(
-              widthFactor: word.length/17,
-              child: Container(
-                //alignment: Alignment.bottomCenter,
-                //color: Colors.orange[50],
-                child: ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          itemCount: word.length,
-          itemBuilder: (_,int h){
-              if(word.indexOf(' ')==h){
-                return Container(
-              alignment: Alignment.center,
-              child: Text('  ',style: TextStyle(fontSize: 15.0),));
-              }
-              else
-                {
-                  if(revealed.indexOf(h)==-1){
-                        return Container(
-             alignment: Alignment.center,
-              child: Text('_ ',style: TextStyle(fontSize: 15.0),));
-                  }
-                  else
-                  {
-                    String rev= word[h];
-                    return Container(
-             alignment: Alignment.center,
-              child: Text('$rev ',style: TextStyle(fontSize: 15.0),));
-                  }
-                }
-          }),
-              ),
-      ),
     );
   }
 
@@ -227,5 +190,49 @@ int q=0,w=0,e=0,r=0;
         e=35;
         r=15;
       }
+  }
+}
+
+
+class WordHint extends StatelessWidget {
+  List revealed;
+  WordHint({this.revealed});
+  @override
+  Widget build(BuildContext context) {
+        return Flexible(
+              child: FractionallySizedBox(
+                widthFactor: word.length/17,
+                child: Container(
+        //alignment: Alignment.bottomCenter,
+        //color: Colors.orange[50],
+        child: ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemCount: word.length,
+            itemBuilder: (_,int h){
+                if(word.indexOf(' ')==h){
+        return Container(
+                alignment: Alignment.center,
+                child: Text('  ',style: TextStyle(fontSize: 15.0),));
+                }
+                else
+        {
+          if(revealed.indexOf(h)==-1){
+                return Container(
+               alignment: Alignment.center,
+                child: Text('_ ',style: TextStyle(fontSize: 15.0),));
+          }
+          else
+          {
+            String rev= word[h];
+            return Container(
+               alignment: Alignment.center,
+                child: Text('$rev ',style: TextStyle(fontSize: 15.0),));
+          }
+        }
+            }),
+                ),
+      ),
+    );
   }
 }

@@ -21,7 +21,7 @@ Color wordText;
 bool switcher=false;
 
 double topPadding= totalLength*0.8;
-Curve curve= Curves.elasticOut; 
+Curve curve= Curves.easeOutBack; 
 Duration duration = Duration(milliseconds: 1000);
 @override
   void initState() {
@@ -170,34 +170,29 @@ class TimeIndicator extends StatefulWidget {
   TimeIndicatorState createState() => TimeIndicatorState();
 }
 
-class TimeIndicatorState extends State<TimeIndicator> with TickerProviderStateMixin {
-  Color green = Color(0xFF008000);
-  Color red= Color(0xFFFF0000);
+class TimeIndicatorState extends State<TimeIndicator> {
+  static Color green = Color(0xFF008000);
+  static Color red= Color(0xFFFF0000);
   double width = totalWidth * 0.75;
-  AnimationController timeIndicator;
-  Animation _colorTween;
+  double animatedWidth= totalWidth*0.75;
+  Color color=green;
   @override
   void initState() {
-    timeIndicator = AnimationController(
-    vsync: this,
-    duration: Duration(seconds: 15),
-    lowerBound: 0.0,
-    upperBound: 1.0
-    );
-    super.initState();
-    _colorTween = ColorTween(begin: green, end: red)
-        .animate(timeIndicator);
-        Timer(
-        Duration(
-          milliseconds: 800,
-        ), () {
-        timeIndicator.forward(from:0.0);
+          super.initState();
+
+    Timer(Duration(seconds: 1), () {
+      setState(() {
+           color =red;
+         animatedWidth=0.0;
         });
-  }
-  @override
-  void dispose() {
-    timeIndicator.dispose();
-    super.dispose();
+
+  // print("Yeah, this line is printed after 3 seconds");
+
+});
+
+          //  WidgetsBinding.instance.addPostFrameCallback((_) { });
+    
+
   }
   @override
   Widget build(BuildContext context) {
@@ -205,18 +200,18 @@ class TimeIndicatorState extends State<TimeIndicator> with TickerProviderStateMi
           child: Container(
                       width:width,
                       alignment: Alignment.centerLeft,
-                      child: AnimatedBuilder(
-                        animation: timeIndicator,
-                         builder:(context,child){
-                          return Container(                    
-                          height: 12.0,
-                         // width: animatedWidth,
-                         width: (1-timeIndicator.value) *width,
-                          decoration: BoxDecoration(
-                              color: _colorTween.value,
-                              border: Border.all(color: _colorTween.value),
+                      child: AnimatedContainer(
+                        duration: Duration(seconds: 14),
+                        height: 12.0,
+                        width: animatedWidth,
+
+                             decoration: BoxDecoration(
+                              color:color,
+                              border: Border.all(color: color,
+),
                               borderRadius: BorderRadius.circular(15.0)),
-                        );}
+
+
                       ),
                     ),
     );

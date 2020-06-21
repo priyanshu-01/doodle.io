@@ -40,7 +40,7 @@ String waitDenId;
   void dispose() {
       waitCurrent=0;
     waitSub.cancel();
-    spinKitController.dispose();
+    //spinKitController.dispose();
     super.dispose();
   }
   void startTimer() {

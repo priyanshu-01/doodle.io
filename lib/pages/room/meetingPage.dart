@@ -154,57 +154,59 @@ class JoiningList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 18.0),
-      child: Container(
-        width: totalWidth * 0.7,
-        child: Card(
-          elevation: 15.0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12.0),
-            child: ListView.builder(
-                itemCount: counter,
-                itemBuilder: (BuildContext context, int a) {
-                  return Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 4.0, left: 4.0, right: 4.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xFFFFD5D5)),
-                            borderRadius: BorderRadius.circular(12.0),
-                            color: Color(0xFFFFD5D5),
-                          ),
-                          child: Row(
-                            // mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 9.0),
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.grey[100],
-                                    backgroundImage:
-                                        NetworkImage(playersImage[a]),
-                                    radius: 20.0,
-                                  )),
-                              Text(
-                                players[a],
-                                style: GoogleFonts.notoSans(
-                                    fontSize: 20.0, color: Color(0xFF45454D)),
-                              ),
-                            ],
+      child: RepaintBoundary(
+              child: Container(
+          width: totalWidth * 0.7,
+          child: Card(
+            elevation: 15.0,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12.0),
+              child: ListView.builder(
+                  itemCount: counter,
+                  itemBuilder: (BuildContext context, int a) {
+                    return Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 4.0, left: 4.0, right: 4.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Color(0xFFFFD5D5)),
+                              borderRadius: BorderRadius.circular(12.0),
+                              color: Color(0xFFFFD5D5),
+                            ),
+                            child: Row(
+                              // mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 9.0),
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.grey[100],
+                                      backgroundImage:
+                                          NetworkImage(playersImage[a]),
+                                      radius: 20.0,
+                                    )),
+                                Text(
+                                  players[a],
+                                  style: GoogleFonts.notoSans(
+                                      fontSize: 20.0, color: Color(0xFF45454D)),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      //  Divider(color: Color(0xFFFFEBCD),
-                      //  thickness: 2.0,
-                      //  indent: 60.0,
-                      //  )
-                    ],
-                  );
-                }),
+                        //  Divider(color: Color(0xFFFFEBCD),
+                        //  thickness: 2.0,
+                        //  indent: 60.0,
+                        //  )
+                      ],
+                    );
+                  }),
+            ),
           ),
         ),
       ),
