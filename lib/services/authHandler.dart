@@ -62,7 +62,6 @@ Widget fetchFutureAnonymous() {
           coins = a['coins'];
           name = a['name'];
           imageUrl= a['imageUrl'];
-          print('coins $coins');
           AuthSignIn().activate();
         }
         return SelectRoom(
@@ -90,7 +89,6 @@ Widget fetchFutureGoogle() {
           DocumentSnapshot a = snapshot.data.documents[0];
           dataDocId = a.documentID;
           coins = a['coins'];
-          print('coins $coins');
           AuthProvider().activate();
         }
         return SelectRoom(

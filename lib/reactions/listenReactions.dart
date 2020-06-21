@@ -22,7 +22,7 @@ vacantSpaces=[totalLength*0.16,totalLength*0.24, totalLength*0.32, totalLength*0
 
 void listenReactions(BuildContext context){
 
-  if(reactionRecord.length!=playersId.length)
+  if(reactionRecord.length!=playersId.length  && game==false)
   initialiseRecord();
 
   roomData.forEach((key,value){

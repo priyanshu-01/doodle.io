@@ -1,25 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:scribbl/pages/selectRoom.dart';
 import 'package:scribbl/pages/wordWas.dart';
-import 'painter/painter.dart';
-import 'room/room.dart';
-import 'chooseWord.dart';
+import 'painter.dart';
+import '../room/room.dart';
+import '../chooseWord.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiver/async.dart';
-import 'guesserScreen.dart';
+import '../Guesser_screen/guesserScreen.dart';
+import '../Guesser_screen/chat.dart';
 String choosenWord;
 bool timerRunning2 = false;
-//bool madeIt2=false;
-class PainterScreen extends StatefulWidget {
-  @override
-  _PainterScreenState createState() => _PainterScreenState();
-}
 
-class _PainterScreenState extends State<PainterScreen> {
-int i;
-  var subs;
-  int curr = 90;
-  int star = 90;
+class PainterScreen extends StatelessWidget {
+// int i;
+ 
   @override
   Widget build(BuildContext context) {
 
@@ -29,12 +23,11 @@ int i;
           children: <Widget>[
           Container(
             color: Colors.white,
-            //constraints: BoxConstraints.expand(),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Flexible(
-                  child: chooseOrDraw(),
+                  child: ChooseOrDraw(),
                   flex: 8,
                 ),
                 Flexible(
@@ -42,16 +35,10 @@ int i;
                   child: Container(
                     decoration: BoxDecoration(
                         border: Border.all(width: 1.0, color: textAndChat),
-                        // borderRadius: BorderRadius.only(
-                        //   topLeft: Radius.circular(35),
-                        //   topRight: Radius.circular(35),
-                        // ),
-                        // color: Colors.white
-                        //  color: Color(0xFF4BCFFA),
                         color: textAndChat
                         // color: Colors.blueAccent[100]
                         ),
-                    child: chatList(),
+                    child: ChatList(),
                   ),
                 )
               ],
@@ -63,9 +50,23 @@ int i;
       ),
     );
   }
+}
 
-  Widget chooseOrDraw() {
-    if (word != '*') //this is true when it should not be
+
+
+  class ChooseOrDraw extends StatefulWidget {
+  @override
+  _ChooseOrDrawState createState() => _ChooseOrDrawState();
+}
+
+class _ChooseOrDrawState extends State<ChooseOrDraw> {
+   var subs;
+  int curr = 90;
+  int star = 90;
+
+    @override
+    Widget build(BuildContext context) {
+     if (word != '*') //this is true when it should not be
     {
       if (curr > 1 && counter - 1 != guessersId.length) {
         if (!timerRunning2) {
@@ -82,9 +83,18 @@ int i;
       }
     } else
       return ChooseWordDialog();
+    }
+    
+    @override
+  void dispose() {
+    if(subs!=null)
+    subs.cancel();                //error caught by crashlytics   -- got undertesting fix
+    timerRunning2 = false;
+    super.dispose();
   }
 
-  void startTimer() {
+
+    void startTimer() {
     CountdownTimer countDownTimer = new CountdownTimer(
       new Duration(seconds: star),
       new Duration(seconds: 1),
@@ -98,19 +108,6 @@ int i;
       else
         curr = star - duration.elapsed.inSeconds;
     });
-    // subs.onDone(() {
-    //   timerRunning2 = false;
-    //   print("Done_painterView");
-    //   subs.cancel();
-    //  // changeDen();
-    // });
-  }
-
-  void dispose() {
-    if(subs!=null)
-    subs.cancel();                //error caught by crashlytics   -- got undertesting fix
-    timerRunning2 = false;
-    super.dispose();
   }
 }
 

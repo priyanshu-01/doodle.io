@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:scribbl/pages/painterScreen.dart';
+import 'package:scribbl/pages/Painter_screen/painterScreen.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../gameScreen.dart';
 import '../selectRoom.dart';
 import '../../services/authHandler.dart';
-import '../guesserScreen.dart';
+import '../Guesser_screen/guesserScreen.dart';
 import '../../reactions/listenReactions.dart';
 import 'meetingPage.dart';
 bool game;
@@ -44,6 +44,7 @@ class CreateRoom extends StatefulWidget {
 class _CreateRoomState extends State<CreateRoom> {
   @override
   void initState() {
+    game=false;
     reactionListener = ReactionListener();
     super.initState();
   }
@@ -93,9 +94,7 @@ class _CreateRoomState extends State<CreateRoom> {
         ),
         onWillPop: () {
           leaveRoomAlert(context, players, counter);
-          //   return;
         });
-    //funct(id);
   }
 
   void readRoomData(AsyncSnapshot<QuerySnapshot> snapshot) {

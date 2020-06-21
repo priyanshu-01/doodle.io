@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scribbl/pages/painterScreen.dart';
+import 'package:scribbl/pages/Painter_screen/painterScreen.dart';
 import 'room/room.dart';
 import 'package:quiver/async.dart';
 import 'selectRoom.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../room/room.dart';
 import '../timer.dart';
-import '../guesserScreen.dart';
+import 'guesserScreen.dart';
 int ind1 = 0, ind2 = 0;
 List<Offset> pointsG = <Offset>[];
 int indStore;
@@ -38,7 +38,6 @@ class _GuesserState extends State<Guesser> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print('guesser widget is rebuilding');
     pointsG = [];
     if (roomData['length'] == 0) {
       pointsG = [];

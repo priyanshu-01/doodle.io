@@ -7,7 +7,7 @@ import 'room/room.dart';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
-import 'guesserScreen.dart';
+import 'Guesser_screen/guesserScreen.dart';
 import '../services/anon.dart';
 import 'loginPage.dart';
 import '../main.dart';
@@ -118,13 +118,10 @@ class _SelectRoomState extends State<SelectRoom> {
   @override
   Widget build(BuildContext context) {
     resumed = true;
-    print('selectRoom called');
     if (initialiseDimension) {
       effectiveLength = MediaQuery.of(context).size.height;
       totalLength = MediaQuery.of(context).size.height;
-      print('Total length ' + '$totalLength');
       guessCanvasLength = ((effectiveLength - 50) * 0.6) * (7 / 8);
-      print('Canvas Length $guessCanvasLength');
       totalWidth = MediaQuery.of(context).size.width;
       initialiseDimension = false;
     }
@@ -144,7 +141,6 @@ class _SelectRoomState extends State<SelectRoom> {
       case ConnectivityResult.wifi:
         online = true;
     }
-    print('connected to internet : $online');
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
@@ -297,17 +293,16 @@ class _SelectRoomState extends State<SelectRoom> {
     print(id);
     addRoom();
     // Navigator.pop(context);
-    Timer(Duration(milliseconds: 200), () {
+    Timer(Duration(milliseconds: 150), () {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => CreateRoom(id: id)));
     });
-    // Future.delayed(Duration(milliseconds: 10000));
   }
 
   void onPressedJoinRoom(BuildContext context) {
     Timer(
         Duration(
-          milliseconds: 200,
+          milliseconds: 150,
         ), () {
 
 

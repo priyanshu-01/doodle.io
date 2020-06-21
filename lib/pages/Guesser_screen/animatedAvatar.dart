@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../guesserScreen.dart';
+import 'guesserScreen.dart';
 import '../selectRoom.dart';
 import '../room/room.dart';
 class AnimatedAvatar extends StatefulWidget {

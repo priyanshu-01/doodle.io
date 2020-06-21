@@ -6,7 +6,7 @@ import 'pages/stateTest.dart';
 import 'dart:async';
 bool resumed=true;
 void main() {
-    Crashlytics.instance.enableInDevMode = true;
+    Crashlytics.instance.enableInDevMode = false;
      FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
        runZoned(() {
@@ -20,8 +20,6 @@ void main() {
   }, onError: Crashlytics.instance.recordError);
 
 }
-   //runApp();
-   // }
 
 
 class MyHomePage extends StatefulWidget {

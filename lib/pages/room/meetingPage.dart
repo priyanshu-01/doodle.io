@@ -113,6 +113,7 @@ class StartStatus extends StatelessWidget {
       return RaisedButton(
         onPressed: (counter > 1)
             ? () {
+                game=true;
                 startGame();
               }
             : null,
@@ -144,7 +145,7 @@ class StartStatus extends StatelessWidget {
     await Firestore.instance
         .collection('rooms')
         .document(documentid)
-        .updateData({'game': true, 'numberOfRounds': roundsLimit});
+        .updateData({'game': game, 'numberOfRounds': roundsLimit});
   }
 }
 

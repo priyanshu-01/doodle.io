@@ -2,20 +2,20 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
-import 'Guesser_screen/guesser.dart';
+import 'guesser.dart';
 import 'package:scribbl/pages/selectRoom.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'room/room.dart';
-import 'selectRoom.dart';
+import '../room/room.dart';
+import '../selectRoom.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'wordWas.dart';
-import 'WaitScreen.dart';
+import '../wordWas.dart';
+import '../WaitScreen.dart';
 import 'package:quiver/async.dart';
-import 'package:bubble/bubble.dart';
 import 'package:achievement_view/achievement_view.dart';
 import 'package:flutter/rendering.dart';
-import '../gift/gift_contents.dart';
-import 'Guesser_screen/animatedAvatar.dart';
+import '../../gift/gift_contents.dart';
+import 'animatedAvatar.dart';
+import 'chat.dart';
 bool timerRunning = false;
 final messageHolder = TextEditingController();
 String message = '';
@@ -28,6 +28,8 @@ String tempDenId;
 AnimationController controlGift;
 enum animateAvatar { start, done, reset }
 var avatarAnimation;
+
+  int currentG = 92;
 
 class GuesserScreen extends StatefulWidget {
   @override
@@ -83,7 +85,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
                       child: Container(
                         child: Stack(
                           children: <Widget>[
-                            chatBox(),
+                            ChatBox(),
                             AnimatedGift()
                             //)
                           ],
@@ -99,8 +101,17 @@ class _GuesserScreenState extends State<GuesserScreen> {
     );
   }
 
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
+}
 
-  Widget chatBox() {
+
+class ChatBox extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return (keyboardState)
         ? Container()
         : FractionallySizedBox(
@@ -108,9 +119,6 @@ class _GuesserScreenState extends State<GuesserScreen> {
             child: Container(
               decoration: BoxDecoration(
                   border: Border.all(width: 1.0, color: textAndChat),
-                  // borderRadius: BorderRadius.only(
-                  //     topLeft: Radius.circular(25.0),
-                  //     topRight: Radius.circular(25.0)),
                   color: textAndChat
                   //  color: Color(0xFFFFF1E9)
                   //color: Color(0xFFFABBB9),
@@ -118,18 +126,10 @@ class _GuesserScreenState extends State<GuesserScreen> {
                   ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: chatList(),
+                child: ChatList(),
               ),
             ),
           );
-  }
-
-
-  @override
-  void dispose() {
-    
-          subscription.cancel();
-    super.dispose();
   }
 }
 
@@ -160,9 +160,9 @@ Widget stackChild(String position) {
                      (denId==playersId[index])?
                               CircleAvatar(
                                   radius: 20.0,
-                                  backgroundColor: Colors.black,
+                                  backgroundColor: Colors.blue,
                                   child: CircleAvatar(
-                                    radius: 18.5,
+                                    radius: 17.5,
                                     backgroundImage: NetworkImage(playersImage[
                                     // playersId.indexOf(guessersId[index])
                                     index
@@ -182,9 +182,9 @@ Widget stackChild(String position) {
 
                         :CircleAvatar(
                           radius: 20.0,
-                          backgroundColor: Colors.green[600],
+                          backgroundColor: Colors.green[400],
                           child: CircleAvatar(
-                            radius: 18.5,
+                            radius: 17.5,
                             backgroundImage: NetworkImage(playersImage[
                              // playersId.indexOf(guessersId[index])
                              index
@@ -259,100 +259,9 @@ Future<void> updateScore() async {
   });
 }
 
-Widget chatList() {
-  int lastIndex = roomData['$identity Chat'];
-  if (lastIndex != null &&
-      chat[lastIndex].substring(0, chat[lastIndex].indexOf('[')) != identity) {
-    chat = chat + [newMessage];
-    sendMessage();
-  }
-  return ListView.builder(
-    //shrinkWrap: true,
-    reverse: true,
-    itemCount: chat.length,
-    itemBuilder: (BuildContext context, int index) {
-      //print('error below');
-      String both = chat[chat.length - 1 - index];
-      String i = both.substring(0, both.indexOf('['));
-      String n = both.substring(both.indexOf('[') + 1, both.indexOf(']'));
-      String m = both.substring(both.indexOf(']') + 1);
-      return Column(
-        crossAxisAlignment: (identity.toString() == i)
-            ? CrossAxisAlignment.end
-            : CrossAxisAlignment.start,
-        children: <Widget>[
-          (i == identity.toString())
-              ? Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Bubble(
-                          nip: BubbleNip.rightTop,
-                          color: Colors.white,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(6.0, 2.0, 6.0, 2.0),
-                            child: Column(
-                              children: [
-                                nameOfOthers(i, n),
-                                Text('$m',
-                                    style: GoogleFonts.ubuntu(
-                                        fontSize: 10.0,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                          )),
-                      CircleAvatar(
-                        radius: 14.0,
-                        backgroundColor: Colors.grey[100],
-                        backgroundImage:
-                            NetworkImage(playersImage[playersId.indexOf(i)]), //error by crashlytics
-                      )
-                    ],
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      (playersId.indexOf(i) == -1)
-                          ? Container()
-                          : CircleAvatar(
-                              radius: 14.0,
-                              backgroundColor: Colors.grey[100],
-                              backgroundImage: NetworkImage(
-                                  playersImage[playersId.indexOf(i)]),
-                            ),
-                      Bubble(
-                        nip: BubbleNip.leftTop,
-                        color: Colors.white,
-                        shadowColor: Colors.black,
-                        elevation: 2.0,
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(6.0, 2.0, 6.0, 2.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              nameOfOthers(i, n),
-                              Text('$m',
-                                  style: GoogleFonts.ubuntu(
-                                      fontSize: 10.0,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-        ],
-      );
-    },
-  );
-}
+
+
+
 
 Widget nameOfOthers(String iden, String nam) {
   if (iden == identity.toString())
@@ -383,7 +292,6 @@ class GuessWaitShow extends StatefulWidget {
 
 class _GuessWaitShowState extends State<GuessWaitShow> {
   int startG = 92;
-  int currentG = 92;
   var subG;
     @override
     Widget build(BuildContext context) {
@@ -603,7 +511,7 @@ class _TextBoxState extends State<TextBox> {
   void calculateScore() {
     //1 time
     int s1;
-    int currentTime = 500000000;//currentG - 5;           //NEEDS TO BE CHANGED
+    int currentTime = currentG - 5;           //NEEDS TO BE CHANGED
     s1 = (currentTime ~/ 10) + 1;
     s1 = s1 * 10;
     int s2;
