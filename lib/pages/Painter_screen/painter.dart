@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../room/room.dart';
 import '../timer.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 class Painter extends StatefulWidget {
   @override
   PainterState createState() => new PainterState();
@@ -16,6 +15,7 @@ class PainterState extends State<Painter> {
   int tempInd = 0;
   List<int> indices = [0];
   int p = 0;
+
   void clearPoints() {
     setState(() {
       pointsD.clear();
@@ -51,7 +51,8 @@ class PainterState extends State<Painter> {
                     new CacheDrawing(
                       points: pointsD,
                        indices: indices,
-                        p: p),
+                        p: p,
+                        ),
                 size: Size.infinite,
               ),
               ),
@@ -77,8 +78,13 @@ class PainterState extends State<Painter> {
                   listY.add(_localPosition.dy);
                   listX.add(_localPosition.dx);
                   tempInd++;
+                //  indices[p]=tempInd;
+
+               //   if(p==0){
                   indices.add(tempInd);
                   p = p + 1;
+                 // }
+
                 });
               },
               onPanUpdate: (DragUpdateDetails details) {
@@ -99,16 +105,11 @@ class PainterState extends State<Painter> {
                 listX.add(null);
                 tempInd++;
                 indices[p] = tempInd;
-                Firestore.instance
-                    .collection('rooms')
-                    .document(documentid)
-                    .updateData({
-                  'xpos': listX,
-                  'ypos': listY,
-                  'length': tempInd,
-                  'indices': indices,
-                  'pointer': p
-                });
+                updateStroke();
+
+                  // indices.add(tempInd);
+                  // p = p + 1;
+
               },
                
               //onTapUp: (TapUpDetails details){tapFunction(details);},
@@ -189,16 +190,7 @@ class PainterState extends State<Painter> {
                         tempInd = 0;
                         p = 0;
                         indices = [0];
-                        Firestore.instance
-                            .collection('rooms')
-                            .document(documentid)
-                            .updateData({
-                          'xpos': listX,
-                          'ypos': listY,
-                          'length': tempInd,
-                          'indices': indices,
-                          'pointer': p
-                        });
+                        updateStroke();
                       },
                     ),
                   ],
@@ -210,6 +202,20 @@ class PainterState extends State<Painter> {
       ],
     );
   }
+  Future<void> updateStroke()async{
+   await Firestore.instance
+                    .collection('rooms')
+                    .document(documentid)
+                    .updateData({
+                  'xpos': listX,
+                  'ypos': listY,
+                  'length': tempInd,
+                  'indices': indices,
+                  'pointer': p
+                });
+  }
+
+
   void tapFunction(TapUpDetails details){
                   print('point drawn');
                       setState(() {
@@ -237,16 +243,7 @@ class PainterState extends State<Painter> {
                         indices.add(tempInd);
                         p=p+1;
                         indices[p]= tempInd;
-                        Firestore.instance
-                        .collection('rooms')
-                          .document(documentid)
-                .updateData({
-                  'xpos': listX,
-                  'ypos': listY,
-                  'length' : tempInd,
-                  'indices':indices,
-                  'pointer': p
-                });
+                        updateStroke();
                       });
                     
   }
@@ -281,6 +278,7 @@ class Signature extends CustomPainter {
 }
 
 class CacheDrawing extends CustomPainter{
+
   List<Offset> points;
   List<int> indices;
   int p;
@@ -300,13 +298,11 @@ class CacheDrawing extends CustomPainter{
         canvas.drawCircle(points[i + 1], 2.5, paint);
       }
     }
+
   }
   @override
-  bool shouldRepaint(CacheDrawing oldDelegate)=> oldDelegate.p!=p;
+  bool shouldRepaint(CacheDrawing oldDelegate)=> oldDelegate.p != p;
 }
-
-
-
 
 
 
