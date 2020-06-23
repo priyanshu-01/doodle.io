@@ -22,7 +22,9 @@ String message = '';
 double guessCanvasLength;
 bool keyboardState;
 String newMessage;
-Color textAndChat = Color(0xFFFFF1E9);
+Color textAndChat = 
+Colors.grey[200];
+//Color(0xFFFFF1E9);
 int score = 0;
 String tempDenId;
 AnimationController controlGift;
@@ -109,29 +111,19 @@ class _GuesserScreenState extends State<GuesserScreen> {
 }
 
 
-class ChatBox extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return (keyboardState)
-        ? Container()
-        : FractionallySizedBox(
-            heightFactor: 1.0,
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1.0, color: textAndChat),
-                  color: textAndChat
-                  //  color: Color(0xFFFFF1E9)
-                  //color: Color(0xFFFABBB9),
-                  // color: Colors.blueAccent[100]
-                  ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ChatList(),
-              ),
-            ),
-          );
-  }
-}
+// class StackChild extends StatelessWidget {
+//   final String positon;
+//   StackChild({this.positon});
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+      
+//     );
+//   }
+// }
+
+
+
 
 Widget stackChild(String position) {
   return Container(
@@ -258,31 +250,6 @@ Future<void> updateScore() async {
     'guessersId': guessersId
   });
 }
-
-
-
-
-
-Widget nameOfOthers(String iden, String nam) {
-  if (iden == identity.toString())
-    return Container(
-      height: 0,
-      width: 0,
-    );
-  else
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 2.0),
-      child: Text('$nam',
-          style: GoogleFonts.ubuntu(
-              //   color: Color(0xFFA74AC7),
-              color: Color(0xFFFF4893),
-              fontSize: 10.0,
-              fontWeight: FontWeight.bold)),
-    );
-}
-
-
-
 
 class GuessWaitShow extends StatefulWidget {
 

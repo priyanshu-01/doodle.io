@@ -13,7 +13,7 @@ void main() {
     runApp(new MaterialApp(
       // home: new RoomCreatingScreen(),
       home: new MyHomePage(),
-      //home: SignIn(),
+     // home: SampleCodePart(),
       debugShowCheckedModeBanner: false,
      theme: ThemeData(primarySwatch: Colors.red),
     ));

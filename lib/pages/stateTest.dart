@@ -1,81 +1,96 @@
-import 'dart:async';
-
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-
-
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
+class SampleCodePart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Crashlytics example app'),
-        ),
-        body: Center(
-          child: Column(
-            children: <Widget>[
-              FlatButton(
-                  child: const Text('Key'),
-                  onPressed: () {
-                    Crashlytics.instance.setString('foo', 'bar');
-                  }),
-              FlatButton(
-                  child: const Text('Log'),
-                  onPressed: () {
-                    Crashlytics.instance.log('baz');
-                  }),
-              FlatButton(
-                  child: const Text('Crash'),
-                  onPressed: () {
-                    // Use Crashlytics to throw an error. Use this for
-                    // confirmation that errors are being correctly reported.
-                    Crashlytics.instance.crash();
-                  }),
-              FlatButton(
-                  child: const Text('Throw Error'),
-                  onPressed: () {
-                    // Example of thrown error, it will be caught and sent to
-                    // Crashlytics.
-                    throw StateError('Uncaught error thrown by app.');
-                  }),
-              FlatButton(
-                  child: const Text('Async out of bounds'),
-                  onPressed: () {
-                    // Example of an exception that does not get caught
-                    // by `FlutterError.onError` but is caught by the `onError` handler of
-                    // `runZoned`.
-                    Future<void>.delayed(const Duration(seconds: 2), () {
-                      final List<int> list = <int>[];
-                      print(list[100]);
-                    });
-                  }),
-              FlatButton(
-                  child: const Text('Record Error'),
-                  onPressed: () {
-                    try {
-                      throw 'error_example';
-                    } catch (e, s) {
-                      // "context" will append the word "thrown" in the
-                      // Crashlytics console.
-                      Crashlytics.instance
-                          .recordError(e, s, context: 'as an example');
-                    }
-                  }),
-            ],
-          ),
+
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: Container(
+              color: Colors.white,
+              constraints: BoxConstraints.expand(),
+              child: Column(
+                children: <Widget>[
+                  Flexible(
+                      flex: 6,
+                      child: SpinKitThreeBounce(color: Colors.blue,)),
+                  Flexible(
+                    flex:  4,
+                    child: FractionallySizedBox(
+            heightFactor: 1.0,
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1.0, color: Colors.grey[200]),
+                  color: Colors.grey[200]
+                  ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListData(),
+              ),
+            ),
+          )
+                  ),
+                ],
+              )),
         ),
       ),
     );
+  }
+}
+
+
+
+
+
+class ListData extends StatelessWidget {
+  final List chat= ['frames take a lot of time with animation playing','average is 29 ms per frame','problem is with GPU thread','if listview is removed, everyting works fine','frames take a lot of time with animation playing','average is 29 ms per frame','problem is with GPU thread','frames take a lot of time with animation playing','average is 29 ms per frame','problem is with GPU thread','frames take a lot of time with animation playing','average is 29 ms per frame','problem is with GPU thread',];
+  final String networkImageUrl='https://firebasestorage.googleapis.com/v0/b/test-b077d.appspot.com/o/avatars%2Favataaars%20(2).png?alt=media&token=44a088a5-b033-49a4-a525-3075d503f9b1';
+  @override
+  Widget build(BuildContext context) {
+    return
+     ListView.builder(
+      reverse: true,
+      itemCount: chat.length,
+      itemBuilder: (BuildContext context, int index) {
+        String message = chat[index];
+        return Container(
+          alignment: Alignment.centerRight,
+      child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: 
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                color: Colors.white,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.fromLTRB(6.0, 2.0, 6.0, 2.0),
+                  child: Column(
+                    children: [
+                      Text('Developer'),
+                      Text(
+                        '$message',
+                          style: GoogleFonts.ubuntu(
+                              fontSize: 10.0,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ),
+               CircleAvatar(
+                radius: 14.0,
+                backgroundColor: Colors.grey[100],
+                backgroundImage:
+                    NetworkImage(networkImageUrl), 
+              )
+            ],
+          ),
+        ),
+    );
+      },
+  );
   }
 }

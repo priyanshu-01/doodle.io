@@ -20,7 +20,6 @@ dependencies:
   loading_animations: ^2.1.0
   flutter_spinkit: ^4.1.2+1   #package is modified for use in waitScreen.dart wave
   share: ^0.6.3+6
-  bubble: ^1.1.9+1
   flutter_keyboard_visibility: ^2.0.0
   carousel_slider: ^2.1.0
   connectivity: ^0.4.8+5
