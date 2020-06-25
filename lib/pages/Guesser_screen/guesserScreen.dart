@@ -262,7 +262,8 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
   var subG;
     @override
     Widget build(BuildContext context) {
-      if (word != '*') {
+      if (word != '*')
+       {
       if (currentG > 3 && counter - 1 != guessersId.length) {
         if (!timerRunning || tempDenId != denId) {
           tempDenId = denId;
@@ -271,7 +272,7 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
         }
         return Guesser();
       } else {
-        timerZero();
+        timerZero2();
         return WordWas();
       }
     } else {
@@ -287,6 +288,11 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
     print('timerZero called');
     subG.cancel();
     currentG = 92;
+    pointsG = [];
+    timerRunning = false;
+  }
+  void timerZero2(){
+    subG.cancel();
     pointsG = [];
     timerRunning = false;
   }

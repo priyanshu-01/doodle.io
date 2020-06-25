@@ -76,9 +76,9 @@ class _ChooseOrDrawState extends State<ChooseOrDraw> {
         }
         return Painter();
       } else {
+        //curr=90;
         timerRunning2 = false;
         subs.cancel();
-        curr = 90;
         return WordWas();
       }
     } else
@@ -87,6 +87,7 @@ class _ChooseOrDrawState extends State<ChooseOrDraw> {
     
     @override
   void dispose() {
+    curr = 90;
     if(subs!=null)
     subs.cancel();                //error caught by crashlytics   -- got undertesting fix
     timerRunning2 = false;
