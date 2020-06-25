@@ -7,7 +7,8 @@ List reactions = [
   'assets/reactions/thumbUp.png',
   'assets/reactions/thumbDown.png',
   'assets/reactions/middleFinger.png',
-  'assets/reactions/fire.png'
+  'assets/reactions/fire.png',
+  'assets/reactions/heart.png',
   ];
 
 class AnimatedGift extends StatefulWidget {

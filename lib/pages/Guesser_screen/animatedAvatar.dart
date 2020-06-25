@@ -94,12 +94,14 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
               child: ScaleTransition(
                 scale: curvedScaleAvatar,
                               child: ClipOval(
-                  child: Image.network(
+                  child:(playersId.indexOf(denId)!=-1)?
+                   Image.network(
                     playersImage[playersId.indexOf(denId)],
                     width: 100,
                     height: 100,
                     fit: BoxFit.cover,
-                  ),
+                  ):
+                  CircleAvatar(backgroundColor: Colors.brown,),
                 ),
               ),
             ),
