@@ -29,7 +29,7 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
     );
 
     curvedAnimationAvatar =
-        CurvedAnimation(parent: controlAvatar, curve: Curves.elasticOut);
+        CurvedAnimation(parent: controlAvatar, curve: Curves.easeInBack);
 
 
      scaleAvatar= AnimationController(
@@ -46,19 +46,23 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
 
     double denIconSize = 50.0;
     double rightIconPadding = 5.0;
-    double topIconPadding = 5.0;
+    double topIconPadding = guessCanvasLength;
 
     relativeRectTween = RelativeRectTween(
       begin: RelativeRect.fromLTRB(
           leftPadding,
           topPadding,
           totalWidth - 50 - leftPadding - photoSize,
-          (guessCanvasLength / 2) - topPadding - photoSize),
+          (guessCanvasLength ) - topPadding - photoSize),
       end: RelativeRect.fromLTRB(
-          totalWidth - 50 - rightIconPadding - denIconSize,
+          //totalWidth - 50 - rightIconPadding - denIconSize,
+          leftPadding+(photoSize/2),
           topIconPadding,
-          rightIconPadding,
-          (guessCanvasLength / 2) - topIconPadding - denIconSize),
+          //rightIconPadding,
+          totalWidth/2,
+          //(guessCanvasLength / 2) - topIconPadding - denIconSize
+          0.0,
+          ),
     );
 
 
@@ -85,7 +89,7 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
 
     return Container(
       width: totalWidth - 50,
-      height: guessCanvasLength / 2,
+      height: guessCanvasLength ,
       child: Stack(
         children: <Widget>[
           PositionedTransition(

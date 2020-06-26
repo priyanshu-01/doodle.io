@@ -4,6 +4,7 @@ import 'package:screen/screen.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'pages/stateTest.dart';
 import 'dart:async';
+import 'pages/wordWas.dart';
 bool resumed=true;
 void main() {
     Crashlytics.instance.enableInDevMode = false;
@@ -11,9 +12,10 @@ void main() {
 
        runZoned(() {
     runApp(new MaterialApp(
-      // home: new RoomCreatingScreen(),
+      //home: new RoomCreatingScreen(),
       home: new MyHomePage(),
      // home: SampleCodePart(),
+     //home: Scaffold(body: WordWasController()),
       debugShowCheckedModeBanner: false,
      theme: ThemeData(primarySwatch: Colors.red),
     ));

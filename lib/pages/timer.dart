@@ -122,18 +122,18 @@ int q=0,w=0,e=0,r=0;
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
         //Text('$denner',style: GoogleFonts.notoSans(),),
-         (guessersId.indexOf( identity )==-1)?
-        Icon(Icons.access_alarm,color: timerColor,):
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.green[700],
-            border: Border.all(
-              color: Colors.green[700]
-            ),
-            borderRadius: BorderRadius.circular(30.0)
-          ),
-          child:Icon(Icons.done, color: Colors.white,)
-        ),
+        //  (guessersId.indexOf( identity )==-1)?
+        // Icon(Icons.access_alarm,color: timerColor,):
+        // Container(
+        //   decoration: BoxDecoration(
+        //     color: Colors.green[700],
+        //     border: Border.all(
+        //       color: Colors.green[700]
+        //     ),
+        //     borderRadius: BorderRadius.circular(30.0)
+        //   ),
+        //   child:Icon(Icons.done, color: Colors.white,)
+        // ),
         
         Text('$current', style: GoogleFonts.lexendGiga(),),
         WordHint(revealed: revealed,)

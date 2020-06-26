@@ -29,6 +29,7 @@ dependencies:
   stepper_counter_swipe: ^0.0.5   #package is modified
   spring_button: ^1.0.13
   beauty_textfield: ^0.0.1
+  auto_size_text: ^2.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

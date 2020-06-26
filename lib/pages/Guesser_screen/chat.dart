@@ -60,7 +60,13 @@ class ChatList extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Container(
-                    color: Colors.white,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                     color: Color(0xFF504A4B),
+                    ),
+                    borderRadius: BorderRadius.circular(10.0),
+                     color: Color(0xFF504A4B),
+                    ),
                     child: Padding(
                       padding:
                           const EdgeInsets.fromLTRB(6.0, 5.0, 6.0, 5.0),
@@ -68,6 +74,7 @@ class ChatList extends StatelessWidget {
                         children: [
                           Text('$m',
                               style: GoogleFonts.ubuntu(
+                                  color: Colors.white,
                                   fontSize: 10.0,
                                   fontWeight: FontWeight.bold)),
                         ],
@@ -109,7 +116,12 @@ class ChatList extends StatelessWidget {
                       ),
                       SizedBox(width: 8.0,),
                   Container(
-                    color: Colors.white,
+                    decoration: BoxDecoration(
+                      border: Border.all(color:Colors.grey[300]),
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Colors.white,
+                    ),
+
                     child: Padding(
                       padding:
                           const EdgeInsets.fromLTRB(6.0, 2.0, 6.0, 2.0),
