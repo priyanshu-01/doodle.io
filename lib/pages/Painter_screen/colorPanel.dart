@@ -1,52 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:scribbl/pages/selectRoom.dart';
 
-final List colors = [
-  Colors.black,
-  Colors.brown,
-  Colors.blue,
-  Colors.green,
-  Colors.yellow,
-  Colors.orange,
-  Colors.pink,
-  Colors.red,
-  Colors.purple
-];
+class ColorHolder {
+  int selectedColorIndex = 0;
+  final List colors = [
+    Colors.black,
+    Colors.brown,
+    Colors.blue,
+    Colors.green,
+    Colors.yellow,
+    Colors.orange,
+    Colors.pink,
+    Colors.red,
+    Colors.purple
+  ];
+}
 
-class ColorPanel extends StatelessWidget {
-  const ColorPanel();
+class ColorPanel extends StatefulWidget {
+  final ColorHolder colorHolder;
+  const ColorPanel({this.colorHolder});
 
+  @override
+  _ColorPanelState createState() => _ColorPanelState();
+}
+
+class _ColorPanelState extends State<ColorPanel> {
   @override
   Widget build(BuildContext context) {
     print('panel rebuilt');
     return Container(
         child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[for (var color in colors) ColorBuilder(color: color)],
+      children: <Widget>[
+        for (var color in widget.colorHolder.colors)
+          InkWell(
+            child: ColorBuilder(
+              color: color,
+              colorHolder: widget.colorHolder,
+            ),
+            onTap: () {
+              setState(() {
+                widget.colorHolder.selectedColorIndex =
+                    widget.colorHolder.colors.indexOf(color);
+              });
+            },
+          )
+      ],
     ));
   }
 }
 
 class ColorBuilder extends StatelessWidget {
+  final ColorHolder colorHolder;
   final Color color;
-  ColorBuilder({this.color});
+  ColorBuilder({this.color, this.colorHolder});
   final double colorParentDimensions = totalLength * (2 / 3) * (1 / 11);
-  final double colorDimensions = totalLength * (2 / 3) * (1 / 11) * (8 / 10);
-  final double colorPadding = totalLength * (2 / 3) * (1 / 11) * (2 / 10);
+  final double colorDimensions = totalLength * (2 / 3) * (1 / 11) * (7.5 / 10);
+  final double selectedColorDimensions =
+      totalLength * (2 / 3) * (1 / 11) * (9 / 10);
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: Container(
-        height: colorParentDimensions,
-        width: colorParentDimensions,
-        child: Center(
-          child: Container(
-            height: colorDimensions,
-            width: colorDimensions,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: color,
-            ),
+    return Container(
+      height: colorParentDimensions,
+      width: colorParentDimensions,
+      child: Center(
+        child: Container(
+          height: (colorHolder.colors.indexOf(color) ==
+                  colorHolder.selectedColorIndex)
+              ? selectedColorDimensions
+              : colorDimensions,
+          width: (colorHolder.colors.indexOf(color) ==
+                  colorHolder.selectedColorIndex)
+              ? selectedColorDimensions
+              : colorDimensions,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color,
           ),
         ),
       ),
