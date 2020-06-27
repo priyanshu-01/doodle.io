@@ -192,17 +192,18 @@ Widget stackChild(String position) {
         ),
         position == 'guesser'
             ? AnimatedAvatar()
-            : Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0, right: 10.0),
-                  child: CircleAvatar(
-                    radius: 20.0,
-                    backgroundColor: Colors.grey[100],
-                    backgroundImage:
-                        NetworkImage(playersImage[playersId.indexOf(denId)]),
-                  ),
-                ),
-              )
+            :Container()
+            // : Container(
+            //     child: Padding(
+            //       padding: const EdgeInsets.only(top: 20.0, right: 10.0),
+            //       child: CircleAvatar(
+            //         radius: 20.0,
+            //         backgroundColor: Colors.grey[100],
+            //         backgroundImage:
+            //             NetworkImage(playersImage[playersId.indexOf(denId)]),
+            //       ),
+            //     ),
+            //   )
       ],
     ),
   );

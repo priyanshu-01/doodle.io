@@ -8,19 +8,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiver/async.dart';
 import '../Guesser_screen/guesserScreen.dart';
 import '../Guesser_screen/chat.dart';
+
 String choosenWord;
 bool timerRunning2 = false;
 
 class PainterScreen extends StatelessWidget {
 // int i;
- 
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: <Widget>[
+        child: Stack(children: <Widget>[
           Container(
             color: Colors.white,
             child: Column(
@@ -28,10 +27,10 @@ class PainterScreen extends StatelessWidget {
               children: <Widget>[
                 Flexible(
                   child: ChooseOrDraw(),
-                  flex: 8,
+                  flex: 2,
                 ),
                 Flexible(
-                  flex: 4,
+                  flex: 1,
                   child: Container(
                     decoration: BoxDecoration(
                         border: Border.all(width: 1.0, color: textAndChat),
@@ -52,21 +51,19 @@ class PainterScreen extends StatelessWidget {
   }
 }
 
-
-
-  class ChooseOrDraw extends StatefulWidget {
+class ChooseOrDraw extends StatefulWidget {
   @override
   _ChooseOrDrawState createState() => _ChooseOrDrawState();
 }
 
 class _ChooseOrDrawState extends State<ChooseOrDraw> {
-   var subs;
+  var subs;
   int curr = 90;
   int star = 90;
 
-    @override
-    Widget build(BuildContext context) {
-     if (word != '*') //this is true when it should not be
+  @override
+  Widget build(BuildContext context) {
+    if (word != '*') //this is true when it should not be
     {
       if (curr > 1 && counter - 1 != guessersId.length) {
         if (!timerRunning2) {
@@ -83,19 +80,18 @@ class _ChooseOrDrawState extends State<ChooseOrDraw> {
       }
     } else
       return ChooseWordDialog();
-    }
-    
-    @override
+  }
+
+  @override
   void dispose() {
     curr = 90;
-    if(subs!=null)
-    subs.cancel();                //error caught by crashlytics   -- got undertesting fix
+    if (subs != null)
+      subs.cancel(); //error caught by crashlytics   -- got undertesting fix
     timerRunning2 = false;
     super.dispose();
   }
 
-
-    void startTimer() {
+  void startTimer() {
     CountdownTimer countDownTimer = new CountdownTimer(
       new Duration(seconds: star),
       new Duration(seconds: 1),
@@ -113,19 +109,19 @@ class _ChooseOrDrawState extends State<ChooseOrDraw> {
 }
 
 Future<void> changeDen(String source) async {
-   record = {
+  record = {
     'name': userNam,
     'beforeChangeDenId': denId,
     'beforeChangeDenName': players[playersId.indexOf(denId)],
     'round': round,
     'myIndex': playersId.indexOf(identity),
     'indexOfDenner': playersId.indexOf(denId),
-    'word':word,
-    'source':source,
+    'word': word,
+    'source': source,
     'guessersId': guessersId,
     'no. of guessers': guessersId.length
   };
-  denChangeTrack=denChangeTrack+[record];
+  denChangeTrack = denChangeTrack + [record];
   word = '*';
   int s = playersId.indexOf(denId);
   if (s == players.length - 1) {
@@ -136,7 +132,7 @@ Future<void> changeDen(String source) async {
   for (int k = 0; k < tempScore.length; k++) {
     tempScore[k] = 0;
   }
- 
+
   await Firestore.instance.collection('rooms').document(documentid).updateData({
     'den': players[s],
     'den_id': playersId[s],

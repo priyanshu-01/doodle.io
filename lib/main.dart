@@ -5,69 +5,69 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'pages/stateTest.dart';
 import 'dart:async';
 import 'pages/wordWas.dart';
-bool resumed=true;
-void main() {
-    Crashlytics.instance.enableInDevMode = false;
-     FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
-       runZoned(() {
+bool resumed = true;
+void main() {
+  Crashlytics.instance.enableInDevMode = false;
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+
+  runZoned(() {
     runApp(new MaterialApp(
       //home: new RoomCreatingScreen(),
       home: new MyHomePage(),
-     // home: SampleCodePart(),
-     //home: Scaffold(body: WordWasController()),
+      // home: SampleCodePart(),
+      // home: Scaffold(body: WordWasContent()),
       debugShowCheckedModeBanner: false,
-     theme: ThemeData(primarySwatch: Colors.red),
+      theme: ThemeData(primarySwatch: Colors.red),
     ));
   }, onError: Crashlytics.instance.recordError);
-
 }
-
 
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
-  void initState(){
+  void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
+
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state){
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     print('state= $state');
-    switch (state){
+    switch (state) {
       case AppLifecycleState.inactive:
-      {
-        print('inactive');
-        resumed=false;
-      }
-      break;
+        {
+          print('inactive');
+          resumed = false;
+        }
+        break;
       case AppLifecycleState.paused:
-      {
-        print('paused');
-        resumed=false;
-      }
-      break;
+        {
+          print('paused');
+          resumed = false;
+        }
+        break;
       case AppLifecycleState.resumed:
-      {
-        print('resumed');
-        resumed=true;
-      }
-      break;
+        {
+          print('resumed');
+          resumed = true;
+        }
+        break;
       case AppLifecycleState.detached:
-      {
-        print('detached');
-        resumed=false;
-      }
-      break;
+        {
+          print('detached');
+          resumed = false;
+        }
+        break;
     }
   }
 
@@ -75,7 +75,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
   Widget build(BuildContext context) {
     Screen.keepOn(true);
     return AuthHandler();
-   // return MyApp();
-
+    // return MyApp();
   }
 }
