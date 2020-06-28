@@ -30,26 +30,27 @@ class _ColorPanelState extends State<ColorPanel> {
   Widget build(BuildContext context) {
     print('panel rebuilt');
     return Container(
+        color: Colors.white,
         child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        for (var color in widget.colorHolder.colors)
-          Flexible(
-            child: InkWell(
-              child: ColorBuilder(
-                color: color,
-                colorHolder: widget.colorHolder,
-              ),
-              onTap: () {
-                setState(() {
-                  widget.colorHolder.selectedColorIndex =
-                      widget.colorHolder.colors.indexOf(color);
-                });
-              },
-            ),
-          )
-      ],
-    ));
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            for (var color in widget.colorHolder.colors)
+              Flexible(
+                child: InkWell(
+                  child: ColorBuilder(
+                    color: color,
+                    colorHolder: widget.colorHolder,
+                  ),
+                  onTap: () {
+                    setState(() {
+                      widget.colorHolder.selectedColorIndex =
+                          widget.colorHolder.colors.indexOf(color);
+                    });
+                  },
+                ),
+              )
+          ],
+        ));
   }
 }
 

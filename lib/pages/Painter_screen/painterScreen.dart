@@ -44,7 +44,7 @@ class PainterScreen extends StatelessWidget {
             ),
           ),
           //stack child 2 down
-          stackChild('painter')
+          StackChild(position: 'painter')
         ]),
       ),
     );

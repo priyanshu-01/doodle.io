@@ -16,14 +16,14 @@ import 'package:flutter/rendering.dart';
 import '../../gift/gift_contents.dart';
 import 'animatedAvatar.dart';
 import 'chat.dart';
+
 bool timerRunning = false;
 final messageHolder = TextEditingController();
 String message = '';
 double guessCanvasLength;
 bool keyboardState;
 String newMessage;
-Color textAndChat = 
-Colors.grey[200];
+Color textAndChat = Colors.grey[200];
 //Color(0xFFFFF1E9);
 int score = 0;
 String tempDenId;
@@ -31,7 +31,7 @@ AnimationController controlGift;
 enum animateAvatar { start, done, reset }
 var avatarAnimation;
 
-  int currentG = 92;
+int currentG = 92;
 
 class GuesserScreen extends StatefulWidget {
   @override
@@ -40,14 +40,14 @@ class GuesserScreen extends StatefulWidget {
 
 class _GuesserScreenState extends State<GuesserScreen> {
   //Color textAndChat= Color(0xFFECC5C0);
-  
+
   StreamSubscription subscription;
   @override
   void initState() {
     guessCanvasLength = (((effectiveLength * 0.6) - 50) * (7 / 8));
     super.initState();
     keyboardState = KeyboardVisibility.isVisible;
-     subscription=  KeyboardVisibility.onChange.listen((bool visible) {
+    subscription = KeyboardVisibility.onChange.listen((bool visible) {
       setState(() {
         //error by crashlytics   --solved and tested
         keyboardState = visible;
@@ -58,11 +58,8 @@ class _GuesserScreenState extends State<GuesserScreen> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -81,7 +78,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
                               }
                             },
                             child: GuessWaitShow())),
-                   TextBox(),
+                    TextBox(),
                     Flexible(
                       flex: (keyboardState) ? 0 : 4,
                       child: Container(
@@ -96,7 +93,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
                     ),
                   ],
                 )),
-            stackChild('guesser')
+            StackChild(position: 'guesser')
           ]),
         ),
       ),
@@ -110,116 +107,102 @@ class _GuesserScreenState extends State<GuesserScreen> {
   }
 }
 
-
-// class StackChild extends StatelessWidget {
-//   final String positon;
-//   StackChild({this.positon});
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-      
-//     );
-//   }
-// }
-
-
-
-
-Widget stackChild(String position) {
-  return Container(
-    height: position == 'guesser' ? guessCanvasLength : denCanvasLength,
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Container(
-          alignment: AlignmentDirectional.topCenter,
-          height: position == 'guesser'
-              ? guessCanvasLength - 15
-              : denCanvasLength - 15,
-          width: 50.0,
-          child: Container(
-            height: checkLeftSideContainerHeight(position),
-            child: ListView.builder(
-              reverse: false,
-              itemCount: playersId.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: (guessersId.indexOf(playersId[index]) == -1)
-                      ? 
-
-                     (denId==playersId[index])?
-                              CircleAvatar(
-                                  radius: 20.0,
-                                  backgroundColor: Colors.blue,
-                                  child: CircleAvatar(
-                                    radius: 17.5,
-                                    backgroundImage: NetworkImage(playersImage[
-                                    // playersId.indexOf(guessersId[index])
-                                    index
-                                      ]),
+class StackChild extends StatelessWidget {
+  final String position;
+  StackChild({this.position});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: position == 'guesser' ? guessCanvasLength : denCanvasLength,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+              alignment: AlignmentDirectional.topCenter,
+              height: position == 'guesser'
+                  ? guessCanvasLength - 15
+                  : denCanvasLength - 15,
+              //width: 50.0,
+              child:
+                  //  Container(
+                  //     // height: checkLeftSideContainerHeight(position),
+                  //     child:
+                  // playersId.length,
+                  Wrap(
+                direction: Axis.vertical,
+                children: [
+                  for (var playerIdentity in playersId)
+                    Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: (guessersId.indexOf(playerIdentity) == -1)
+                            ? (denId == playerIdentity)
+                                ? CircleAvatar(
+                                    radius: 20.0,
+                                    backgroundColor: Colors.blue,
+                                    child: CircleAvatar(
+                                      radius: 17.5,
+                                      backgroundImage: NetworkImage(
+                                          playersImage[
+                                              playersId.indexOf(playerIdentity)
+                                              // index
+                                              ]),
                                       backgroundColor: Colors.grey[100],
-                                  ),
-                                ):
-                              CircleAvatar(
-                                  radius: 20.0,
-                                  backgroundColor: Colors.grey[100],
+                                    ),
+                                  )
+                                : CircleAvatar(
+                                    radius: 20.0,
+                                    backgroundColor: Colors.grey[100],
+                                    backgroundImage: NetworkImage(playersImage[
+                                        // playersId.indexOf(guessersId[index])
+                                        playersId.indexOf(playerIdentity)]),
+                                  )
+                            : CircleAvatar(
+                                radius: 20.0,
+                                backgroundColor: Colors.green[400],
+                                child: CircleAvatar(
+                                  radius: 17.5,
                                   backgroundImage: NetworkImage(playersImage[
-                                    // playersId.indexOf(guessersId[index])
-                                    index
-                                      ]),
-                                )
-
-
-                        :CircleAvatar(
-                          radius: 20.0,
-                          backgroundColor: Colors.green[400],
-                          child: CircleAvatar(
-                            radius: 17.5,
-                            backgroundImage: NetworkImage(playersImage[
-                             // playersId.indexOf(guessersId[index])
-                             index
-                              ]),
-                              backgroundColor: Colors.grey[100],
-                          ),
-                        )
-                      
-                );
-              },
-            ),
-          ),
-        ),
-        position == 'guesser'
-            ? AnimatedAvatar()
-            :Container()
-            // : Container(
-            //     child: Padding(
-            //       padding: const EdgeInsets.only(top: 20.0, right: 10.0),
-            //       child: CircleAvatar(
-            //         radius: 20.0,
-            //         backgroundColor: Colors.grey[100],
-            //         backgroundImage:
-            //             NetworkImage(playersImage[playersId.indexOf(denId)]),
-            //       ),
-            //     ),
-            //   )
-      ],
-    ),
-  );
+                                      // playersId.indexOf(guessersId[index])
+                                      playersId.indexOf(playerIdentity)]),
+                                  backgroundColor: Colors.grey[100],
+                                ),
+                              )),
+                ],
+              )
+              // ),
+              ),
+          position == 'guesser' ? AnimatedAvatar() : Container()
+          // : Container(
+          //     child: Padding(
+          //       padding: const EdgeInsets.only(top: 20.0, right: 10.0),
+          //       child: CircleAvatar(
+          //         radius: 20.0,
+          //         backgroundColor: Colors.grey[100],
+          //         backgroundImage:
+          //             NetworkImage(playersImage[playersId.indexOf(denId)]),
+          //       ),
+          //     ),
+          //   )
+        ],
+      ),
+    );
+  }
 }
- 
-double checkLeftSideContainerHeight(String position){
+
+double checkLeftSideContainerHeight(String position) {
   double tempHeight;
   int len;
-  (position=='guesser')?tempHeight=guessCanvasLength-15:tempHeight=denCanvasLength-15;
-  int i = (tempHeight~/50);
-  if(i<playersId.length)
-  len= i*50;
+  (position == 'guesser')
+      ? tempHeight = guessCanvasLength - 15
+      : tempHeight = denCanvasLength - 15;
+  int i = (tempHeight ~/ 50);
+  if (i < playersId.length)
+    len = i * 50;
   else
-  len= playersId.length*50;
+    len = playersId.length * 50;
   return len.toDouble();
-} 
+}
 
 Future<void> sendMessage() async {
   await Firestore.instance
@@ -253,7 +236,6 @@ Future<void> updateScore() async {
 }
 
 class GuessWaitShow extends StatefulWidget {
-
   @override
   _GuessWaitShowState createState() => _GuessWaitShowState();
 }
@@ -261,10 +243,9 @@ class GuessWaitShow extends StatefulWidget {
 class _GuessWaitShowState extends State<GuessWaitShow> {
   int startG = 92;
   var subG;
-    @override
-    Widget build(BuildContext context) {
-      if (word != '*')
-       {
+  @override
+  Widget build(BuildContext context) {
+    if (word != '*') {
       if (currentG > 3 && counter - 1 != guessersId.length) {
         if (!timerRunning || tempDenId != denId) {
           tempDenId = denId;
@@ -283,16 +264,17 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
       }
       return WaitScreen();
     }
-    }
+  }
 
-     void timerZero() {
+  void timerZero() {
     print('timerZero called');
     subG.cancel();
     currentG = 92;
     pointsG = [];
     timerRunning = false;
   }
-  void timerZero2(){
+
+  void timerZero2() {
     subG.cancel();
     pointsG = [];
     timerRunning = false;
@@ -323,6 +305,7 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
       currentG = 92;
     });
   }
+
   @override
   void dispose() {
     word = '*';
@@ -333,111 +316,108 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
   }
 }
 
-
-
-
 class TextBox extends StatefulWidget {
   @override
   _TextBoxState createState() => _TextBoxState();
 }
 
 class _TextBoxState extends State<TextBox> {
-    final FocusNode fn = FocusNode();
+  final FocusNode fn = FocusNode();
   @override
   Widget build(BuildContext context) {
-    return  Container(
-                      height: 50.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  0.0, 8.0, 0.0, 10.0),
-                              child: InkWell(
-                                child: Image(
-                                  image: AssetImage('assets/icons/gift.gif'),
-                                ),
-                                onTap: () {
-                                  if (fn.hasFocus) {
-                                    fn.unfocus();
-                                    controlGift.forward(from: 0.0);
-                                  } else {
-                                    (controlGift.value == 0.0)
-                                        ? controlGift.forward(from: 0.0)
-                                        : controlGift.reverse();
-                                  }
-                                },
-                              )),
-                          Container(
-                            width: totalWidth * 0.7,
-                            color: Colors.white,
-                            height: 50.0,
-                            child: TextField(
-                              style: GoogleFonts.ubuntu(
-                                fontSize: 20.0,
-                                //fontWeight: FontWeight.bold
-                              ),
-                              focusNode: fn,
-                              cursorColor: Color(0xFF1A2F77),
-                              decoration: InputDecoration(
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                    color: Color(0xFFFF4893),
-                                  )),
-                                  hintText: 'Type Here',
-                                  focusColor: Colors.white),
-                              controller: messageHolder,
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.newline,
-                              onChanged: (mess) {
-                                setState(() {
-                                  message = mess;
-                                });
-                              },
-                              onEditingComplete: () {},
-                              onSubmitted: (String a) => onSend(),
-                            ),
-                          ),
-                          (message == '')
-                              ? (keyboardState)
-                                  ? IconButton(
-                                      icon: Icon(
-                                        Icons.keyboard_arrow_down,
-                                        size: 30.0,
-                                        color: Color(0xFFFF4893),
-                                      ),
-                                      onPressed: () {
-                                        fn.unfocus();
-                                        // FocusScope.of(context).unfocus();
-                                      },
-                                    )
-                                  : IconButton(
-                                      icon: Icon(
-                                        Icons.keyboard_arrow_up,
-                                        size: 30.0,
-                                        color: Color(0xFFFF4893),
-                                      ),
-                                      onPressed: () {
-                                        fn.requestFocus();
-                                      },
-                                    )
-                              : IconButton(
-                                  icon: Icon(
-                                    Icons.send,
-                                    //color: Color(0xFF16162E),
-                                    color: Color(0xFFFF4893),
-                                    //  color: Color(0xFF1A2F77),
-                                    //   color: Color(0xFFA74AC7),
-                                    size: 30.0,
-                                  ),
-                                  //onPressed:=>onSend(),
-                                  onPressed: () => onSend(),
-                                ),
-                        ],
+    return Container(
+      color: Colors.white,
+      height: 50.0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Padding(
+              padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 10.0),
+              child: InkWell(
+                child: Image(
+                  image: AssetImage('assets/icons/gift.gif'),
+                ),
+                onTap: () {
+                  if (fn.hasFocus) {
+                    fn.unfocus();
+                    controlGift.forward(from: 0.0);
+                  } else {
+                    (controlGift.value == 0.0)
+                        ? controlGift.forward(from: 0.0)
+                        : controlGift.reverse();
+                  }
+                },
+              )),
+          Container(
+            width: totalWidth * 0.7,
+            color: Colors.white,
+            height: 50.0,
+            child: TextField(
+              style: GoogleFonts.ubuntu(
+                fontSize: 20.0,
+                //fontWeight: FontWeight.bold
+              ),
+              focusNode: fn,
+              cursorColor: Color(0xFF1A2F77),
+              decoration: InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                    color: Color(0xFFFF4893),
+                  )),
+                  hintText: 'Type Here',
+                  focusColor: Colors.white),
+              controller: messageHolder,
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.newline,
+              onChanged: (mess) {
+                setState(() {
+                  message = mess;
+                });
+              },
+              onEditingComplete: () {},
+              onSubmitted: (String a) => onSend(),
+            ),
+          ),
+          (message == '')
+              ? (keyboardState)
+                  ? IconButton(
+                      icon: Icon(
+                        Icons.keyboard_arrow_down,
+                        size: 30.0,
+                        color: Color(0xFFFF4893),
                       ),
-                    );
+                      onPressed: () {
+                        fn.unfocus();
+                        // FocusScope.of(context).unfocus();
+                      },
+                    )
+                  : IconButton(
+                      icon: Icon(
+                        Icons.keyboard_arrow_up,
+                        size: 30.0,
+                        color: Color(0xFFFF4893),
+                      ),
+                      onPressed: () {
+                        fn.requestFocus();
+                      },
+                    )
+              : IconButton(
+                  icon: Icon(
+                    Icons.send,
+                    //color: Color(0xFF16162E),
+                    color: Color(0xFFFF4893),
+                    //  color: Color(0xFF1A2F77),
+                    //   color: Color(0xFFA74AC7),
+                    size: 30.0,
+                  ),
+                  //onPressed:=>onSend(),
+                  onPressed: () => onSend(),
+                ),
+        ],
+      ),
+    );
   }
-  
+
   void onSend() {
     message = ' $message ';
     if (message != '  ') {
@@ -460,7 +440,8 @@ class _TextBoxState extends State<TextBox> {
     message = '';
     fn.unfocus();
   }
-    void showPopup(context) {
+
+  void showPopup(context) {
     AchievementView(context,
         title: "Bingo!",
         subTitle: '',
@@ -485,7 +466,7 @@ class _TextBoxState extends State<TextBox> {
   void calculateScore() {
     //1 time
     int s1;
-    int currentTime = currentG - 5;           //NEEDS TO BE CHANGED
+    int currentTime = currentG - 5; //NEEDS TO BE CHANGED
     s1 = (currentTime ~/ 10) + 1;
     s1 = s1 * 10;
     int s2;
@@ -498,5 +479,4 @@ class _TextBoxState extends State<TextBox> {
 
     //claculate score for denner
   }
-
 }
