@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../room/room.dart';
 import '../../timer.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,112 +42,8 @@ class PainterState extends State<Painter> {
       children: <Widget>[
         Flexible(
             flex: 9,
-            child: Stack(
-              children: [
-                RepaintBoundary(
-                  child: CustomPaint(
-                    child: Container(
-                      color: Colors.white,
-                      constraints: BoxConstraints.expand(),
-                    ),
-                    foregroundPainter: new CacheDrawing(
-                        points: painterData.pointsD,
-                        indices: painterData.indices,
-                        p: painterData.p,
-                        colorHolder: painterData.colorHolder,
-                        colorIndexStack: painterData.colorIndexStack),
-                    size: Size.infinite,
-                  ),
-                ),
-                RepaintBoundary(
-                  child: new GestureDetector(
-                    onPanStart: (DragStartDetails details) {
-                      setState(() {
-                        RenderBox object = context.findRenderObject();
-                        Offset _localPosition =
-                            object.globalToLocal(details.globalPosition);
-                        if (painterData.indices[painterData.p] !=
-                            painterData.tempInd) {
-                          painterData.listX = painterData.stringOperations
-                              .truncate3(painterData.listX,
-                                  painterData.indices[painterData.p]);
-                          painterData.listY = painterData.stringOperations
-                              .truncate3(painterData.listY,
-                                  painterData.indices[painterData.p]);
-                          painterData.pointsD = painterData.stringOperations
-                              .truncate2(painterData.pointsD,
-                                  painterData.indices[painterData.p]);
-                          painterData.indices = painterData.stringOperations
-                              .truncate(painterData.indices, painterData.p);
-                          painterData.colorIndexStack =
-                              painterData.stringOperations.truncate(
-                                  painterData.colorIndexStack, painterData.p);
-                          painterData.pointsD.add(null);
-                          painterData.listY.add(null);
-                          painterData.listX.add(null);
-                          painterData.tempInd =
-                              painterData.indices[painterData.p] + 1;
-                        }
-                        painterData.pointsD = new List.from(painterData.pointsD)
-                          ..add(_localPosition);
-                        painterData.listY.add(_localPosition.dy);
-                        painterData.listX.add(_localPosition.dx);
-                        painterData.tempInd++;
-                        painterData.signatureTempInd = painterData.tempInd;
-                        // painterData.indices.add(painterData.tempInd);
-                        // p = p + 1;
-                      });
-                    },
-                    onPanUpdate: (DragUpdateDetails details) {
-                      setState(() {
-                        RenderBox object = context.findRenderObject();
-                        Offset _localPosition =
-                            object.globalToLocal(details.globalPosition);
-                        painterData.pointsD = new List.from(painterData.pointsD)
-                          ..add(_localPosition);
-                        painterData.listY.add(_localPosition.dy);
-                        painterData.listX.add(_localPosition.dx);
-                        painterData.tempInd++;
-                        painterData.signatureTempInd = painterData.tempInd;
-                        // painterData.indices[p] = painterData.tempInd;
-                      });
-                    },
-                    onPanEnd: (DragEndDetails details) {
-                      setState(() {
-                        painterData.pointsD.add(null);
-                        painterData.listY.add(null);
-                        painterData.listX.add(null);
-                        painterData.tempInd++;
-                        painterData.indices.add(painterData.tempInd);
-                        painterData.colorIndexStack
-                            .add(painterData.colorHolder.selectedColorIndex);
-                        painterData.p = painterData.p + 1;
-                        painterData.indices[painterData.p] =
-                            painterData.tempInd;
-                        painterData.colorIndexStack[painterData.p] =
-                            painterData.colorHolder.selectedColorIndex;
-                        painterData.signatureTempInd = painterData.tempInd;
-                        painterData.crud.updateStroke();
-                      });
-                    },
-
-                    //onTapUp: (TapUpDetails details){tapFunction(details);},
-                    child: new CustomPaint(
-                      child: Container(
-                        // color: Colors.pink,
-                        constraints: BoxConstraints.expand(),
-                      ),
-                      painter: new Signature(
-                          points: painterData.pointsD,
-                          signatureTempInd: painterData.signatureTempInd,
-                          indices: painterData.indices,
-                          p: painterData.p,
-                          colorHolder: painterData.colorHolder),
-                      size: Size.infinite,
-                    ),
-                  ),
-                )
-              ],
+            child: SingleStroke(
+              painterData: painterData,
             )),
         Flexible(
           flex: 1,
@@ -205,13 +100,14 @@ class PainterState extends State<Painter> {
                       icon: const Icon(
                         Icons.delete,
                         size: 30.0,
-                        color: Colors.black,
+                        color: Color(0xFF504A4B),
                       ),
                       onPressed: () {
                         clearPoints();
                         painterData.listX = [];
                         painterData.listY = [];
                         painterData.tempInd = 0;
+                        painterData.signatureTempInd = 0;
                         painterData.p = 0;
                         painterData.indices = [0];
                         painterData.colorIndexStack = [0];
@@ -248,6 +144,105 @@ class _SingleStrokeState extends State<SingleStroke> {
   _SingleStrokeState({this.painterData});
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Stack(
+      children: [
+        RepaintBoundary(
+          child: CustomPaint(
+            child: Container(
+              color: Colors.white,
+              constraints: BoxConstraints.expand(),
+            ),
+            foregroundPainter: new CacheDrawing(
+                points: painterData.pointsD,
+                indices: painterData.indices,
+                p: painterData.p,
+                colorHolder: painterData.colorHolder,
+                colorIndexStack: painterData.colorIndexStack),
+            size: Size.infinite,
+          ),
+        ),
+        RepaintBoundary(
+          child: new GestureDetector(
+            onPanStart: (DragStartDetails details) {
+              setState(() {
+                RenderBox object = context.findRenderObject();
+                Offset _localPosition =
+                    object.globalToLocal(details.globalPosition);
+                if (painterData.indices[painterData.p] != painterData.tempInd) {
+                  painterData.listX = painterData.stringOperations.truncate3(
+                      painterData.listX, painterData.indices[painterData.p]);
+                  painterData.listY = painterData.stringOperations.truncate3(
+                      painterData.listY, painterData.indices[painterData.p]);
+                  painterData.pointsD = painterData.stringOperations.truncate2(
+                      painterData.pointsD, painterData.indices[painterData.p]);
+                  painterData.indices = painterData.stringOperations
+                      .truncate(painterData.indices, painterData.p);
+                  painterData.colorIndexStack = painterData.stringOperations
+                      .truncate(painterData.colorIndexStack, painterData.p);
+                  painterData.pointsD.add(null);
+                  painterData.listY.add(null);
+                  painterData.listX.add(null);
+                  painterData.tempInd = painterData.indices[painterData.p] + 1;
+                }
+                painterData.pointsD = new List.from(painterData.pointsD)
+                  ..add(_localPosition);
+                painterData.listY.add(_localPosition.dy);
+                painterData.listX.add(_localPosition.dx);
+                painterData.tempInd++;
+                painterData.signatureTempInd = painterData.tempInd;
+                // painterData.indices.add(painterData.tempInd);
+                // p = p + 1;
+              });
+            },
+            onPanUpdate: (DragUpdateDetails details) {
+              setState(() {
+                RenderBox object = context.findRenderObject();
+                Offset _localPosition =
+                    object.globalToLocal(details.globalPosition);
+                painterData.pointsD = new List.from(painterData.pointsD)
+                  ..add(_localPosition);
+                painterData.listY.add(_localPosition.dy);
+                painterData.listX.add(_localPosition.dx);
+                painterData.tempInd++;
+                painterData.signatureTempInd = painterData.tempInd;
+                // painterData.indices[p] = painterData.tempInd;
+              });
+            },
+            onPanEnd: (DragEndDetails details) {
+              setState(() {
+                painterData.pointsD.add(null);
+                painterData.listY.add(null);
+                painterData.listX.add(null);
+                painterData.tempInd++;
+                painterData.indices.add(painterData.tempInd);
+                painterData.colorIndexStack
+                    .add(painterData.colorHolder.selectedColorIndex);
+                painterData.p = painterData.p + 1;
+                painterData.indices[painterData.p] = painterData.tempInd;
+                painterData.colorIndexStack[painterData.p] =
+                    painterData.colorHolder.selectedColorIndex;
+                painterData.signatureTempInd = painterData.tempInd;
+                painterData.crud.updateStroke();
+              });
+            },
+
+            //onTapUp: (TapUpDetails details){tapFunction(details);},
+            child: new CustomPaint(
+              child: Container(
+                // color: Colors.pink,
+                constraints: BoxConstraints.expand(),
+              ),
+              painter: new Signature(
+                  points: painterData.pointsD,
+                  signatureTempInd: painterData.signatureTempInd,
+                  indices: painterData.indices,
+                  p: painterData.p,
+                  colorHolder: painterData.colorHolder),
+              size: Size.infinite,
+            ),
+          ),
+        )
+      ],
+    );
   }
 }

@@ -48,6 +48,10 @@ class CacheDrawing extends CustomPainter {
   int p;
   ColorHolder colorHolder;
   List<int> colorIndexStack;
+  Paint paintObj = new Paint()
+    ..color = Colors.black
+    ..strokeCap = StrokeCap.round
+    ..strokeWidth = 03.0;
   CacheDrawing(
       {this.points,
       this.indices,
@@ -56,25 +60,22 @@ class CacheDrawing extends CustomPainter {
       this.colorIndexStack});
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = new Paint()
-      ..color = Colors.black
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 03.0;
     //paint.color=Colors.blue;
-    for (int i = 0; i < ((p == 0) ? 0 : indices[p]) - 1; i++) {
+    for (int i = 0; i < indices[p]; i++) {
       if (indices.indexOf(i) != -1) {
-        if (colorHolder.colors[colorIndexStack[indices.indexOf(i)]] !=
-            paint.color) {
-          paint.color = colorHolder.colors[colorIndexStack[indices.indexOf(i)]];
+        if (colorHolder.colors[colorIndexStack[indices.indexOf(i) + 1]] !=
+            paintObj.color) {
+          paintObj.color =
+              colorHolder.colors[colorIndexStack[indices.indexOf(i) + 1]];
         }
       }
 
       if ((points[i] != null && points[i] != Offset(-1, -1)) &&
           (points[i + 1] != null && points[i + 1] != Offset(-1, -1))) {
-        canvas.drawLine(points[i], points[i + 1], paint);
+        canvas.drawLine(points[i], points[i + 1], paintObj);
         //print(points[i]);
       } else if (points[i] == Offset(-1, -1) && points[i + 1] != null) {
-        canvas.drawCircle(points[i + 1], 2.5, paint);
+        canvas.drawCircle(points[i + 1], 2.5, paintObj);
       }
     }
   }

@@ -5,14 +5,15 @@ class ColorHolder {
   int selectedColorIndex = 0;
   final List colors = [
     Colors.black,
-    Colors.brown,
+    Colors.white,
     Colors.blue,
     Colors.green,
     Colors.yellow,
     Colors.orange,
     Colors.pink,
     Colors.red,
-    Colors.purple
+    Colors.purple,
+    Colors.brown,
   ];
 }
 
@@ -33,17 +34,19 @@ class _ColorPanelState extends State<ColorPanel> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         for (var color in widget.colorHolder.colors)
-          InkWell(
-            child: ColorBuilder(
-              color: color,
-              colorHolder: widget.colorHolder,
+          Flexible(
+            child: InkWell(
+              child: ColorBuilder(
+                color: color,
+                colorHolder: widget.colorHolder,
+              ),
+              onTap: () {
+                setState(() {
+                  widget.colorHolder.selectedColorIndex =
+                      widget.colorHolder.colors.indexOf(color);
+                });
+              },
             ),
-            onTap: () {
-              setState(() {
-                widget.colorHolder.selectedColorIndex =
-                    widget.colorHolder.colors.indexOf(color);
-              });
-            },
           )
       ],
     ));
@@ -55,7 +58,7 @@ class ColorBuilder extends StatelessWidget {
   final Color color;
   ColorBuilder({this.color, this.colorHolder});
   final double colorParentDimensions = totalLength * (2 / 3) * (1 / 11);
-  final double colorDimensions = totalLength * (2 / 3) * (1 / 11) * (7.5 / 10);
+  final double colorDimensions = totalLength * (2 / 3) * (1 / 11) * (6.5 / 10);
   final double selectedColorDimensions =
       totalLength * (2 / 3) * (1 / 11) * (9 / 10);
   @override
@@ -73,10 +76,13 @@ class ColorBuilder extends StatelessWidget {
                   colorHolder.selectedColorIndex)
               ? selectedColorDimensions
               : colorDimensions,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: color,
-          ),
+          decoration: (color == Colors.white)
+              ? BoxDecoration(
+                  shape: BoxShape.circle, color: color, border: Border.all())
+              : BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color,
+                ),
         ),
       ),
     );
