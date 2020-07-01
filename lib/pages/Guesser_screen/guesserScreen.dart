@@ -61,41 +61,39 @@ class _GuesserScreenState extends State<GuesserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Stack(children: <Widget>[
-            Container(
-                color: Colors.white,
-                constraints: BoxConstraints.expand(),
-                child: Column(
-                  children: <Widget>[
-                    Flexible(
-                        flex: 6,
-                        child: GestureDetector(
-                            onTap: () {
-                              if (controlGift.value == 1.0) {
-                                controlGift.reverse(from: 1.0);
-                              }
-                            },
-                            child: GuessWaitShow())),
-                    TextBox(),
-                    Flexible(
-                      flex: (keyboardState) ? 0 : 4,
-                      child: Container(
-                        child: Stack(
-                          children: <Widget>[
-                            ChatBox(),
-                            AnimatedGift()
-                            //)
-                          ],
-                        ),
+      body: Center(
+        child: Stack(children: <Widget>[
+          Container(
+              color: Colors.white,
+              constraints: BoxConstraints.expand(),
+              child: Column(
+                children: <Widget>[
+                  Flexible(
+                      flex: 6,
+                      child: GestureDetector(
+                          onTap: () {
+                            if (controlGift.value == 1.0) {
+                              controlGift.reverse(from: 1.0);
+                            }
+                          },
+                          child: GuessWaitShow())),
+                  TextBox(),
+                  Flexible(
+                    flex: (keyboardState) ? 0 : 4,
+                    child: Container(
+                      child: Stack(
+                        children: <Widget>[
+                          ChatBox(),
+                          AnimatedGift()
+                          //)
+                        ],
                       ),
                     ),
-                  ],
-                )),
-            StackChild(position: 'guesser')
-          ]),
-        ),
+                  ),
+                ],
+              )),
+          StackChild(position: 'guesser')
+        ]),
       ),
     );
   }
@@ -228,6 +226,8 @@ Future<void> updateScore() async {
   tempScore[ind] = sum;
   finalScore[ind] = finalScore[ind] + sum;
   //madeIt = true;
+  // score = 0;
+
   await Firestore.instance.collection('rooms').document(documentid).updateData({
     'tempScore': tempScore,
     'finalScore': finalScore,
@@ -275,7 +275,7 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
   }
 
   void timerZero2() {
-    subG.cancel();
+    if (subG != null) subG.cancel();
     pointsG = [];
     timerRunning = false;
   }
@@ -334,7 +334,7 @@ class _TextBoxState extends State<TextBox> {
           Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 10.0),
               child: InkWell(
-                child: Image(
+                child: const Image(
                   image: AssetImage('assets/icons/gift.gif'),
                 ),
                 onTap: () {

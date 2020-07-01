@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:scribbl/services/authHandler.dart';
+import 'package:scribbl/virtualCurrency/data.dart';
+import 'package:scribbl/virtualCurrency/virtualCurrency.dart';
 import '../services/authService.dart';
-import '../services/authHandler.dart';
+// import '../services/authHandler.dart';
 import 'roomId.dart';
 import 'room/room.dart';
 import 'dart:math';
@@ -16,10 +20,11 @@ import 'dart:io';
 import '../reactions/listenReactions.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+
 ReactionListener reactionListener;
 double effectiveLength = 0;
 String userNam;
-String identity = uid;
+String identity;
 int id;
 bool initialiseDimension = true;
 bool online;
@@ -41,27 +46,22 @@ Map<String, Color> color = {
   'blackShade': Color(0xFF343434)
 };
 
-String commas(int n) {
-  String c = n.toString();
-  String r;
-  if (c.length <= 3)
-    r = c;
-  else if (c.length == 4) {
-    r = c.substring(0, 1) + ',' + c.substring(1);
-  } else if (c.length == 5) {
-    r = c.substring(0, 2) + ',' + c.substring(2);
-  } else if (c.length == 6) {
-    r = c.substring(0, 1) + ',' + c.substring(1, 3) + ',' + c.substring(3);
-  } else if (c.length == 7) {
-    r = c.substring(0, 2) + ',' + c.substring(2, 4) + ',' + c.substring(4);
-  } else
-    r = c;
-  return r;
-}
-
 class SelectRoom extends StatefulWidget {
-  String userName;
-  SelectRoom({Key key, this.userName}) : super(key: key);
+  final String userName;
+  final Currency currency;
+  final String uid;
+  final String name;
+  final String imageUrl;
+  final String email;
+  SelectRoom(
+      {Key key,
+      @required this.userName,
+      @required this.currency,
+      @required this.uid,
+      @required this.imageUrl,
+      @required this.name,
+      @required this.email})
+      : super(key: key);
   @override
   _SelectRoomState createState() => _SelectRoomState(userName);
 }
@@ -69,48 +69,6 @@ class SelectRoom extends StatefulWidget {
 class _SelectRoomState extends State<SelectRoom> {
   Map _source = {ConnectivityResult.none: false};
   MyConnectivity _connectivity = MyConnectivity.instance;
-  Widget showDrawer() {
-    return Row(
-      children: <Widget>[
-        InkWell(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-            child: CircleAvatar(
-              radius: 26.0,
-              backgroundColor: color['buttonBg'],
-              child: CircleAvatar(
-                backgroundColor: Colors.grey[100],
-                backgroundImage: NetworkImage(
-                  imageUrl,
-                ),
-                radius: 25.0,
-              ),
-            ),
-          ),
-          onTap: () {
-            _scaffoldKey.currentState.openDrawer();
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Icon(
-                Icons.attach_money,
-                // color: Colors.yellow,
-              ),
-              Text(
-                commas(coins),
-                style: TextStyle(fontSize: 20.0),
-              )
-            ],
-          ),
-        )
-      ],
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    );
-  }
 
   String userName;
   _SelectRoomState(this.userName);
@@ -141,149 +99,109 @@ class _SelectRoomState extends State<SelectRoom> {
       case ConnectivityResult.wifi:
         online = true;
     }
-    return Scaffold(
-      key: _scaffoldKey,
-      drawer: Drawer(
-        child: Column(
-          children: <Widget>[
-            UserAccountsDrawerHeader(
-                decoration: BoxDecoration(color: Colors.orange[100]),
-                accountName: Text(
-                  name,
-                  style: TextStyle(color: Colors.black),
-                ),
-                accountEmail: Text(
-                  email,
-                  style: TextStyle(color: Colors.black),
-                ),
-                currentAccountPicture: CircleAvatar(
-                  backgroundColor: Colors.grey[100],
-                  backgroundImage: NetworkImage(imageUrl),
-                )),
-            SizedBox(
-              height: 10.0,
-            ),
-            ListTile(
-              onTap: () {},
-              title: Text('Earn Coins'),
-              leading: Icon(Icons.monetization_on),
-            ),
-            // Divider(
-            //   thickness: 1.0,
-            // ),
-            ListTile(
-              onTap: () {},
-              title: Text('Developer Contact'),
-              leading: Icon(Icons.person_outline),
-            ),
-            ListTile(
-              onTap: () {
-                (check == signInMethod.google)
-                    ? AuthProvider().signOutGoogle()
-                    : signOut();
-              },
-              title: Text('Sign Out'),
-              leading: Icon(Icons.exit_to_app),
-            ),
-          ],
+    return ChangeNotifierProvider(
+      create: (context) => widget.currency,
+      child: Scaffold(
+        key: _scaffoldKey,
+        drawer: DrawerContent(
+          imageUrl: widget.imageUrl,
+          name: widget.name,
+          email: widget.email,
         ),
-      ),
-      body: Container(
-        decoration: new BoxDecoration(
-          //color: Colors.orange[50],
-          color: color['bg'],
-          // image: new DecorationImage(
-          //     fit: BoxFit.cover,
-          //     colorFilter: new ColorFilter.mode(
-          //         Colors.black.withOpacity(0.10), BlendMode.dstATop),
-          //     image: new AssetImage('assets/images/selectRoom.jpg')),
-        ),
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: 30.0,
-            ),
-            showDrawer(),
-            SizedBox(height: 40.0),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    SizedBox(
-                      height: 100.0,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: SpringButton(
-                        SpringButtonType.OnlyScale,
-                        Container(
-                          decoration: BoxDecoration(
-                              color: color['buttonBg'],
-                              border: Border.all(color: color['buttonBg']),
-                              borderRadius: BorderRadius.circular(18.0)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 18.0, horizontal: 30.0),
-                            child: Text('Create Room',
-                                style: GoogleFonts.notoSans(
-                                    //color: Color(0xFF00008B),
-                                    color: color['bg2'],
-                                    fontSize: 20.0)),
-                          ),
-                        ),
-                        alignment: Alignment.center,
-                        onTap: () => onPressedCreateRoom(),
-                        useCache: true,
-                        scaleCoefficient: 0.75,
+        body: Container(
+          decoration: new BoxDecoration(
+            color: color['bg'],
+          ),
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 30.0,
+              ),
+              ShowDrawer(
+                imageUrl: widget.imageUrl,
+                scaffoldKey: _scaffoldKey,
+              ),
+              SizedBox(height: 40.0),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20.0,
                       ),
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: SpringButton(
-                        SpringButtonType.OnlyScale,
-                        Container(
-                          decoration: BoxDecoration(
-                              color: color['buttonBg'],
-                              border: Border.all(color: color['buttonBg']),
-                              borderRadius: BorderRadius.circular(18.0)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 18.0, horizontal: 40.0),
-                            child: Text(
-                              'Join Room',
-                              style: GoogleFonts.notoSans(
-                                  //color: Colors.orange[700],
-                                  color: color['bg2'],
-                                  fontSize: 20.0),
+                      SizedBox(
+                        height: 100.0,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: SpringButton(
+                          SpringButtonType.OnlyScale,
+                          Container(
+                            decoration: BoxDecoration(
+                                color: color['buttonBg'],
+                                border: Border.all(color: color['buttonBg']),
+                                borderRadius: BorderRadius.circular(18.0)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 18.0, horizontal: 30.0),
+                              child: Text('Create Room',
+                                  style: GoogleFonts.notoSans(
+                                      //color: Color(0xFF00008B),
+                                      color: color['bg2'],
+                                      fontSize: 20.0)),
                             ),
                           ),
+                          alignment: Alignment.center,
+                          onTap: () => onPressedCreateRoom(widget.currency),
+                          useCache: true,
+                          scaleCoefficient: 0.75,
                         ),
-                        scaleCoefficient: 0.75,
-                        onTap: () => onPressedJoinRoom(context),
                       ),
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                  ],
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: SpringButton(
+                          SpringButtonType.OnlyScale,
+                          Container(
+                            decoration: BoxDecoration(
+                                color: color['buttonBg'],
+                                border: Border.all(color: color['buttonBg']),
+                                borderRadius: BorderRadius.circular(18.0)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 18.0, horizontal: 40.0),
+                              child: Text(
+                                'Join Room',
+                                style: GoogleFonts.notoSans(
+                                    //color: Colors.orange[700],
+                                    color: color['bg2'],
+                                    fontSize: 20.0),
+                              ),
+                            ),
+                          ),
+                          scaleCoefficient: 0.75,
+                          onTap: () => onPressedJoinRoom(context, currency),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  void onPressedCreateRoom() {
+  void onPressedCreateRoom(Currency currency) {
     flag = false;
     Random random = Random();
     double randomNumber;
@@ -291,35 +209,43 @@ class _SelectRoomState extends State<SelectRoom> {
     double d = randomNumber * 1000000;
     id = d.toInt();
     print(id);
-    addRoom();
+    addRoom(widget.uid);
     // Navigator.pop(context);
     Timer(Duration(milliseconds: 150), () {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => CreateRoom(id: id)));
+          context,
+          MaterialPageRoute(
+              builder: (context) => CreateRoom(
+                    id: id,
+                    currency: currency,
+                  )));
     });
   }
 
-  void onPressedJoinRoom(BuildContext context) {
+  void onPressedJoinRoom(BuildContext context, Currency currency) {
     Timer(
         Duration(
           milliseconds: 150,
         ), () {
-
-
       // Navigator.push(
       //     context, MaterialPageRoute(builder: (context) => EnterRoomId()));
       Alert(
-        desc: 'Enter Room Id',
-        context: context,
-        content: EnterRoomId(),
-        buttons: [],
-        image: Image(image:AssetImage('assets/icons/gift.gif',),height: 30.0,)
-      ).show();
+          desc: 'Enter Room Id',
+          context: context,
+          content: EnterRoomId(currency: currency),
+          buttons: [],
+          image: Image(
+            image: AssetImage(
+              'assets/icons/gift.gif',
+            ),
+            height: 30.0,
+          )).show();
     });
   }
 
   @override
   void initState() {
+    identity = widget.uid;
     _connectivity.initialise();
     _connectivity.myStream.listen((source) {
       setState(() => _source = source);
@@ -334,7 +260,7 @@ class _SelectRoomState extends State<SelectRoom> {
   }
 }
 
-Future<void> addRoom() async {
+Future<void> addRoom(String uid) async {
   await Firestore.instance.collection('rooms').add({
     'id': id,
     'game': false,
@@ -400,8 +326,118 @@ class MyConnectivity {
     } on SocketException catch (_) {
       isOnline = false;
     }
-      controller.sink.add({result: isOnline});
+    controller.sink.add({result: isOnline});
   }
 
   void disposeStream() => controller.close();
+}
+
+class ShowDrawer extends StatelessWidget {
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  final String imageUrl;
+  ShowDrawer({
+    @required this.scaffoldKey,
+    @required this.imageUrl,
+  });
+  @override
+  Widget build(BuildContext context) {
+    // var currency = Provider.of<Currency>(context);
+    return Row(
+      children: <Widget>[
+        InkWell(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+            child: CircleAvatar(
+              radius: 26.0,
+              backgroundColor: color['buttonBg'],
+              child: CircleAvatar(
+                backgroundColor: Colors.grey[100],
+                backgroundImage: NetworkImage(
+                  imageUrl,
+                ),
+                radius: 25.0,
+              ),
+            ),
+          ),
+          onTap: () {
+            scaffoldKey.currentState.openDrawer();
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Icon(
+                Icons.attach_money,
+                // color: Colors.yellow,
+              ),
+              // Text(
+              //   commas(currency.remainingCoins),
+              //   style: TextStyle(fontSize: 20.0),
+              // )
+              VirtualCurrencyContent(
+                currency: currency,
+              ),
+            ],
+          ),
+        )
+      ],
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    );
+  }
+}
+
+class DrawerContent extends StatelessWidget {
+  final String name, email, imageUrl;
+  DrawerContent({
+    @required this.name,
+    @required this.imageUrl,
+    @required this.email,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Column(
+        children: <Widget>[
+          UserAccountsDrawerHeader(
+              decoration: BoxDecoration(color: Colors.orange[100]),
+              accountName: Text(
+                name,
+                style: TextStyle(color: Colors.black),
+              ),
+              accountEmail: Text(
+                email,
+                style: TextStyle(color: Colors.black),
+              ),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.grey[100],
+                backgroundImage: NetworkImage(imageUrl),
+              )),
+          SizedBox(
+            height: 10.0,
+          ),
+          ListTile(
+            onTap: () {},
+            title: Text('Earn Coins'),
+            leading: Icon(Icons.monetization_on),
+          ),
+          ListTile(
+            onTap: () {},
+            title: Text('Developer Contact'),
+            leading: Icon(Icons.person_outline),
+          ),
+          ListTile(
+            onTap: () {
+              (check == signInMethod.google)
+                  ? AuthProvider().signOutGoogle()
+                  : signOut();
+            },
+            title: Text('Sign Out'),
+            leading: Icon(Icons.exit_to_app),
+          ),
+        ],
+      ),
+    );
+  }
 }

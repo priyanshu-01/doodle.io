@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import 'package:scribbl/pages/Painter_screen/painterScreen.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:scribbl/virtualCurrency/data.dart';
+import 'package:scribbl/virtualCurrency/virtualCurrency.dart';
 import '../gameScreen.dart';
 import '../selectRoom.dart';
 import '../../services/authHandler.dart';
 import '../Guesser_screen/guesserScreen.dart';
 import '../../reactions/listenReactions.dart';
 import 'meetingPage.dart';
+
 bool game;
 bool wordChosen;
 String host;
@@ -35,7 +39,9 @@ Map<String, dynamic> record;
 
 class CreateRoom extends StatefulWidget {
   final int id;
-  CreateRoom({Key key, this.id}) : super(key: key);
+  final Currency currency;
+  CreateRoom({Key key, @required this.id, @required this.currency})
+      : super(key: key);
 
   @override
   _CreateRoomState createState() => _CreateRoomState();
@@ -44,7 +50,7 @@ class CreateRoom extends StatefulWidget {
 class _CreateRoomState extends State<CreateRoom> {
   @override
   void initState() {
-    game=false;
+    game = false;
     reactionListener = ReactionListener();
     super.initState();
   }
@@ -54,41 +60,53 @@ class _CreateRoomState extends State<CreateRoom> {
     roomID = widget.id;
     print('returned room');
     return WillPopScope(
-        child: Scaffold(
-          body: Container(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance
-                  .collection('rooms')
-                  .where('id', isEqualTo: roomID)
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  reactionListener.listenReactions(context);
-                });
-                if (snapshot.connectionState == ConnectionState.waiting ||
-                    snapshot == null)
-                  return Container();
-                else {
-                  readRoomData(snapshot);
+        child: ChangeNotifierProvider.value(
+          value: widget.currency,
+          // create: (context) => widget.currency,
+          child: Scaffold(
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  Container(
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: Firestore.instance
+                          .collection('rooms')
+                          .where('id', isEqualTo: roomID)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          reactionListener.listenReactions(context);
+                        });
+                        if (snapshot.connectionState ==
+                                ConnectionState.waiting ||
+                            snapshot == null)
+                          return Container();
+                        else {
+                          readRoomData(snapshot);
 
-                  if (playersId.indexOf(identity) == -1 && !flag) {
-                    addPlayer();
-                  }
+                          if (playersId.indexOf(identity) == -1 && !flag) {
+                            addPlayer();
+                          }
 
-                  if (roomData[identity] == '$denId $round' &&
-                      guessersId.indexOf(identity) == -1) {
-                    updateScore();
-                  }
-                  //    if(denner!=players[playersId.indexOf(denId)] && identity==hostId)   //error by crashlytics
-                  //  updateDennerName();
-                  if (game == false)
-                    return MeetingPage();
-                  else {
-                    return GameScreen();
-                  }
-                }
-              },
+                          if (roomData[identity] == '$denId $round' &&
+                              guessersId.indexOf(identity) == -1) {
+                            updateScore();
+                          }
+                          //    if(denner!=players[playersId.indexOf(denId)] && identity==hostId)   //error by crashlytics
+                          //  updateDennerName();
+                          if (game == false)
+                            return MeetingPage();
+                          else {
+                            return GameScreen();
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                  Positioned(right: 10.0, top: 0.0, child: VirtualCurrency()),
+                ],
+              ),
             ),
           ),
         ),
@@ -226,6 +244,7 @@ class _CreateRoomState extends State<CreateRoom> {
     }
   }
 }
+
 Future<void> updatePlayerData() async {
   await Firestore.instance.collection('rooms').document(documentid).updateData({
     'users': players,

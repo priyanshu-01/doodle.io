@@ -8,10 +8,13 @@ import '../pages/signIn.dart';
 import '../pages/loginPage.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../virtualCurrency/data.dart';
 
+Currency currency;
 String name = '  ', email = '  ', imageUrl = '  ', uid = '  ';
 int coins;
 String dataDocId = '  ';
+
 class AuthHandler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -61,11 +64,17 @@ Widget fetchFutureAnonymous() {
           dataDocId = a.documentID;
           coins = a['coins'];
           name = a['name'];
-          imageUrl= a['imageUrl'];
+          imageUrl = a['imageUrl'];
           AuthSignIn().activate();
         }
+        currency = Currency(coins: coins);
         return SelectRoom(
+          currency: currency,
+          email: email,
+          imageUrl: imageUrl,
           userName: name,
+          name: name,
+          uid: uid,
         );
       }
     },
@@ -91,8 +100,14 @@ Widget fetchFutureGoogle() {
           coins = a['coins'];
           AuthProvider().activate();
         }
+        currency = Currency(coins: coins);
         return SelectRoom(
+          currency: currency,
+          email: email,
+          imageUrl: imageUrl,
           userName: name,
+          name: name,
+          uid: uid,
         );
       }
     },

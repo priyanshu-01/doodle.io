@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'services/authHandler.dart';
 import 'package:screen/screen.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'pages/stateTest.dart';
+import 'testingCode/stateTest.dart';
+import 'testingCode/home.dart';
 import 'dart:async';
 import 'pages/wordWas.dart';
 
@@ -15,6 +16,7 @@ void main() {
     runApp(new MaterialApp(
       //home: new RoomCreatingScreen(),
       home: new MyHomePage(),
+      // home: Home(),
       // home: SampleCodePart(),
       // home: Scaffold(body: WordWasContent()),
       debugShowCheckedModeBanner: false,

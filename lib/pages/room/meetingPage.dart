@@ -6,7 +6,9 @@ import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../selectRoom.dart';
 import 'room.dart';
+
 int roundsLimit = 3;
+
 class DisplayRound extends StatefulWidget {
   @override
   _DisplayRoundState createState() => _DisplayRoundState();
@@ -89,20 +91,20 @@ class WaitingForFriends extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text(
-              'Waiting for friends to join...',
-              style: TextStyle(color: Color(0xFF45454D)),
-            ),
-            SpinKitThreeBounce(
-                  color: Colors.black,
-                  size: 20.0,
-                ),
-          ],
-        ),
-      );
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Text(
+            'Waiting for friends to join...',
+            style: TextStyle(color: Color(0xFF45454D)),
+          ),
+          SpinKitThreeBounce(
+            color: Colors.black,
+            size: 20.0,
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -113,7 +115,7 @@ class StartStatus extends StatelessWidget {
       return RaisedButton(
         onPressed: (counter > 1)
             ? () {
-                game=true;
+                game = true;
                 startGame();
               }
             : null,
@@ -130,13 +132,13 @@ class StartStatus extends StatelessWidget {
       );
     else
       return Padding(
-       padding: const EdgeInsets.only(top: 14.0, bottom: 12.0),
+        padding: const EdgeInsets.only(top: 14.0, bottom: 12.0),
         child: FractionallySizedBox(
           widthFactor: 0.7,
           child: Text('$host will start the Game',
               textAlign: TextAlign.center,
-              style:
-                  GoogleFonts.notoSans(color: Color(0xFFFF4893), fontSize: 20.0)),
+              style: GoogleFonts.notoSans(
+                  color: Color(0xFFFF4893), fontSize: 20.0)),
         ),
       );
   }
@@ -155,12 +157,12 @@ class JoiningList extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 18.0),
       child: RepaintBoundary(
-              child: Container(
+        child: Container(
           width: totalWidth * 0.7,
           child: Card(
             elevation: 15.0,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)),
             color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.only(top: 12.0),
@@ -218,94 +220,88 @@ class RoomIdentity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-                    //alignment: Alignment.center,
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(left: 12.0, right: 12.0),
-                          child: Text(
-                            'Room id : $roomID',
-                            style: GoogleFonts.quicksand(
-                                fontSize: 25.0, color: Colors.black),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                          child: Row(
-                            children: <Widget>[
-                              Column(
-                                children: <Widget>[
-                                  Text(
-                                    'Share this with your firends',
-                                    style: GoogleFonts.quicksand(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  Text(' and ask them to join!',
-                                      style: GoogleFonts.quicksand(
-                                        color: Colors.black,
-                                      )),
-                                ],
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.share,
-                                  color: Color(0xFFFF4893),
-                                  size: 30.0,
-                                ),
-                                onPressed: () {
-                                  Share.share('Room id $roomID');
-                                },
-                              )
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                          ),
-                        ),
-                      ],
+      //alignment: Alignment.center,
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+            child: Text(
+              'Room id : $roomID',
+              style: GoogleFonts.quicksand(fontSize: 25.0, color: Colors.black),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            child: Row(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Text(
+                      'Share this with your firends',
+                      style: GoogleFonts.quicksand(
+                        color: Colors.black,
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        //color: Color(0xFFFFD5D5),
-                        border: Border.all(
-                          color: Colors.white,
-                          // width: 2.0
-                        ),
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(20.0),
-                            bottomRight: Radius.circular(20.0))),
-                  );
+                    Text(' and ask them to join!',
+                        style: GoogleFonts.quicksand(
+                          color: Colors.black,
+                        )),
+                  ],
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.share,
+                    color: Color(0xFFFF4893),
+                    size: 30.0,
+                  ),
+                  onPressed: () {
+                    Share.share('Room id $roomID');
+                  },
+                )
+              ],
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+            ),
+          ),
+        ],
+      ),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          //color: Color(0xFFFFD5D5),
+          border: Border.all(
+            color: Colors.white,
+            // width: 2.0
+          ),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20.0),
+              bottomRight: Radius.circular(20.0))),
+    );
   }
 }
-
-
 
 class MeetingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SafeArea(
-        child: Container(
-          color: Color(0xFFFFF1E9),
-          child: Column(
-            children: <Widget>[
-              Flexible(flex: 2,child: RoomIdentity()),
-              Flexible(flex: 4, child: JoiningList()),
-              Flexible(child:   (identity == hostId)?DisplayRound():WaitingForFriends()),
-              Flexible(flex: 2,child: StartStatus()),
-            ],
-          ),
+      child: Container(
+        color: Color(0xFFFFF1E9),
+        child: Column(
+          children: <Widget>[
+            Flexible(flex: 2, child: RoomIdentity()),
+            Flexible(flex: 4, child: JoiningList()),
+            Flexible(
+                child: (identity == hostId)
+                    ? DisplayRound()
+                    : WaitingForFriends()),
+            Flexible(flex: 2, child: StartStatus()),
+          ],
         ),
       ),
     );
   }
 }
-
-
-
 
 Future<void> updateDennerName() async {
   await Firestore.instance

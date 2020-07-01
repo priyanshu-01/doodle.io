@@ -18,35 +18,33 @@ class PainterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Stack(children: <Widget>[
-          Container(
-            color: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Flexible(
-                  child: ChooseOrDraw(),
-                  flex: 2,
+      body: Stack(children: <Widget>[
+        Container(
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Flexible(
+                child: ChooseOrDraw(),
+                flex: 2,
+              ),
+              Flexible(
+                flex: 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(width: 1.0, color: textAndChat),
+                      color: textAndChat
+                      // color: Colors.blueAccent[100]
+                      ),
+                  child: ChatList(),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 1.0, color: textAndChat),
-                        color: textAndChat
-                        // color: Colors.blueAccent[100]
-                        ),
-                    child: ChatList(),
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           ),
-          //stack child 2 down
-          StackChild(position: 'painter')
-        ]),
-      ),
+        ),
+        //stack child 2 down
+        StackChild(position: 'painter')
+      ]),
     );
   }
 }
