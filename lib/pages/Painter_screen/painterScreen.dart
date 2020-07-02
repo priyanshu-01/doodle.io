@@ -140,6 +140,7 @@ Future<void> changeDen(String source) async {
     'length': 0,
     'wordChosen': false,
     'indices': [0],
+    'colorIndexStack': [0],
     'pointer': 0,
     'guessersId': [],
     'tempScore': tempScore,

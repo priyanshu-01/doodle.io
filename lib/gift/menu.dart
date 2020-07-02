@@ -5,32 +5,42 @@ enum currencyType { gems, coins }
 const List<Map> reactionsMenu = [
   {
     'name': 'ThumbUp',
-    'path': 'assets/reactions/thumbUp.png',
+    'image': const Image(
+      image: AssetImage('assets/reactions/thumbUp.png'),
+    ),
     'currency': currencyType.coins,
-    'price': 50,
+    'price': 10,
   },
   {
     'name': 'ThumbDown',
-    'path': 'assets/reactions/thumbDown.png',
+    'image': const Image(
+      image: AssetImage('assets/reactions/thumbDown.png'),
+    ),
     'currency': currencyType.coins,
-    'price': 50,
+    'price': 10,
   },
   {
     'name': 'Heart',
-    'path': 'assets/reactions/heart.png',
+    'image': const Image(
+      image: AssetImage('assets/reactions/heart.png'),
+    ),
     'currency': currencyType.coins,
-    'price': 75,
+    'price': 20,
   },
   {
     'name': 'Fire',
-    'path': 'assets/reactions/fire.png',
+    'image': const Image(
+      image: AssetImage('assets/reactions/fire.png'),
+    ),
     'currency': currencyType.coins,
-    'price': 75,
+    'price': 20,
   },
   {
     'name': 'MiddleFinger',
-    'path': 'assets/reactions/middleFinger.png',
+    'image': const Image(
+      image: AssetImage('assets/reactions/middleFinger.png'),
+    ),
     'currency': currencyType.coins,
-    'price': 100,
+    'price': 50,
   },
 ];

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../room/room.dart';
 import '../timer.dart';
 import 'guesserScreen.dart';
+import '../Painter_screen/colorPanel.dart';
+
 int ind1 = 0, ind2 = 0;
 List<Offset> pointsG = <Offset>[];
 int indStore;
@@ -15,12 +17,14 @@ class _GuesserState extends State<Guesser> with SingleTickerProviderStateMixin {
   int pStore;
   int pointerVal = 0;
   AnimationController controller;
+  ColorHolder colorHolder;
   @override
   void initState() {
-    avatarAnimation= animateAvatar.start;
+    avatarAnimation = animateAvatar.start;
     pointsG = [];
     ind1 = 0;
     ind2 = 0;
+    colorHolder = ColorHolder();
     super.initState();
     controller = AnimationController(
       vsync: this,
@@ -30,6 +34,7 @@ class _GuesserState extends State<Guesser> with SingleTickerProviderStateMixin {
       upperBound: 1.0,
     );
   }
+
   @override
   void dispose() {
     controller.dispose();
@@ -49,7 +54,7 @@ class _GuesserState extends State<Guesser> with SingleTickerProviderStateMixin {
     if (roomData['pointer'] == 0)
       ind1 = 0;
     else
-       ind1 = dex[roomData['pointer'] - 1];
+      ind1 = dex[roomData['pointer'] - 1];
     ind2 = dex[roomData['pointer']];
     pointerVal = roomData['pointer'];
     refactor();
@@ -58,13 +63,12 @@ class _GuesserState extends State<Guesser> with SingleTickerProviderStateMixin {
       if (pStore > pointerVal && roomData['length'] != 0) {
         ind1 = dex[roomData['pointer']];
         ind2 = dex[roomData['pointer'] + 1]; //error caught by crashlytics
-        controller.duration= Duration(milliseconds: (ind2-ind1)*17);
+        controller.duration = Duration(milliseconds: (ind2 - ind1) * 17);
         controller.reverse(from: 1.0);
-      } 
-      else{
-             controller.duration= Duration(milliseconds: (ind2-ind1)*17);
-             controller.forward(from: 0.0);
-            }
+      } else {
+        controller.duration = Duration(milliseconds: (ind2 - ind1) * 17);
+        controller.forward(from: 0.0);
+      }
     }
     return FractionallySizedBox(
       heightFactor: 1.0,
@@ -74,30 +78,30 @@ class _GuesserState extends State<Guesser> with SingleTickerProviderStateMixin {
         child: Column(
           children: <Widget>[
             Flexible(
-                    flex: 7,
-                    child: Column(
-                      children: [
-                        RepaintBoundary(
-                           child: new CustomPaint(
-                            foregroundPainter: CacheGuesser(
-                              points: pointsG,
-                              pointerVal:pointerVal
-                            ),
-                            child: Container(),
-                          ),
-                        ),
-                        RepaintBoundary(
-                           child: new CustomPaint(
-                            painter: Signature(
-                              points: pointsG,
-                              animation: controller,
-                            ),
-                            child: Container(),
-                          ),
-                        ),
-                      ],
+              flex: 7,
+              child: Column(
+                children: [
+                  RepaintBoundary(
+                    child: new CustomPaint(
+                      foregroundPainter: CacheGuesser(
+                          points: pointsG,
+                          pointerVal: pointerVal,
+                          colorHolder: colorHolder),
+                      child: Container(),
                     ),
                   ),
+                  RepaintBoundary(
+                    child: new CustomPaint(
+                      painter: Signature(
+                          points: pointsG,
+                          animation: controller,
+                          colorHolder: colorHolder),
+                      child: Container(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Flexible(
               flex: 1,
               child: Container(
@@ -117,85 +121,83 @@ class _GuesserState extends State<Guesser> with SingleTickerProviderStateMixin {
 class Signature extends CustomPainter {
   List<Offset> points;
   Animation<double> animation;
-  Signature({this.points, this.animation}) : super(repaint: animation);
+  ColorHolder colorHolder;
+  Paint paintObj = new Paint()
+    ..color = Colors.black
+    ..strokeCap = StrokeCap.round
+    ..strokeWidth = 03.0;
+  Signature({this.points, this.animation, this.colorHolder})
+      : super(repaint: animation);
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = new Paint()
-      ..color = Colors.black
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 03.0;
-      // paint..color= Colors.blue;   use this way to add colors later
+    if (paintObj.color !=
+        colorHolder.colors[roomData['colorIndexStack'][roomData['pointer']]]) {
+      paintObj.color =
+          colorHolder.colors[roomData['colorIndexStack'][roomData['pointer']]];
+    }
     int diff = ind2 - ind1;
     double v = animation.value * diff;
     int val = v.toInt();
     int ind = ind1 + val;
-    // for (int i = 0; i < ind1; i++) {
-    //   if ((points[i] != null && points[i] != Offset(-1, -1)) &&
-    //       (points[i + 1] != null && points[i + 1] != Offset(-1, -1))) {
-    //     canvas.drawLine(points[i], points[i + 1], paint);
-    //   } else if (points[i] == Offset(-1, -1) && points[i + 1] != null) {
-    //     canvas.drawCircle(points[i + 1], 2.5, paint);
-    //   }
-    // }
     for (int i = ind1; i < ind - 1; i++) {
       if ((points[i] != null && points[i] != Offset(-1, -1)) &&
           (points[i + 1] != null && points[i + 1] != Offset(-1, -1))) {
-        canvas.drawLine(points[i], points[i + 1], paint);
+        canvas.drawLine(points[i], points[i + 1], paintObj);
       } else if (points[i] == Offset(-1, -1) && points[i + 1] != null) {
-        canvas.drawCircle(points[i + 1], 2.5, paint);
+        canvas.drawCircle(points[i + 1], 2.5, paintObj);
       }
     }
   }
+
   @override
   bool shouldRepaint(Signature oldDelegate) {
-     if(animation.value != oldDelegate.animation.value ||
-      oldDelegate.points != points){
-        return true;
-      }
-      else
+    if (animation.value != oldDelegate.animation.value ||
+        oldDelegate.points != points) {
+      return true;
+    } else
       return false;
   }
-      
 }
-
 
 class CacheGuesser extends CustomPainter {
   List<Offset> points;
   int pointerVal;
-  CacheGuesser({this.points, this.pointerVal});
+  ColorHolder colorHolder;
+  Paint paintObj = new Paint()
+    ..color = Colors.black
+    ..strokeCap = StrokeCap.round
+    ..strokeWidth = 03.0;
+  CacheGuesser({this.points, this.pointerVal, this.colorHolder});
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = new Paint()
-      ..color = Colors.black
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 03.0;
-      // paint..color= Colors.blue;   use this way to add colors later
+    // paint..color= Colors.blue;   use this way to add colors later
     for (int i = 0; i < ind1; i++) {
+      if (roomData['indices'].indexOf(i) != -1) {
+        if (colorHolder.colors[roomData['colorIndexStack']
+                [roomData['indices'].indexOf(i) + 1]] !=
+            paintObj.color) {
+          paintObj.color = colorHolder.colors[roomData['colorIndexStack']
+              [roomData['indices'].indexOf(i) + 1]];
+        }
+      }
+
       if ((points[i] != null && points[i] != Offset(-1, -1)) &&
           (points[i + 1] != null && points[i + 1] != Offset(-1, -1))) {
-        canvas.drawLine(points[i], points[i + 1], paint);
+        canvas.drawLine(points[i], points[i + 1], paintObj);
       } else if (points[i] == Offset(-1, -1) && points[i + 1] != null) {
-        canvas.drawCircle(points[i + 1], 2.5, paint);
+        canvas.drawCircle(points[i + 1], 2.5, paintObj);
       }
     }
-    
   }
+
   @override
   bool shouldRepaint(CacheGuesser oldDelegate) {
-     if(
-      oldDelegate.pointerVal != pointerVal){
-        return true;
-      }
-      else
+    if (oldDelegate.pointerVal != pointerVal) {
+      return true;
+    } else
       return false;
   }
-      
 }
-
-
-
-
-
 
 void refactor() {
   for (int i = 0; i < roomData['length']; i++) {
@@ -203,8 +205,11 @@ void refactor() {
       pointsG = pointsG + [null];
       continue;
     }
-    pointsG =
-        pointsG + [Offset(alterValue2(roomData['xpos'][i]), alterValue(roomData['ypos'][i]))];
+    pointsG = pointsG +
+        [
+          Offset(
+              alterValue2(roomData['xpos'][i]), alterValue(roomData['ypos'][i]))
+        ];
   }
 }
 

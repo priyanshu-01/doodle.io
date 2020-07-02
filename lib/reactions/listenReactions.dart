@@ -62,9 +62,7 @@ class ReactionListener {
   }
 
   Image reactionImage(int index) {
-    return Image(
-      image: AssetImage(reactionsMenu[index]['path']),
-    );
+    return reactionsMenu[index]['image'];
   }
 
   void showReaction(BuildContext context, Image reaction, Image sender) {

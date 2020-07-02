@@ -114,26 +114,26 @@ class _SelectRoomState extends State<SelectRoom> {
           ),
           child: Column(
             children: <Widget>[
-              SizedBox(
-                height: 30.0,
+              Flexible(
+                flex: 1,
+                child: Container(),
               ),
-              ShowDrawer(
-                imageUrl: widget.imageUrl,
-                scaffoldKey: _scaffoldKey,
+              Flexible(
+                flex: 2,
+                child: ShowDrawer(
+                  imageUrl: widget.imageUrl,
+                  scaffoldKey: _scaffoldKey,
+                ),
               ),
-              SizedBox(height: 40.0),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+              Flexible(flex: 1, child: Container()),
+              Flexible(
+                flex: 16,
+                child: Container(
+                  alignment: Alignment.center,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      SizedBox(
-                        height: 100.0,
-                      ),
                       Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: SpringButton(
@@ -156,7 +156,7 @@ class _SelectRoomState extends State<SelectRoom> {
                           alignment: Alignment.center,
                           onTap: () => onPressedCreateRoom(widget.currency),
                           useCache: true,
-                          scaleCoefficient: 0.75,
+                          scaleCoefficient: 0.80,
                         ),
                       ),
                       SizedBox(
@@ -183,12 +183,9 @@ class _SelectRoomState extends State<SelectRoom> {
                               ),
                             ),
                           ),
-                          scaleCoefficient: 0.75,
+                          scaleCoefficient: 0.80,
                           onTap: () => onPressedJoinRoom(context, currency),
                         ),
-                      ),
-                      SizedBox(
-                        height: 20.0,
                       ),
                     ],
                   ),
@@ -212,13 +209,14 @@ class _SelectRoomState extends State<SelectRoom> {
     addRoom(widget.uid);
     // Navigator.pop(context);
     Timer(Duration(milliseconds: 150), () {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CreateRoom(
-                    id: id,
-                    currency: currency,
-                  )));
+      Navigator.push(context, createRoute(id, currency)
+          // MaterialPageRoute(
+          //     builder: (context) => CreateRoom(
+          //           id: id,
+          //           currency: currency,
+          //         ))
+
+          );
     });
   }
 
@@ -227,19 +225,18 @@ class _SelectRoomState extends State<SelectRoom> {
         Duration(
           milliseconds: 150,
         ), () {
-      // Navigator.push(
-      //     context, MaterialPageRoute(builder: (context) => EnterRoomId()));
       Alert(
-          desc: 'Enter Room Id',
-          context: context,
-          content: EnterRoomId(currency: currency),
-          buttons: [],
-          image: Image(
-            image: AssetImage(
-              'assets/icons/gift.gif',
-            ),
-            height: 30.0,
-          )).show();
+        // desc: 'Enter Room Id',
+        context: context,
+        content: EnterRoomId(currency: currency),
+        buttons: [],
+        // image: Image(
+        //   image: AssetImage(
+        //     'assets/icons/gift.gif',
+        //   ),
+        //   height: 30.0,
+        // )
+      ).show();
     });
   }
 
@@ -258,6 +255,25 @@ class _SelectRoomState extends State<SelectRoom> {
     _connectivity.disposeStream();
     super.dispose();
   }
+}
+
+Route createRoute(int id, Currency currency) {
+  CurvedAnimation curvedTransition;
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => CreateRoom(
+      id: id,
+      currency: currency,
+    ),
+    transitionDuration: Duration(milliseconds: 500),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      curvedTransition =
+          CurvedAnimation(parent: animation, curve: Curves.easeOut);
+      return ScaleTransition(
+        scale: curvedTransition,
+        child: child,
+      );
+    },
+  );
 }
 
 Future<void> addRoom(String uid) async {

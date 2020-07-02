@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scribbl/pages/selectRoom.dart';
 import 'package:scribbl/virtualCurrency/data.dart';
 import 'room/room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'roomCreatingScreen.dart';
 import 'package:beauty_textfield/beauty_textfield.dart';
 
 bool mistake = false;
@@ -20,6 +20,12 @@ class EnterRoomId extends StatefulWidget {
 
 class _EnterRoomIdState extends State<EnterRoomId> {
   int val;
+  String status;
+  @override
+  void initState() {
+    status = 'Join';
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,74 +56,26 @@ class _EnterRoomIdState extends State<EnterRoomId> {
                   mistake = false;
                 });
               },
-              // decoration: new InputDecoration(
-              //         labelText: 'Room ID',
-              //         labelStyle: TextStyle(color: Colors.white),
-              //         disabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 10.0,style: BorderStyle.solid,
-              //         color: Colors.white
-              //         )),
-              //         //fillColor: Colors.white,
-              //         prefixIcon: Icon(Icons.vpn_key, color: Colors.red[800],),
-              //         border: new OutlineInputBorder(
-
-              //           borderRadius: new BorderRadius.circular(25.0),
-              //           borderSide: new BorderSide(
-              //             color: Colors.white,
-              //             // width: 16.0,style: BorderStyle.solid
-              //           ),
-
-              //         ),
-              //         enabledBorder: OutlineInputBorder(
-
-              //           borderRadius: new BorderRadius.circular(25.0),
-              //           borderSide: new BorderSide(
-              //             color: Colors.white,
-              //             // width: 16.0,style: BorderStyle.solid
-              //           ),
-
-              //         ),
-              //         focusedBorder: OutlineInputBorder(
-              //           borderRadius: new BorderRadius.circular(25.0),
-              //           borderSide: new BorderSide(
-              //             color: Colors.red[800],
-              //             // width: 16.0,style: BorderStyle.solid
-              //           ),
-
-              //         ),
-              //         focusColor: Colors.red[800],
-              //         //filled: true,
-
-              //         errorBorder: OutlineInputBorder(
-              //           borderRadius: new BorderRadius.circular(25.0),
-              //           borderSide: new BorderSide(
-              //             color: Colors.red[800],
-              //             // width: 16.0,style: BorderStyle.solid
-              //           ),
-
-              //         ),
-
-              // )
             ),
           ),
           showWarning(),
           RaisedButton(
             onPressed: () {
               flag = false;
-              (enteredId != null)
-                  ? val = int.parse(enteredId)
-                  : val = 0; //error by crashlytics   --got undertesting fix
-              print(val);
+              (enteredId != null) ? val = int.parse(enteredId) : val = 0;
               getDetails(context);
             },
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0)),
             child: Padding(
               padding: const EdgeInsets.all(18.0),
-              child: Text(
-                'Join',
-                style:
-                    GoogleFonts.quicksand(color: Colors.white, fontSize: 35.0),
-              ),
+              child: (status == 'Join')
+                  ? Text(
+                      'Join',
+                      style: GoogleFonts.quicksand(
+                          color: Colors.white, fontSize: 35.0),
+                    )
+                  : SpinKitFadingCircle(color: Colors.white),
             ),
             color: Colors.red[800],
           )
@@ -138,8 +96,10 @@ class _EnterRoomIdState extends State<EnterRoomId> {
   }
 
   Future<void> getDetails(BuildContext context) async {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => RoomCreatingScreen()));
+    setState(() {
+      if (mistake == true) mistake = false;
+      status = 'Joining..';
+    });
     QuerySnapshot qs;
     var ref = Firestore.instance;
     qs = await ref
@@ -148,17 +108,11 @@ class _EnterRoomIdState extends State<EnterRoomId> {
         .getDocuments();
 
     if (qs.documents.length != 0) {
-      Navigator.pop(context);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CreateRoom(
-                    id: val,
-                    currency: widget.currency,
-                  )));
+      status = 'Join';
+      Navigator.push(context, createRoute(val, widget.currency));
     } else {
-      Navigator.pop(context);
       setState(() {
+        status = 'Join';
         mistake = true;
       });
     }

@@ -147,7 +147,7 @@ class Item extends StatelessWidget {
         children: [
           Flexible(
             flex: 6,
-            child: Image(image: AssetImage(reactionsMenu[index]['path'])),
+            child: reactionsMenu[index]['image'],
           ),
           Flexible(
             flex: 1,

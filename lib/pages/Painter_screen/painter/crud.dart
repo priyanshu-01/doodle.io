@@ -16,6 +16,7 @@ class CRUD {
       'ypos': painterData.listY,
       'length': painterData.tempInd,
       'indices': painterData.indices,
+      'colorIndexStack': painterData.colorIndexStack,
       'pointer': painterData.p
     });
   }
