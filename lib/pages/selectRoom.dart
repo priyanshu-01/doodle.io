@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:scribbl/audioPlayer/audioPlayer.dart';
 import 'package:scribbl/services/authHandler.dart';
 import 'package:scribbl/virtualCurrency/data.dart';
 import 'package:scribbl/virtualCurrency/virtualCurrency.dart';
@@ -20,6 +21,9 @@ import 'dart:io';
 import '../reactions/listenReactions.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import '../main.dart';
+
+AudioPlayer audioPlayer;
 
 ReactionListener reactionListener;
 double effectiveLength = 0;
@@ -198,7 +202,8 @@ class _SelectRoomState extends State<SelectRoom> {
     );
   }
 
-  void onPressedCreateRoom(Currency currency) {
+  void onPressedCreateRoom(Currency currency) async {
+    await audioPlayer.playSound(audioPlayer.soundTracks['click']);
     flag = false;
     Random random = Random();
     double randomNumber;
@@ -220,7 +225,8 @@ class _SelectRoomState extends State<SelectRoom> {
     });
   }
 
-  void onPressedJoinRoom(BuildContext context, Currency currency) {
+  void onPressedJoinRoom(BuildContext context, Currency currency) async {
+    await audioPlayer.playSound(audioPlayer.soundTracks['click']);
     Timer(
         Duration(
           milliseconds: 150,
@@ -242,6 +248,10 @@ class _SelectRoomState extends State<SelectRoom> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      audioPlayer = AudioPlayer();
+    });
+
     identity = widget.uid;
     _connectivity.initialise();
     _connectivity.myStream.listen((source) {

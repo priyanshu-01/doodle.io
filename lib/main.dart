@@ -6,9 +6,14 @@ import 'testingCode/stateTest.dart';
 import 'testingCode/home.dart';
 import 'dart:async';
 import 'pages/wordWas.dart';
+import 'package:flutter/widgets.dart';
+import 'audioPlayer/audioPlayer.dart';
+import 'package:flutter/foundation.dart';
 
 bool resumed = true;
+
 void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
   Crashlytics.instance.enableInDevMode = false;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 

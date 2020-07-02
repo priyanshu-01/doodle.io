@@ -59,7 +59,8 @@ class _EnterRoomIdState extends State<EnterRoomId> {
             ),
           ),
           showWarning(),
-          RaisedButton(
+          MaterialButton(
+            enableFeedback: false,
             onPressed: () {
               flag = false;
               (enteredId != null) ? val = int.parse(enteredId) : val = 0;
@@ -96,6 +97,8 @@ class _EnterRoomIdState extends State<EnterRoomId> {
   }
 
   Future<void> getDetails(BuildContext context) async {
+    await audioPlayer.playSound(audioPlayer.soundTracks['click']);
+
     setState(() {
       if (mistake == true) mistake = false;
       status = 'Joining..';
