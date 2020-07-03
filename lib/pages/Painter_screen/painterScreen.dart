@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scribbl/pages/roundIndicator.dart';
 import 'package:scribbl/pages/selectRoom.dart';
 import 'package:scribbl/pages/wordWas.dart';
 import 'painter/painter.dart';
@@ -28,6 +29,7 @@ class PainterScreen extends StatelessWidget {
                 child: ChooseOrDraw(),
                 flex: 2,
               ),
+              RoundIndicator(),
               Flexible(
                 flex: 1,
                 child: Container(

@@ -13,11 +13,11 @@ String docId;
 class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // return GuesserScreen();
+    //return GuesserScreen();
     if (round <= numberOfRounds) {
       if (denId == identity) {
         //  denCanvasLength = totalLength*(7/12);
-        denCanvasLength = totalLength * (2 / 3) * (9 / 11);
+        denCanvasLength = (totalLength - 20) * (2 / 3) * (9 / 11);
         updateDimension();
         return PainterScreen();
       } else

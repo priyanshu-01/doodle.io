@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
+import '../roundIndicator.dart';
 import 'guesser.dart';
 import 'package:scribbl/pages/selectRoom.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,7 +45,8 @@ class _GuesserScreenState extends State<GuesserScreen> {
   StreamSubscription subscription;
   @override
   void initState() {
-    guessCanvasLength = (((effectiveLength * 0.6) - 50) * (7 / 8));
+    guessCanvasLength = (((effectiveLength * 0.6) - 70) *
+        (7 / 8)); //50 is textField and 20 is roundIndicator
     super.initState();
     keyboardState = KeyboardVisibility.isVisible;
     subscription = KeyboardVisibility.onChange.listen((bool visible) {
@@ -78,6 +80,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
                           },
                           child: GuessWaitShow())),
                   TextBox(),
+                  RoundIndicator(),
                   Flexible(
                     flex: (keyboardState) ? 0 : 4,
                     child: Container(

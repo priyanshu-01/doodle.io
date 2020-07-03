@@ -112,90 +112,92 @@ class _SelectRoomState extends State<SelectRoom> {
           name: widget.name,
           email: widget.email,
         ),
-        body: Container(
-          decoration: new BoxDecoration(
-            color: color['bg'],
-          ),
-          child: Column(
-            children: <Widget>[
-              Flexible(
-                flex: 1,
-                child: Container(),
-              ),
-              Flexible(
-                flex: 2,
-                child: ShowDrawer(
-                  imageUrl: widget.imageUrl,
-                  scaffoldKey: _scaffoldKey,
-                ),
-              ),
-              Flexible(flex: 1, child: Container()),
-              Flexible(
-                flex: 16,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: SpringButton(
-                          SpringButtonType.OnlyScale,
-                          Container(
-                            decoration: BoxDecoration(
-                                color: color['buttonBg'],
-                                border: Border.all(color: color['buttonBg']),
-                                borderRadius: BorderRadius.circular(18.0)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 18.0, horizontal: 30.0),
-                              child: Text('Create Room',
-                                  style: GoogleFonts.notoSans(
-                                      //color: Color(0xFF00008B),
-                                      color: color['bg2'],
-                                      fontSize: 20.0)),
-                            ),
-                          ),
-                          alignment: Alignment.center,
-                          onTap: () => onPressedCreateRoom(widget.currency),
-                          useCache: true,
-                          scaleCoefficient: 0.80,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: SpringButton(
-                          SpringButtonType.OnlyScale,
-                          Container(
-                            decoration: BoxDecoration(
-                                color: color['buttonBg'],
-                                border: Border.all(color: color['buttonBg']),
-                                borderRadius: BorderRadius.circular(18.0)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 18.0, horizontal: 40.0),
-                              child: Text(
-                                'Join Room',
-                                style: GoogleFonts.notoSans(
-                                    //color: Colors.orange[700],
-                                    color: color['bg2'],
-                                    fontSize: 20.0),
-                              ),
-                            ),
-                          ),
-                          scaleCoefficient: 0.80,
-                          onTap: () => onPressedJoinRoom(context, currency),
-                        ),
-                      ),
-                    ],
+        body: SafeArea(
+          child: Container(
+            decoration: new BoxDecoration(
+              color: color['bg'],
+            ),
+            child: Column(
+              children: <Widget>[
+                // Flexible(
+                //   flex: 1,
+                //   child: Container(),
+                // ),
+                Flexible(
+                  flex: 2,
+                  child: ShowDrawer(
+                    imageUrl: widget.imageUrl,
+                    scaffoldKey: _scaffoldKey,
                   ),
                 ),
-              ),
-            ],
+                Flexible(flex: 1, child: Container()),
+                Flexible(
+                  flex: 16,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: SpringButton(
+                            SpringButtonType.OnlyScale,
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: color['buttonBg'],
+                                  border: Border.all(color: color['buttonBg']),
+                                  borderRadius: BorderRadius.circular(18.0)),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 18.0, horizontal: 30.0),
+                                child: Text('Create Room',
+                                    style: GoogleFonts.notoSans(
+                                        //color: Color(0xFF00008B),
+                                        color: color['bg2'],
+                                        fontSize: 20.0)),
+                              ),
+                            ),
+                            alignment: Alignment.center,
+                            onTap: () => onPressedCreateRoom(widget.currency),
+                            useCache: true,
+                            scaleCoefficient: 0.80,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: SpringButton(
+                            SpringButtonType.OnlyScale,
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: color['buttonBg'],
+                                  border: Border.all(color: color['buttonBg']),
+                                  borderRadius: BorderRadius.circular(18.0)),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 18.0, horizontal: 40.0),
+                                child: Text(
+                                  'Join Room',
+                                  style: GoogleFonts.notoSans(
+                                      //color: Colors.orange[700],
+                                      color: color['bg2'],
+                                      fontSize: 20.0),
+                                ),
+                              ),
+                            ),
+                            scaleCoefficient: 0.80,
+                            onTap: () => onPressedJoinRoom(context, currency),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -203,7 +205,7 @@ class _SelectRoomState extends State<SelectRoom> {
   }
 
   void onPressedCreateRoom(Currency currency) async {
-    await audioPlayer.playSound(audioPlayer.soundTracks['click']);
+    await audioPlayer.playSound('click');
     flag = false;
     Random random = Random();
     double randomNumber;
@@ -226,7 +228,7 @@ class _SelectRoomState extends State<SelectRoom> {
   }
 
   void onPressedJoinRoom(BuildContext context, Currency currency) async {
-    await audioPlayer.playSound(audioPlayer.soundTracks['click']);
+    await audioPlayer.playSound('click');
     Timer(
         Duration(
           milliseconds: 150,
@@ -369,6 +371,7 @@ class ShowDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     // var currency = Provider.of<Currency>(context);
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         InkWell(
           child: Padding(
@@ -389,24 +392,8 @@ class ShowDrawer extends StatelessWidget {
             scaffoldKey.currentState.openDrawer();
           },
         ),
-        Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Icon(
-                Icons.attach_money,
-                // color: Colors.yellow,
-              ),
-              // Text(
-              //   commas(currency.remainingCoins),
-              //   style: TextStyle(fontSize: 20.0),
-              // )
-              VirtualCurrencyContent(
-                currency: currency,
-              ),
-            ],
-          ),
+        VirtualCurrencyContent(
+          currency: currency,
         )
       ],
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

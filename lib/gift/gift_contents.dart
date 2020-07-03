@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scribbl/gift/menu.dart';
 import 'package:scribbl/services/authHandler.dart';
@@ -14,6 +15,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //   'assets/reactions/fire.png',
 //   'assets/reactions/heart.png',
 // ];
+final Image CoinImage = const Image(image: AssetImage('assets/icons/coin.png'));
 
 class AnimatedGift extends StatefulWidget {
   @override
@@ -109,7 +111,14 @@ class _AnimatedGiftState extends State<AnimatedGift>
                                       border:
                                           Border.all(color: Colors.grey[200]),
                                       borderRadius: BorderRadius.circular(15.0),
-                                      color: Colors.grey[100],
+                                      // color: Colors.grey[100],
+                                      gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                            Colors.grey[50],
+                                            Colors.grey[200]
+                                          ]),
                                     ),
                                     child: Item(
                                       index: index,
@@ -146,7 +155,7 @@ class Item extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Flexible(
-            flex: 6,
+            flex: 10,
             child: reactionsMenu[index]['image'],
           ),
           Flexible(
@@ -156,11 +165,39 @@ class Item extends StatelessWidget {
             ),
           ),
           Flexible(
-            flex: 2,
-            child: Text(
-              reactionsMenu[index]['price'].toString(),
-              style: GoogleFonts.ubuntu(
-                  fontSize: 13.0, fontWeight: FontWeight.w400),
+            flex: 5,
+            child: Container(
+              decoration: BoxDecoration(
+                  // color: Colors.blue[700],
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.blue[800], Colors.blue[300]]),
+                  border: Border.all(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(5.0)),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(child: CoinImage),
+                    SizedBox(
+                      width: 4.0,
+                    ),
+                    Flexible(
+                      child: Text(
+                        reactionsMenu[index]['price'].toString(),
+                        style: GoogleFonts.ubuntu(
+                            color: Colors.white,
+                            fontSize: 10.0,
+                            fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],

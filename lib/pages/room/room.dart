@@ -104,7 +104,7 @@ class _CreateRoomState extends State<CreateRoom> {
                       },
                     ),
                   ),
-                  Positioned(right: 10.0, top: 0.0, child: VirtualCurrency()),
+                  Positioned(right: 0.0, top: 0.0, child: VirtualCurrency()),
                 ],
               ),
             ),

@@ -97,7 +97,7 @@ class _EnterRoomIdState extends State<EnterRoomId> {
   }
 
   Future<void> getDetails(BuildContext context) async {
-    await audioPlayer.playSound(audioPlayer.soundTracks['click']);
+    await audioPlayer.playSound('click');
 
     setState(() {
       if (mistake == true) mistake = false;

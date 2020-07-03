@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:scribbl/gift/menu.dart';
 import '../pages/room/room.dart';
@@ -27,7 +29,9 @@ class ReactionListener {
 
     roomData.forEach((key, value) async {
       if (reactionRecord.containsKey(key) && value != reactionRecord[key]) {
-        await audioPlayer.playSound(audioPlayer.soundTracks['notification']);
+        Timer(Duration(milliseconds: 450), () async {
+          await audioPlayer.playSound('notification');
+        });
         String keyStr = key.toString();
         String id = keyStr.substring(0, keyStr.indexOf(' '));
 
