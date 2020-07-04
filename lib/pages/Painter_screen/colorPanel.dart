@@ -6,9 +6,9 @@ class ColorHolder {
   final List colors = [
     Colors.black,
     Colors.white,
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
+    Colors.blue[600],
+    Colors.green[600],
+    Colors.yellow[600],
     Colors.orange,
     Colors.pink,
     Colors.red,

@@ -29,7 +29,7 @@ class ReactionListener {
 
     roomData.forEach((key, value) async {
       if (reactionRecord.containsKey(key) && value != reactionRecord[key]) {
-        Timer(Duration(milliseconds: 450), () async {
+        Timer(Duration(milliseconds: 350), () async {
           await audioPlayer.playSound('notification');
         });
         String keyStr = key.toString();

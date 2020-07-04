@@ -28,39 +28,41 @@ class AuthProvider {
   }
 
   Future<void> signOutGoogle() async {
-       name = '  ';
-    imageUrl='  ';
-    email= '  ';
-    uid='  ';   
-    coins=0;
+    name = '  ';
+    imageUrl = '  ';
+    email = '  ';
+    uid = '  ';
+    coins = 0;
     AuthProvider().deactivate();
     print("signOutWithGoogle succeeded");
     await _auth.signOut();
- 
   }
 
-
-  Future<void> createGoogleUser() async{
-       await Firestore.instance.collection('users google').add({
-      'uid':uid,
-      'coins': 1000,
+  Future<void> createGoogleUser() async {
+    await Firestore.instance.collection('users google').add({
+      'uid': uid,
+      'coins': coins,
       'name': name,
-      'email' : email,
+      'email': email,
       'imageUrl': imageUrl,
-      'active': true
-    }).then((value)  {
-       dataDocId= value.documentID;
+      'active': true,
+      'attemptedWords': [],
+    }).then((value) {
+      dataDocId = value.documentID;
     });
   }
-    Future<void> activate() async{
-    await Firestore.instance.collection('users google').document(dataDocId).updateData({
-      'active':true
-    });
+
+  Future<void> activate() async {
+    await Firestore.instance
+        .collection('users google')
+        .document(dataDocId)
+        .updateData({'active': true});
   }
-    Future<void> deactivate() async{
-    await Firestore.instance.collection('users google').document(dataDocId).updateData({
-      'active':false
-    });
+
+  Future<void> deactivate() async {
+    await Firestore.instance
+        .collection('users google')
+        .document(dataDocId)
+        .updateData({'active': false});
   }
 }
-

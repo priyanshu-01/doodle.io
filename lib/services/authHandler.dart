@@ -9,11 +9,14 @@ import '../pages/loginPage.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../virtualCurrency/data.dart';
+import '../pages/Painter_screen/wordCheck/wordCheck.dart';
 
+WordCheck wordCheck;
 Currency currency;
 String name = '  ', email = '  ', imageUrl = '  ', uid = '  ';
 int coins;
 String dataDocId = '  ';
+DocumentSnapshot userFirebaseDocument;
 
 class AuthHandler extends StatelessWidget {
   @override
@@ -57,17 +60,18 @@ Widget fetchFutureAnonymous() {
       else {
         if (snapshot.data.documents.length == 0) {
           name = enteredName;
-          coins = 1000;
+          coins = 200;
           AuthSignIn().createAnonymousUser();
         } else {
-          DocumentSnapshot a = snapshot.data.documents[0];
-          dataDocId = a.documentID;
-          coins = a['coins'];
-          name = a['name'];
-          imageUrl = a['imageUrl'];
+          userFirebaseDocument = snapshot.data.documents[0];
+          dataDocId = userFirebaseDocument.documentID;
+          coins = userFirebaseDocument['coins'];
+          name = userFirebaseDocument['name'];
+          imageUrl = userFirebaseDocument['imageUrl'];
           AuthSignIn().activate();
         }
         currency = Currency(coins: coins);
+        wordCheck = WordCheck(userFirebaseDocument);
         return SelectRoom(
           currency: currency,
           email: email,
@@ -92,15 +96,16 @@ Widget fetchFutureGoogle() {
         return SignIn();
       else {
         if (snapshot.data.documents.length == 0) {
-          coins = 1000;
+          coins = 200;
           AuthProvider().createGoogleUser();
         } else {
-          DocumentSnapshot a = snapshot.data.documents[0];
-          dataDocId = a.documentID;
-          coins = a['coins'];
+          userFirebaseDocument = snapshot.data.documents[0];
+          dataDocId = userFirebaseDocument.documentID;
+          coins = userFirebaseDocument['coins'];
           AuthProvider().activate();
         }
         currency = Currency(coins: coins);
+        wordCheck = WordCheck(userFirebaseDocument);
         return SelectRoom(
           currency: currency,
           email: email,

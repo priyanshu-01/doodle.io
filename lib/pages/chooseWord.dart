@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scribbl/services/authHandler.dart';
 import 'room/room.dart';
 import 'dart:math';
 import 'Painter_screen/painterScreen.dart';
@@ -13,26 +14,27 @@ class ChooseWordDialog extends StatefulWidget {
 }
 
 class _ChooseWordDialogState extends State<ChooseWordDialog> {
-List displayWords = [' ', ' ', ' '];
+  List displayWords = [' ', ' ', ' '];
 
-Color wordBack;
-Color wordText;
+  Color wordBack;
+  Color wordText;
 
-bool switcher=false;
+  bool switcher = false;
 
-double topPadding= totalLength*0.8;
-Curve curve= Curves.easeOutBack; 
-Duration duration = Duration(milliseconds: 1000);
-@override
+  double topPadding = totalLength * 0.8;
+  Curve curve = Curves.easeOutBack;
+  Duration duration = Duration(milliseconds: 1000);
+  @override
   void initState() {
-        getWords();
-         WidgetsBinding.instance.addPostFrameCallback((_) {
-           setState(() {
-             topPadding=totalLength*0.1;
-           });
-                });
+    getWords();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        topPadding = totalLength * 0.1;
+      });
+    });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     //wordBack= Color(0xFFFFE5B4);
@@ -47,94 +49,84 @@ Duration duration = Duration(milliseconds: 1000);
         ),
         AnimatedPositioned(
           duration: duration,
-          top:topPadding,
-          left: totalWidth*0.15,
+          top: topPadding,
+          left: totalWidth * 0.15,
           curve: curve,
-          onEnd: (){
-            if(topPadding!=totalLength*0.1)
-            updateWord();
-            },
-                  child: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Text(
-                'Pick a word',
-                style: GoogleFonts.notoSans(color: Colors.black, fontSize: 25.0),
-              ),
-              SizedBox(height: totalLength*0.05,),
-              Container(
-                  height: 200.0,
-                  //color: Colors.red,
-                  child: Column(
-                    children: <Widget>[
-                      FlatButton(
-                        color: wordBack,
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(10.0)),
-                        child: Text(
-                          displayWords[0].toUpperCase(),
-                          style:
-                              GoogleFonts.poppins(color: wordText, fontSize: 18.0),
+          onEnd: () {
+            if (topPadding != totalLength * 0.1) updateWord();
+          },
+          child: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text(
+                  'Pick a word',
+                  style:
+                      GoogleFonts.notoSans(color: Colors.black, fontSize: 25.0),
+                ),
+                SizedBox(
+                  height: totalLength * 0.05,
+                ),
+                Container(
+                    height: 200.0,
+                    //color: Colors.red,
+                    child: Column(
+                      children: <Widget>[
+                        FlatButton(
+                          color: wordBack,
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0)),
+                          child: Text(
+                            displayWords[0].toUpperCase(),
+                            style: GoogleFonts.poppins(
+                                color: wordText, fontSize: 18.0),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              onWordPressed(displayWords[0]);
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          choosenWord = displayWords[0];
-                          //updateWord();
-                          setState(() {
-                            topPadding=totalLength*0.8;
-                            curve = Curves.easeInBack;
-                            duration= Duration(milliseconds: 500);
-                          });
-                        },
-                      ),
-                      FlatButton(
-                        color: wordBack,
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(10.0)),
-                        child: Text(
-                          displayWords[1].toUpperCase(),
-                          style:
-                              GoogleFonts.poppins(color: wordText, fontSize: 18.0),
+                        FlatButton(
+                          color: wordBack,
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0)),
+                          child: Text(
+                            displayWords[1].toUpperCase(),
+                            style: GoogleFonts.poppins(
+                                color: wordText, fontSize: 18.0),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              onWordPressed(displayWords[1]);
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          choosenWord = displayWords[1];
-                          //updateWord();
-                           setState(() {
-                            topPadding=totalLength*0.8;
-                            curve = Curves.easeInBack;
-                            duration= Duration(milliseconds: 500);
-
-                          });
-                        },
-                      ),
-                      FlatButton(
-                        color: wordBack,
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(10.0)),
-                        child: Text(
-                          displayWords[2].toUpperCase(),
-                          style:
-                              GoogleFonts.poppins(color: wordText, fontSize: 18.0),
+                        FlatButton(
+                          color: wordBack,
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0)),
+                          child: Text(
+                            displayWords[2].toUpperCase(),
+                            style: GoogleFonts.poppins(
+                                color: wordText, fontSize: 18.0),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              onWordPressed(displayWords[2]);
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          choosenWord = displayWords[2];
-                          //updateWord();
-                           setState(() {
-                            topPadding=totalLength*0.8;
-                            curve = Curves.easeInBack;
-                            duration= Duration(milliseconds: 500);
-
-                          });
-                        },
-                      ),
-                      SizedBox(height: totalLength*0.03,),
-                     TimeIndicator()
-                    ],
-                  ))
-            ],
+                        SizedBox(
+                          height: totalLength * 0.03,
+                        ),
+                        TimeIndicator()
+                      ],
+                    ))
+              ],
+            ),
           ),
-      ),
         ),
       ],
     );
@@ -142,9 +134,19 @@ Duration duration = Duration(milliseconds: 1000);
     //
   }
 
+  void onWordPressed(String choosen) {
+    choosenWord = choosen;
+    topPadding = totalLength * 0.8;
+    curve = Curves.easeInBack;
+    duration = Duration(milliseconds: 500);
+    wordCheck.addWord(choosen);
+    allAttemptedWords = allAttemptedWords + [choosen];
+  }
+
   void getWords() async {
     int length;
-    List word = wordListDocument['list'];
+    wordList.removeWhere((e) => allAttemptedWords.contains(e));
+    List word = wordList;
     length = word.length;
     Random random = Random();
     double randomNumber;
@@ -158,12 +160,12 @@ Duration duration = Duration(milliseconds: 1000);
 }
 
 Future<void> updateWord() async {
-  await Firestore.instance
-      .collection('rooms')
-      .document(documentid)
-      .updateData({'word': choosenWord, 'wordChosen': true});
+  await Firestore.instance.collection('rooms').document(documentid).updateData({
+    'word': choosenWord,
+    'wordChosen': true,
+    'allAttemptedWords': allAttemptedWords,
+  });
 }
-
 
 class TimeIndicator extends StatefulWidget {
   @override
@@ -172,48 +174,44 @@ class TimeIndicator extends StatefulWidget {
 
 class TimeIndicatorState extends State<TimeIndicator> {
   static Color green = Color(0xFF008000);
-  static Color red= Color(0xFFFF0000);
+  static Color red = Color(0xFFFF0000);
   double width = totalWidth * 0.75;
-  double animatedWidth= totalWidth*0.75;
-  Color color=green;
+  double animatedWidth = totalWidth * 0.75;
+  Color color = green;
   @override
   void initState() {
-          super.initState();
+    super.initState();
 
     Timer(Duration(seconds: 1), () {
       setState(() {
-           color =red;
-         animatedWidth=0.0;
-        });
+        color = red;
+        animatedWidth = 0.0;
+      });
 
-  // print("Yeah, this line is printed after 3 seconds");
+      // print("Yeah, this line is printed after 3 seconds");
+    });
 
-});
-
-          //  WidgetsBinding.instance.addPostFrameCallback((_) { });
-    
-
+    //  WidgetsBinding.instance.addPostFrameCallback((_) { });
   }
+
   @override
   Widget build(BuildContext context) {
-    return   RepaintBoundary(
-          child: Container(
-                      width:width,
-                      alignment: Alignment.centerLeft,
-                      child: AnimatedContainer(
-                        duration: Duration(seconds: 14),
-                        height: 12.0,
-                        width: animatedWidth,
-
-                             decoration: BoxDecoration(
-                              color:color,
-                              border: Border.all(color: color,
-),
-                              borderRadius: BorderRadius.circular(15.0)),
-
-
-                      ),
-                    ),
+    return RepaintBoundary(
+      child: Container(
+        width: width,
+        alignment: Alignment.centerLeft,
+        child: AnimatedContainer(
+          duration: Duration(seconds: 14),
+          height: 12.0,
+          width: animatedWidth,
+          decoration: BoxDecoration(
+              color: color,
+              border: Border.all(
+                color: color,
+              ),
+              borderRadius: BorderRadius.circular(15.0)),
+        ),
+      ),
     );
   }
 }

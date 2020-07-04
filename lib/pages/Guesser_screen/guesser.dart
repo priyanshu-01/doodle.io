@@ -79,17 +79,23 @@ class _GuesserState extends State<Guesser> with SingleTickerProviderStateMixin {
           children: <Widget>[
             Flexible(
               flex: 7,
-              child: Column(
+              child: Stack(
                 children: [
-                  RepaintBoundary(
-                    child: new CustomPaint(
-                      foregroundPainter: CacheGuesser(
-                          points: pointsG,
-                          pointerVal: pointerVal,
-                          colorHolder: colorHolder),
-                      child: Container(),
+                  //pointerVal-1
+                  for (int i = 0; i < dex.indexOf(ind1); i++)
+                    RepaintBoundary(
+                      child: new CustomPaint(
+                        foregroundPainter: CacheGuesser(
+                            points: pointsG,
+                            dex: dex,
+                            sketcher: i,
+                            color: colorHolder
+                                .colors[roomData['colorIndexStack'][i + 1]],
+                            // pointerVal: pointerVal,
+                            colorHolder: colorHolder),
+                        child: Container(),
+                      ),
                     ),
-                  ),
                   RepaintBoundary(
                     child: new CustomPaint(
                       painter: Signature(
@@ -131,9 +137,10 @@ class Signature extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (paintObj.color !=
-        colorHolder.colors[roomData['colorIndexStack'][roomData['pointer']]]) {
-      paintObj.color =
-          colorHolder.colors[roomData['colorIndexStack'][roomData['pointer']]];
+        colorHolder.colors[roomData['colorIndexStack']
+            [roomData['indices'].indexOf(ind2)]]) {
+      paintObj.color = colorHolder.colors[roomData['colorIndexStack']
+          [roomData['indices'].indexOf(ind2)]];
     }
     int diff = ind2 - ind1;
     double v = animation.value * diff;
@@ -161,25 +168,30 @@ class Signature extends CustomPainter {
 
 class CacheGuesser extends CustomPainter {
   List<Offset> points;
-  int pointerVal;
+  List dex;
+  int sketcher;
+  Color color;
+  // int pointerVal;
   ColorHolder colorHolder;
   Paint paintObj = new Paint()
     ..color = Colors.black
     ..strokeCap = StrokeCap.round
     ..strokeWidth = 03.0;
-  CacheGuesser({this.points, this.pointerVal, this.colorHolder});
+  CacheGuesser(
+      {this.points, this.dex, this.sketcher, this.color, this.colorHolder});
   @override
   void paint(Canvas canvas, Size size) {
+    paintObj.color = color;
     // paint..color= Colors.blue;   use this way to add colors later
-    for (int i = 0; i < ind1; i++) {
-      if (roomData['indices'].indexOf(i) != -1) {
-        if (colorHolder.colors[roomData['colorIndexStack']
-                [roomData['indices'].indexOf(i) + 1]] !=
-            paintObj.color) {
-          paintObj.color = colorHolder.colors[roomData['colorIndexStack']
-              [roomData['indices'].indexOf(i) + 1]];
-        }
-      }
+    for (int i = dex[sketcher]; i < dex[sketcher + 1]; i++) {
+      // if (roomData['indices'].indexOf(i) != -1) {
+      //   if (colorHolder.colors[roomData['colorIndexStack']
+      //           [roomData['indices'].indexOf(i) + 1]] !=
+      //       paintObj.color) {
+      //     paintObj.color = colorHolder.colors[roomData['colorIndexStack']
+      //         [roomData['indices'].indexOf(i) + 1]];
+      //   }
+      // }
 
       if ((points[i] != null && points[i] != Offset(-1, -1)) &&
           (points[i + 1] != null && points[i + 1] != Offset(-1, -1))) {
@@ -191,12 +203,13 @@ class CacheGuesser extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CacheGuesser oldDelegate) {
-    if (oldDelegate.pointerVal != pointerVal) {
-      return true;
-    } else
-      return false;
-  }
+  bool shouldRepaint(CacheGuesser oldDelegate) => false;
+  //  {
+  //   if (oldDelegate.pointerVal != pointerVal) {
+  //     return true;
+  //   } else
+  //     return false;
+  // }
 }
 
 void refactor() {

@@ -36,6 +36,7 @@ bool flag = false;
 String documentid;
 List denChangeTrack;
 Map<String, dynamic> record;
+List allAttemptedWords = [];
 
 class CreateRoom extends StatefulWidget {
   final int id;
@@ -139,6 +140,7 @@ class _CreateRoomState extends State<CreateRoom> {
         : denChangeTrack = [];
     denCanvasLength = roomData['denCanvasLength'];
     numberOfRounds = roomData['numberOfRounds'];
+    allAttemptedWords = roomData['allAttemptedWords'];
   }
 
   void addPlayer() {

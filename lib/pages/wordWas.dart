@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:scribbl/pages/Painter_screen/painterScreen.dart';
+import 'package:scribbl/services/authHandler.dart';
+import 'Guesser_screen/guesserScreen.dart';
 import 'room/room.dart';
 import 'package:quiver/async.dart';
 import 'selectRoom.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../main.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 List sortedPlayers;
+// = [
+//   'developer',
+//   'dev',
+//   'developer ksaalcalichaovo',
+//   'devesdasloper',
+//   'dedveloper',
+//   'dedveloper',
+//   'dedveloper',
+// ];
 List sortedScore;
+// = [450, 450, 450, 450, 450, 100, 1000]; //CHANGE LATER
 
 class WordWas extends StatefulWidget {
   @override
@@ -22,6 +35,15 @@ class _WordWasState extends State<WordWas> {
   void initState() {
     current = 0;
     startTimer();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (identity == denId) {
+        currency.setCoins =
+            currency.remainingCoins + tempScore[playersId.indexOf(denId)];
+      } else {
+        currency.setCoins = currency.remainingCoins + score;
+        score = 0;
+      }
+    });
 
     super.initState();
   }
@@ -74,7 +96,38 @@ class _WordWasState extends State<WordWas> {
       distance = counter + m - d;
     }
     if (current == 5 + (distance * 3) && resumed && online)
-     changeDen('wordWas.dart line 76 and vlaue of current is $current');
+      changeDen('wordWas.dart line 76 and vlaue of current is $current');
+  }
+}
+
+class WordHeading extends StatelessWidget {
+  const WordHeading();
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'Word was',
+          style: GoogleFonts.openSans(
+            color: Colors.black,
+            fontSize: 20.0,
+            //fontWeight: FontWeight.bold,
+          ),
+        ),
+        AutoSizeText(
+          '$word',
+          //'$word',
+          style: GoogleFonts.openSans(
+            color: Colors.black,
+            fontSize: 26.0,
+            // fontWeight: FontWeight.bold,
+          ),
+          maxLines: 1,
+        ),
+      ],
+    );
   }
 }
 
@@ -84,8 +137,10 @@ class WordWasContent extends StatefulWidget {
 }
 
 class _WordWasContentState extends State<WordWasContent>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   AnimationController controller;
+  double sc;
+  int score;
   @override
   void initState() {
     sort();
@@ -96,105 +151,121 @@ class _WordWasContentState extends State<WordWasContent>
       lowerBound: 0.0,
       upperBound: 1.0,
     );
+    controller.forward(from: 0.0);
     super.initState();
-  }
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    controller.forward();
-    print(controller.value);
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (BuildContext context, Widget child) {
-        return wordWasContent();
-      },
-    );
-  }
-
-  Widget wordWasContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Flexible(
-          flex: 1,
-          child:
-              // Text('The word was $word')
-              Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'Word was',
-                style: GoogleFonts.notoSans(
-                  color: Colors.black,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                '$word',
-                style: GoogleFonts.notoSans(
-                  color: Colors.black,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Flexible(
-          flex: 4,
-          child: Container(
-            child: Center(
+    return Container(
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Flexible(
+              flex: 5,
+              child:
+                  // Text('The word was $word')
+                  const WordHeading()),
+          Flexible(
+            flex: 14,
+            child: Container(
               child: ListView.builder(
                   itemCount: sortedPlayers.length,
                   //  itemCount: 10,
                   itemBuilder: (_, int a) {
                     String name = sortedPlayers[a];
                     //  int score = sortedScore[a]*controller.value;
-                    double sc = sortedScore[a] * controller.value;
-                    int score = sc.toInt();
-                    return FractionallySizedBox(
-                      widthFactor: 0.75,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            Flexible(
-                              flex: 9,
-                              child: Text('$name',
-                                  style: GoogleFonts.notoSans(
-                                      color: Colors.black,
-                                      fontSize: totalWidth / 20,
-                                      fontWeight: (name==userNam)?FontWeight.w800:FontWeight.normal
-                                      )),
+
+                    int b = a + 1;
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: FractionallySizedBox(
+                        widthFactor: 0.65,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              border: Border.all(color: Colors.grey[200]),
+                              borderRadius: BorderRadius.circular(12.0)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 4.0, horizontal: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Flexible(
+                                  flex: 9,
+                                  child: Row(
+                                    children: [
+                                      Text('$b',
+                                          style: GoogleFonts.notoSans(
+                                              color: Colors.black,
+                                              fontSize: totalWidth / 20,
+                                              // fontSize: 300 / 20, //CHANGE LATER
+
+                                              fontWeight: (name == userNam)
+                                                  ? FontWeight.w800
+                                                  : FontWeight.normal)),
+                                      SizedBox(
+                                        width: 8.0,
+                                      ),
+                                      Flexible(
+                                        child: AutoSizeText('$name',
+                                            maxLines: 1,
+                                            style: GoogleFonts.notoSans(
+                                                color: Colors.black,
+                                                fontSize: totalWidth /
+                                                    20, //CHANGE LATER
+                                                // fontSize:
+                                                // 300 / 20, //CHANGE LATER
+
+                                                fontWeight: (name == userNam)
+                                                    ? FontWeight.w800
+                                                    : FontWeight.normal)),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Flexible(
+                                  flex: 4,
+                                  child: AnimatedBuilder(
+                                    animation: controller,
+                                    builder:
+                                        (BuildContext context, Widget child) {
+                                      sc = sortedScore[a] * controller.value;
+                                      score = sc.toInt();
+                                      return
+                                          // Temp();
+
+                                          Row(
+                                        children: [
+                                          Text('+ $score',
+                                              style: GoogleFonts.notoSans(
+                                                  color: (score == 0)
+                                                      ? Colors.red[800]
+                                                      : Colors.green[600],
+                                                  fontSize: totalWidth /
+                                                      20 //  CHANGE LATER
+                                                  // fontSize: 300 / 20
+                                                  )),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            //Text(':',style: GoogleFonts.notoSans(color: Colors.black, fontSize: 20.0)),
-                            Flexible(
-                              flex: 4,
-                              child: Text('+ $score',
-                                  style: GoogleFonts.notoSans(
-                                      color: (score == 0)
-                                          ? Colors.red[800]
-                                          : Colors.green[600],
-                                      fontSize: totalWidth / 20)),
-                            )
-                          ],
+                          ),
                         ),
                       ),
                     );
                   }),
             ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 

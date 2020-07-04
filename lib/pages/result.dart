@@ -16,9 +16,9 @@ class _ResultState extends State<Result> {
   @override
   void initState() {
     if (check == signInMethod.google)
-      updateCoinsGoogle();
+      updateUserDataGoogle();
     else
-      updateCoinsAnonymous();
+      updateUserDataAnonymous();
     super.initState();
   }
 
@@ -28,7 +28,7 @@ class _ResultState extends State<Result> {
   }
 }
 
-Future<void> updateCoinsGoogle() async {
+Future<void> updateUserDataGoogle() async {
   QuerySnapshot q = await Firestore.instance
       .collection('users google')
       .where('uid', isEqualTo: identity)
@@ -36,13 +36,13 @@ Future<void> updateCoinsGoogle() async {
   DocumentSnapshot d = q.documents[0];
   String i = d.documentID;
   // int score = finalScore[playersId.indexOf(identity)];
-  await Firestore.instance
-      .collection('users google')
-      .document(i)
-      .updateData({'coins': currency.remainingCoins});
+  await Firestore.instance.collection('users google').document(i).updateData({
+    'coins': currency.remainingCoins,
+    'attemptedWords': wordCheck.myAttemptedWords
+  });
 }
 
-Future<void> updateCoinsAnonymous() async {
+Future<void> updateUserDataAnonymous() async {
   QuerySnapshot q = await Firestore.instance
       .collection('users anonymous')
       .where('uid', isEqualTo: identity)
@@ -53,7 +53,10 @@ Future<void> updateCoinsAnonymous() async {
   await Firestore.instance
       .collection('users anonymous')
       .document(i)
-      .updateData({'coins': currency.remainingCoins});
+      .updateData({
+    'coins': currency.remainingCoins,
+    'attemptedWords': wordCheck.myAttemptedWords
+  });
 }
 
 class ResultContent extends StatefulWidget {

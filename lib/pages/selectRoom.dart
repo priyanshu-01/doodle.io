@@ -34,7 +34,7 @@ bool initialiseDimension = true;
 bool online;
 double totalWidth;
 double totalLength;
-DocumentSnapshot wordListDocument;
+List wordList;
 
 Map<String, Color> color = {
   //'bg2': Color(0xFF2994b2),
@@ -311,8 +311,9 @@ Future<void> addRoom(String uid) async {
     'indices': [0],
     'pointer': 0,
     'length': 0,
-    'xpos': {},
-    'ypos': {},
+    'xpos': [],
+    'ypos': [],
+    'allAttemptedWords': [],
   }).catchError((e) {
     print('error $e');
   });
@@ -337,10 +338,25 @@ class MyConnectivity {
     connectivity.onConnectivityChanged.listen((result) {
       _checkStatus(result);
     });
-    wordListDocument = await Firestore.instance
+
+    await Firestore.instance
         .collection('words')
         .document('word list')
-        .get();
+        .get()
+        .then((value) {
+      wordList = removeRepeatedWords(value);
+    });
+  }
+
+  List removeRepeatedWords(DocumentSnapshot documentSnapshot) {
+    List allWords = documentSnapshot['list'];
+    List freshWords = [];
+    for (String i in allWords) {
+      if (wordCheck.myAttemptedWords.indexOf(i) == -1) {
+        freshWords.add(i);
+      }
+    }
+    return freshWords;
   }
 
   void _checkStatus(ConnectivityResult result) async {
