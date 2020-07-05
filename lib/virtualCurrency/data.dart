@@ -4,8 +4,15 @@ import 'package:flutter/material.dart';
 class Currency extends ChangeNotifier {
   int coins;
   int lastValueCoins;
+  Color coinsAmountColor;
   Currency({this.coins}) {
     lastValueCoins = coins;
+    coinsAmountColor = Colors.white;
+  }
+
+  set coinsColor(Color a) {
+    coinsAmountColor = a;
+    notifyListeners();
   }
 
   int get remainingCoins => coins;

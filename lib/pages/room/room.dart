@@ -113,6 +113,11 @@ class _CreateRoomState extends State<CreateRoom> {
                           if (game == false)
                             return MeetingPage();
                           else {
+                            if (currency.coinsAmountColor != Colors.black) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                currency.coinsColor = Colors.black;
+                              });
+                            }
                             return GameScreen();
                           }
                         }

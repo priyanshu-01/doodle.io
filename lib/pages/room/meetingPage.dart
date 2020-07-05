@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,19 +18,17 @@ class DisplayRound extends StatefulWidget {
 class _DisplayRoundState extends State<DisplayRound> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: StepperSwipe(
-        initialValue: roundsLimit,
-        onChanged: (int val) {
-          roundsLimit = val;
-        },
-        direction: Axis.horizontal,
-        secondIncrementDuration: Duration(milliseconds: 500),
-        withPlusMinus: true,
-        dragButtonColor: Colors.pink,
-        iconsColor: Colors.pink,
-        speedTransitionLimitCount: 3,
-      ),
+    return StepperSwipe(
+      initialValue: roundsLimit,
+      onChanged: (int val) {
+        roundsLimit = val;
+      },
+      direction: Axis.horizontal,
+      secondIncrementDuration: Duration(milliseconds: 500),
+      withPlusMinus: true,
+      dragButtonColor: Color(0xFFE9B123),
+      iconsColor: Colors.blue[900],
+      speedTransitionLimitCount: 3,
     );
 
     Container(
@@ -91,16 +90,17 @@ class WaitingForFriends extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: Alignment.center,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Text(
-            'Waiting for friends to join...',
-            style: TextStyle(color: Color(0xFF45454D)),
-          ),
+          // Text(
+          //   'Waiting for friends to join...',
+          //   style: TextStyle(color: Colors.white,
+          // ),
           SpinKitThreeBounce(
-            color: Colors.black,
-            size: 20.0,
+            color: Colors.yellow,
+            size: 40.0,
           ),
         ],
       ),
@@ -113,32 +113,39 @@ class StartStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     if (identity == hostId)
       return RaisedButton(
-        onPressed: (counter > 1)
-            ? () {
-                game = true;
-                startGame();
-              }
-            : null,
-        disabledColor: Colors.pink[100],
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 25.0),
-          child: Text('Start Game',
-              style: GoogleFonts.notoSans(
-                  color: Color(0xFFFFF1E9), fontSize: 20.0)),
-        ),
-        color: Color(0xFFFF4893),
-      );
+          animationDuration: Duration(seconds: 1),
+          onPressed: (counter > 1)
+              ? () {
+                  game = true;
+                  startGame();
+                }
+              : null,
+          disabledColor: Colors.grey[700],
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 15.0, horizontal: 22.0),
+            child: Text('START',
+                style: GoogleFonts.fredokaOne(
+                    color: Colors.white,
+                    letterSpacing: 1.3,
+                    // Color(0xFFFFF1E9)
+                    fontWeight: FontWeight.w500,
+                    fontSize: 23.0)),
+          ),
+          color: Colors.green[700]
+          // Color(0xFFFF4893),
+          );
     else
       return Padding(
         padding: const EdgeInsets.only(top: 14.0, bottom: 12.0),
         child: FractionallySizedBox(
           widthFactor: 0.7,
-          child: Text('$host will start the Game',
+          child: AutoSizeText('$host will start the Game',
+              maxLines: 1,
               textAlign: TextAlign.center,
-              style: GoogleFonts.notoSans(
-                  color: Color(0xFFFF4893), fontSize: 20.0)),
+              style: GoogleFonts.notoSans(color: Colors.white, fontSize: 20.0)),
         ),
       );
   }
@@ -161,6 +168,7 @@ class JoiningList extends StatelessWidget {
           width: totalWidth * 0.7,
           child: Card(
             elevation: 15.0,
+            shadowColor: Colors.blue[900],
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0)),
             color: Colors.white,
@@ -176,10 +184,18 @@ class JoiningList extends StatelessWidget {
                               bottom: 4.0, left: 4.0, right: 4.0),
                           child: Container(
                             decoration: BoxDecoration(
-                              border: Border.all(color: Color(0xFFFFD5D5)),
-                              borderRadius: BorderRadius.circular(12.0),
-                              color: Color(0xFFFFD5D5),
-                            ),
+                                border: Border.all(
+                                  color: Colors.blue[200],
+                                  // Color(0xFFFFD5D5)
+                                ),
+                                borderRadius: BorderRadius.circular(12.0),
+                                color: Colors.blue[200],
+                                gradient: LinearGradient(colors: [
+                                  Colors.blue[700],
+                                  Colors.blue[300]
+                                ])
+                                //  Color(0xFFFFD5D5),
+                                ),
                             child: Row(
                               // mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
@@ -195,7 +211,9 @@ class JoiningList extends StatelessWidget {
                                 Text(
                                   players[a],
                                   style: GoogleFonts.notoSans(
-                                      fontSize: 20.0, color: Color(0xFF45454D)),
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 20.0,
+                                      color: Colors.black),
                                 ),
                               ],
                             ),
@@ -229,7 +247,10 @@ class RoomIdentity extends StatelessWidget {
             padding: const EdgeInsets.only(left: 12.0, right: 12.0),
             child: Text(
               'Room id : $roomID',
-              style: GoogleFonts.quicksand(fontSize: 25.0, color: Colors.black),
+              style: GoogleFonts.quicksand(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700),
             ),
           ),
           Padding(
@@ -241,19 +262,18 @@ class RoomIdentity extends StatelessWidget {
                     Text(
                       'Share this with your firends',
                       style: GoogleFonts.quicksand(
-                        color: Colors.black,
-                      ),
+                          color: Colors.white, fontWeight: FontWeight.w700),
                     ),
                     Text(' and ask them to join!',
                         style: GoogleFonts.quicksand(
-                          color: Colors.black,
-                        )),
+                            color: Colors.white, fontWeight: FontWeight.w700)),
                   ],
                 ),
                 IconButton(
                   icon: Icon(
                     Icons.share,
-                    color: Color(0xFFFF4893),
+                    // color: Color(0xFFFF4893),
+                    color: Color(0xFFF6EC13),
                     size: 30.0,
                   ),
                   onPressed: () {
@@ -270,10 +290,12 @@ class RoomIdentity extends StatelessWidget {
       decoration: BoxDecoration(
           color: Colors.white,
           //color: Color(0xFFFFD5D5),
-          border: Border.all(
-            color: Colors.white,
-            // width: 2.0
+          gradient: LinearGradient(
+            colors: [Colors.blue, Colors.blue[900]],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
+          border: Border.all(color: Color(0xFFE9B123), width: 2.0),
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20.0),
               bottomRight: Radius.circular(20.0))),
@@ -286,16 +308,24 @@ class MeetingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        color: Color(0xFFFFF1E9),
+        decoration: BoxDecoration(
+          gradient: RadialGradient(radius: 0.8, colors: [
+            Colors.white,
+            Colors.blue[300],
+            Color(0xFF000080),
+            // Colors.blue[900],
+          ]),
+        ),
+        // color: Color(0xFFFFF1E9),
         child: Column(
           children: <Widget>[
             Flexible(flex: 2, child: RoomIdentity()),
             Flexible(flex: 4, child: JoiningList()),
             Flexible(
                 child: (identity == hostId)
-                    ? DisplayRound()
-                    : WaitingForFriends()),
-            Flexible(flex: 2, child: StartStatus()),
+                    ? Center(child: DisplayRound())
+                    : Center(child: WaitingForFriends())),
+            Flexible(flex: 2, child: Center(child: StartStatus())),
           ],
         ),
       ),

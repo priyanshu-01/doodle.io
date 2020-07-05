@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'data.dart';
 
@@ -57,7 +58,7 @@ class _VirtualCurrencyChangerState extends State<VirtualCurrencyChanger>
     }
 
     return Container(
-      color: Colors.white,
+      // color: Colors.white,
       height: 40.0,
       child: Row(
         children: [
@@ -84,7 +85,13 @@ class _VirtualCurrencyChangerState extends State<VirtualCurrencyChanger>
                       .toInt();
                   temp = widget.currency.lastValueCoins - temp;
                 }
-                return Text(commas(temp));
+                return Text(
+                  commas(temp),
+                  style: GoogleFonts.fredokaOne(
+                      letterSpacing: 1.0,
+                      fontWeight: FontWeight.w400,
+                      color: widget.currency.coinsAmountColor),
+                );
               }
               //  },
               ),
@@ -107,7 +114,7 @@ class VirtualCurrencyContent extends StatelessWidget {
     print('currency changed');
     return Container(
         height: 40.0,
-        color: Colors.white,
+        // color: Colors.white,
         // width: 100.0,
         child: Row(
           children: [
@@ -117,7 +124,13 @@ class VirtualCurrencyContent extends StatelessWidget {
                 image: AssetImage('assets/icons/coin.png'),
               ),
             ),
-            Text(commas(currency.remainingCoins)),
+            Text(
+              commas(currency.remainingCoins),
+              style: GoogleFonts.fredokaOne(
+                  letterSpacing: 1.0,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white),
+            ),
             SizedBox(
               width: 5.0,
             )

@@ -43,12 +43,17 @@ Map<String, Color> color = {
   // 'buttonBg': Color(0xFF120136),
   //'bg2': Color(0xFFfde9c9),
 // 'buttonBg': Color(0xFFfcbf1e),
-  'buttonBg': Color(0xFFea5455),
+  'buttonBg': Colors.yellow[700],
 
   'bg2': Color(0xfffffbe0),
   'buttonText': Color(0xFFea5455),
   'blackShade': Color(0xFF343434)
 };
+
+LinearGradient gradient = LinearGradient(
+    colors: [Colors.blue[900], Colors.blue[400]],
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter);
 
 class SelectRoom extends StatefulWidget {
   final String userName;
@@ -116,6 +121,12 @@ class _SelectRoomState extends State<SelectRoom> {
           child: Container(
             decoration: new BoxDecoration(
               color: color['bg'],
+              gradient: RadialGradient(radius: 1.0, colors: [
+                // Colors.white,
+                Colors.blue[200],
+                Color(0xFF000080),
+                // Colors.blue[900],
+              ]),
             ),
             child: Column(
               children: <Widget>[
@@ -145,17 +156,40 @@ class _SelectRoomState extends State<SelectRoom> {
                             SpringButtonType.OnlyScale,
                             Container(
                               decoration: BoxDecoration(
+                                  // gradient: gradient,
                                   color: color['buttonBg'],
                                   border: Border.all(color: color['buttonBg']),
                                   borderRadius: BorderRadius.circular(18.0)),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    vertical: 18.0, horizontal: 30.0),
-                                child: Text('Create Room',
-                                    style: GoogleFonts.notoSans(
-                                        //color: Color(0xFF00008B),
-                                        color: color['bg2'],
-                                        fontSize: 20.0)),
+                                    vertical: 18.0, horizontal: 10.0),
+                                child: Text(
+                                  'CREATE ROOM',
+                                  style: GoogleFonts.fredokaOne(
+                                      letterSpacing: 1.4,
+                                      shadows: [
+                                        Shadow(
+                                            // bottomLeft
+                                            offset: Offset(-1.0, -1.0),
+                                            color: Colors.black),
+                                        Shadow(
+                                            // bottomRight
+                                            offset: Offset(1.0, -1.0),
+                                            color: Colors.black),
+                                        Shadow(
+                                            // topRight
+                                            offset: Offset(2.5, 2.5),
+                                            color: Colors.black),
+                                        Shadow(
+                                            // topLeft
+                                            offset: Offset(-1.0, 1.0),
+                                            color: Colors.black),
+                                      ],
+                                      //color: Colors.orange[700],
+                                      color: color['bg2'],
+                                      fontSize: 25.0,
+                                      fontWeight: FontWeight.w800),
+                                ),
                               ),
                             ),
                             alignment: Alignment.center,
@@ -174,17 +208,38 @@ class _SelectRoomState extends State<SelectRoom> {
                             Container(
                               decoration: BoxDecoration(
                                   color: color['buttonBg'],
+                                  // gradient: gradient,
                                   border: Border.all(color: color['buttonBg']),
                                   borderRadius: BorderRadius.circular(18.0)),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    vertical: 18.0, horizontal: 40.0),
+                                    vertical: 18.0, horizontal: 20.0),
                                 child: Text(
-                                  'Join Room',
-                                  style: GoogleFonts.notoSans(
+                                  'JOIN ROOM',
+                                  style: GoogleFonts.fredokaOne(
+                                      letterSpacing: 1.4,
+                                      shadows: [
+                                        Shadow(
+                                            // bottomLeft
+                                            offset: Offset(-1.0, -1.0),
+                                            color: Colors.black),
+                                        Shadow(
+                                            // bottomRight
+                                            offset: Offset(1.0, -1.0),
+                                            color: Colors.black),
+                                        Shadow(
+                                            // topRight
+                                            offset: Offset(2.5, 2.5),
+                                            color: Colors.black),
+                                        Shadow(
+                                            // topLeft
+                                            offset: Offset(-1.0, 1.0),
+                                            color: Colors.black),
+                                      ],
                                       //color: Colors.orange[700],
                                       color: color['bg2'],
-                                      fontSize: 20.0),
+                                      fontSize: 25.0,
+                                      fontWeight: FontWeight.w800),
                                 ),
                               ),
                             ),
@@ -234,6 +289,7 @@ class _SelectRoomState extends State<SelectRoom> {
           milliseconds: 150,
         ), () {
       Alert(
+        style: AlertStyle(backgroundColor: Colors.blue),
         // desc: 'Enter Room Id',
         context: context,
         content: EnterRoomId(currency: currency),

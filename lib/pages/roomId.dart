@@ -30,6 +30,7 @@ class _EnterRoomIdState extends State<EnterRoomId> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.blue,
       height: totalLength * 0.4,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -59,26 +60,51 @@ class _EnterRoomIdState extends State<EnterRoomId> {
             ),
           ),
           showWarning(),
-          MaterialButton(
+          InkWell(
             enableFeedback: false,
-            onPressed: () {
+            onTap: () {
               flag = false;
               (enteredId != null) ? val = int.parse(enteredId) : val = 0;
               getDetails(context);
             },
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0)),
-            child: Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: (status == 'Join')
-                  ? Text(
-                      'Join',
-                      style: GoogleFonts.quicksand(
-                          color: Colors.white, fontSize: 35.0),
-                    )
-                  : SpinKitFadingCircle(color: Colors.white),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18.0),
+                color: color['buttonBg'],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: (status == 'Join')
+                    ? Text(
+                        'JOIN',
+                        style: GoogleFonts.fredokaOne(
+                            letterSpacing: 1.4,
+                            shadows: [
+                              Shadow(
+                                  // bottomLeft
+                                  offset: Offset(-1.0, -1.0),
+                                  color: Colors.black),
+                              Shadow(
+                                  // bottomRight
+                                  offset: Offset(1.0, -1.0),
+                                  color: Colors.black),
+                              Shadow(
+                                  // topRight
+                                  offset: Offset(2.5, 2.5),
+                                  color: Colors.black),
+                              Shadow(
+                                  // topLeft
+                                  offset: Offset(-1.0, 1.0),
+                                  color: Colors.black),
+                            ],
+                            //color: Colors.orange[700],
+                            color: color['bg2'],
+                            fontSize: 25.0,
+                            fontWeight: FontWeight.w800),
+                      )
+                    : SpinKitFadingCircle(color: Colors.white),
+              ),
             ),
-            color: Colors.red[800],
           )
         ],
       ),
@@ -112,6 +138,7 @@ class _EnterRoomIdState extends State<EnterRoomId> {
 
     if (qs.documents.length != 0) {
       status = 'Join';
+      Navigator.pop(context);
       Navigator.push(context, createRoute(val, widget.currency));
     } else {
       setState(() {
