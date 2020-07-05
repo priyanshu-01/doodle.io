@@ -58,14 +58,14 @@ class ChooseOrDraw extends StatefulWidget {
 
 class _ChooseOrDrawState extends State<ChooseOrDraw> {
   var subs;
-  int curr = 90;
-  int star = 90;
+  // int curr = ;
+  int star = painterCountDown.initialValue;
 
   @override
   Widget build(BuildContext context) {
     if (word != '*') //this is true when it should not be
     {
-      if (curr > 1 && counter - 1 != guessersId.length) {
+      if (painterCountDown.current > 1 && counter - 1 != guessersId.length) {
         if (!timerRunning2) {
           print('timer started');
           startTimer();
@@ -73,7 +73,6 @@ class _ChooseOrDrawState extends State<ChooseOrDraw> {
         }
         return Painter();
       } else {
-        //curr=90;
         timerRunning2 = false;
         subs.cancel();
         return WordWas();
@@ -84,7 +83,7 @@ class _ChooseOrDrawState extends State<ChooseOrDraw> {
 
   @override
   void dispose() {
-    curr = 90;
+    painterCountDown.current = painterCountDown.initialValue;
     if (subs != null)
       subs.cancel(); //error caught by crashlytics   -- got undertesting fix
     timerRunning2 = false;
@@ -98,12 +97,12 @@ class _ChooseOrDrawState extends State<ChooseOrDraw> {
     );
     subs = countDownTimer.listen(null);
     subs.onData((duration) {
-      if (curr <= 1)
+      if (painterCountDown.current <= 1)
         setState(() {
-          curr = star - duration.elapsed.inSeconds;
+          painterCountDown.setCurrent = star - duration.elapsed.inSeconds;
         });
       else
-        curr = star - duration.elapsed.inSeconds;
+        painterCountDown.setCurrent = star - duration.elapsed.inSeconds;
     });
   }
 }

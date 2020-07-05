@@ -314,6 +314,7 @@ Future<void> addRoom(String uid) async {
     'xpos': [],
     'ypos': [],
     'allAttemptedWords': [],
+    'colorIndexStack': [0],
   }).catchError((e) {
     print('error $e');
   });

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
+import 'package:scribbl/pages/Guesser_screen/countDown.dart';
+import 'package:scribbl/pages/Painter_screen/painterCountDown.dart';
 import 'package:scribbl/pages/Painter_screen/painterScreen.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:scribbl/virtualCurrency/data.dart';
@@ -37,6 +39,8 @@ String documentid;
 List denChangeTrack;
 Map<String, dynamic> record;
 List allAttemptedWords = [];
+GuesserCountDown guesserCountDown;
+PainterCountDown painterCountDown;
 
 class CreateRoom extends StatefulWidget {
   final int id;
@@ -51,6 +55,8 @@ class CreateRoom extends StatefulWidget {
 class _CreateRoomState extends State<CreateRoom> {
   @override
   void initState() {
+    guesserCountDown = GuesserCountDown();
+    painterCountDown = PainterCountDown();
     game = false;
     reactionListener = ReactionListener();
     super.initState();
@@ -61,8 +67,16 @@ class _CreateRoomState extends State<CreateRoom> {
     roomID = widget.id;
     print('returned room');
     return WillPopScope(
-        child: ChangeNotifierProvider.value(
-          value: widget.currency,
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider.value(value: widget.currency),
+            ChangeNotifierProvider(
+              create: (context) => guesserCountDown,
+            ),
+            ChangeNotifierProvider(
+              create: (context) => painterCountDown,
+            )
+          ],
           // create: (context) => widget.currency,
           child: Scaffold(
             body: SafeArea(

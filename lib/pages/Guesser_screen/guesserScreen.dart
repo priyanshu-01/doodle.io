@@ -32,7 +32,7 @@ AnimationController controlGift;
 enum animateAvatar { start, done, reset }
 var avatarAnimation;
 
-int currentG = 92;
+// int currentG = 92;
 
 class GuesserScreen extends StatefulWidget {
   @override
@@ -51,7 +51,6 @@ class _GuesserScreenState extends State<GuesserScreen> {
     keyboardState = KeyboardVisibility.isVisible;
     subscription = KeyboardVisibility.onChange.listen((bool visible) {
       setState(() {
-        //error by crashlytics   --solved and tested
         keyboardState = visible;
         if (keyboardState && controlGift.value == 1.0) {
           controlGift.value = 0.0;
@@ -85,11 +84,7 @@ class _GuesserScreenState extends State<GuesserScreen> {
                     flex: (keyboardState) ? 0 : 4,
                     child: Container(
                       child: Stack(
-                        children: <Widget>[
-                          ChatBox(),
-                          AnimatedGift()
-                          //)
-                        ],
+                        children: <Widget>[ChatBox(), AnimatedGift()],
                       ),
                     ),
                   ),
@@ -124,13 +119,7 @@ class StackChild extends StatelessWidget {
               height: position == 'guesser'
                   ? guessCanvasLength - 15
                   : denCanvasLength - 15,
-              //width: 50.0,
-              child:
-                  //  Container(
-                  //     // height: checkLeftSideContainerHeight(position),
-                  //     child:
-                  // playersId.length,
-                  Wrap(
+              child: Wrap(
                 direction: Axis.vertical,
                 children: [
                   for (var playerIdentity in playersId)
@@ -170,21 +159,8 @@ class StackChild extends StatelessWidget {
                                 ),
                               )),
                 ],
-              )
-              // ),
-              ),
+              )),
           position == 'guesser' ? AnimatedAvatar() : Container()
-          // : Container(
-          //     child: Padding(
-          //       padding: const EdgeInsets.only(top: 20.0, right: 10.0),
-          //       child: CircleAvatar(
-          //         radius: 20.0,
-          //         backgroundColor: Colors.grey[100],
-          //         backgroundImage:
-          //             NetworkImage(playersImage[playersId.indexOf(denId)]),
-          //       ),
-          //     ),
-          //   )
         ],
       ),
     );
@@ -244,12 +220,12 @@ class GuessWaitShow extends StatefulWidget {
 }
 
 class _GuessWaitShowState extends State<GuessWaitShow> {
-  int startG = 92;
+  int startG = guesserCountDown.initialValue;
   var subG;
   @override
   Widget build(BuildContext context) {
     if (word != '*') {
-      if (currentG > 3 && counter - 1 != guessersId.length) {
+      if (guesserCountDown.current > 3 && counter - 1 != guessersId.length) {
         if (!timerRunning || tempDenId != denId) {
           tempDenId = denId;
           startTimer();
@@ -261,7 +237,7 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
         return WordWas();
       }
     } else {
-      if (currentG != 92) {
+      if (guesserCountDown.current != guesserCountDown.initialValue) {
         print('timerStoppedForcefully ');
         timerZero();
       }
@@ -272,7 +248,7 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
   void timerZero() {
     print('timerZero called');
     subG.cancel();
-    currentG = 92;
+    guesserCountDown.current = guesserCountDown.initialValue;
     pointsG = [];
     timerRunning = false;
   }
@@ -291,12 +267,12 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
 
     subG = countDownTimer.listen(null);
     subG.onData((duration) {
-      if (currentG <= 3)
+      if (guesserCountDown.current <= 3)
         setState(() {
-          currentG = startG - duration.elapsed.inSeconds;
+          guesserCountDown.setCurrent = startG - duration.elapsed.inSeconds;
         });
       else
-        currentG = startG - duration.elapsed.inSeconds;
+        guesserCountDown.setCurrent = startG - duration.elapsed.inSeconds;
     });
 
     subG.onDone(() {
@@ -305,7 +281,7 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
       //word = '*';
       pointsG = [];
       subG.cancel();
-      currentG = 92;
+      guesserCountDown.current = guesserCountDown.initialValue;
     });
   }
 
@@ -313,7 +289,7 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
   void dispose() {
     word = '*';
     if (subG != null) subG.cancel();
-    currentG = 92;
+    guesserCountDown.current = guesserCountDown.initialValue;
     timerRunning = false;
     super.dispose();
   }
@@ -469,7 +445,7 @@ class _TextBoxState extends State<TextBox> {
   void calculateScore() {
     //1 time
     int s1;
-    int currentTime = currentG - 5; //NEEDS TO BE CHANGED
+    int currentTime = guesserCountDown.current - 2;
     s1 = (currentTime ~/ 10) + 1;
     s1 = s1 * 10;
     int s2;
