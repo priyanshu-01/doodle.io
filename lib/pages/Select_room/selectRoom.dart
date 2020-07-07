@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scribbl/audioPlayer/audioPlayer.dart';
@@ -344,7 +343,7 @@ Future<void> addRoom(String uid) async {
     'colorIndexStack': [0],
   }).catchError((e) {
     print('error $e');
-  });
+  }).then((value) => documentid = value.documentID);
 }
 
 class ButtonCreateRoom extends StatelessWidget {

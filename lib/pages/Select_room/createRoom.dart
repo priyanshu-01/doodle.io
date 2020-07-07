@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
 import 'package:scribbl/pages/room/room.dart';
 import 'package:scribbl/virtualCurrency/data.dart';
+import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 
 class MakeRoom extends StatefulWidget {
   final Currency currency;
@@ -25,7 +26,7 @@ class _MakeRoomState extends State<MakeRoom> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Padding(padding: const EdgeInsets.all(15.0), child: Container()),
+          Padding(padding: const EdgeInsets.all(15.0), child: DisplayRound()),
           InkWell(
             enableFeedback: false,
             onTap: () => (!processingCreateRoom) ? createRoom() : null,
@@ -92,5 +93,92 @@ class _MakeRoomState extends State<MakeRoom> {
               Navigator.push(context, createRoute(id, widget.currency));
               processingCreateRoom = false;
             }));
+  }
+}
+
+int roundsLimit = 3;
+
+class DisplayRound extends StatefulWidget {
+  @override
+  _DisplayRoundState createState() => _DisplayRoundState();
+}
+
+class _DisplayRoundState extends State<DisplayRound> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          'Number of rounds',
+          style: TextStyle(color: Colors.white),
+        ),
+        StepperSwipe(
+          initialValue: roundsLimit,
+          onChanged: (int val) {
+            roundsLimit = val;
+          },
+          direction: Axis.horizontal,
+          secondIncrementDuration: Duration(milliseconds: 500),
+          withPlusMinus: true,
+          dragButtonColor: Color(0xFFE9B123),
+          iconsColor: Colors.blue[900],
+          speedTransitionLimitCount: 3,
+          withNaturalNumbers: true,
+        ),
+      ],
+    );
+
+    Container(
+      alignment: Alignment.center,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.chevron_left,
+              size: 45.0,
+            ),
+            onPressed: () {
+              (roundsLimit == 1)
+                  ? null
+                  : setState(() {
+                      roundsLimit = roundsLimit - 1;
+                    });
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Text(
+              '$roundsLimit',
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
+            ),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.chevron_right,
+              size: 45.0,
+            ),
+            onPressed: () {
+              (roundsLimit == 5)
+                  ? null
+                  : setState(() {
+                      roundsLimit = roundsLimit + 1;
+                    });
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Text('Rounds',
+                style: TextStyle(
+                  fontSize: 20.0,
+                )),
+          ),
+        ],
+      ),
+    );
   }
 }

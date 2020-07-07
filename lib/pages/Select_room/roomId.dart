@@ -19,11 +19,12 @@ class EnterRoomId extends StatefulWidget {
 }
 
 class _EnterRoomIdState extends State<EnterRoomId> {
+  bool processingJoinRoom = false;
   int val;
-  String status;
+  // String status;
   @override
   void initState() {
-    status = 'Join';
+    processingJoinRoom = false;
     super.initState();
   }
 
@@ -35,47 +36,48 @@ class _EnterRoomIdState extends State<EnterRoomId> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: BeautyTextfield(
-              width: totalWidth * 0.7,
-              prefixIcon: Icon(
-                Icons.vpn_key,
-                color: Colors.white,
-              ),
-              height: 60.0,
-              inputType: TextInputType.number,
-              placeholder: 'Room ID',
-              margin: EdgeInsets.all(10.0),
-              accentColor: Colors.black,
-              textColor: Colors.white,
-              enabled: true,
-              autofocus: true,
-              onChanged: (str) {
-                enteredId = str;
-                setState(() {
-                  mistake = false;
-                });
-              },
+          BeautyTextfield(
+            width: totalWidth * 0.7,
+            prefixIcon: Icon(
+              Icons.vpn_key,
+              color: Colors.white,
             ),
+            height: 60.0,
+            inputType: TextInputType.number,
+            placeholder: 'Room ID',
+            margin: EdgeInsets.all(10.0),
+            accentColor: Colors.black,
+            textColor: Colors.white,
+            enabled: true,
+            autofocus: true,
+            onChanged: (str) {
+              enteredId = str;
+              setState(() {
+                mistake = false;
+              });
+            },
           ),
           showWarning(),
           InkWell(
             enableFeedback: false,
-            onTap: () {
-              flag = false;
-              (enteredId != null) ? val = int.parse(enteredId) : val = 0;
-              getDetails(context);
-            },
+            onTap: () => (!processingJoinRoom)
+                ? {
+                    flag = false,
+                    (enteredId != "" && (!enteredId.contains(' ')))
+                        ? val = int.parse(enteredId)
+                        : val = 0,
+                    getDetails(context)
+                  }
+                : null,
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(18.0),
                 color: color['buttonBg'],
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: (status == 'Join')
-                    ? Text(
+              child: (!processingJoinRoom)
+                  ? Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Text(
                         'JOIN',
                         style: GoogleFonts.fredokaOne(
                             letterSpacing: 1.4,
@@ -101,9 +103,11 @@ class _EnterRoomIdState extends State<EnterRoomId> {
                             color: color['bg2'],
                             fontSize: 25.0,
                             fontWeight: FontWeight.w800),
-                      )
-                    : SpinKitFadingCircle(color: Colors.white),
-              ),
+                      ))
+                  : Container(
+                      height: 70.0,
+                      width: 100.0,
+                      child: SpinKitFadingCircle(color: Colors.white)),
             ),
           )
         ],
@@ -117,7 +121,7 @@ class _EnterRoomIdState extends State<EnterRoomId> {
     } else {
       return Text(
         'It seems you made a mistake, Try Again!',
-        style: GoogleFonts.quicksand(color: Colors.black),
+        style: GoogleFonts.quicksand(color: Colors.white),
       );
     }
   }
@@ -127,7 +131,7 @@ class _EnterRoomIdState extends State<EnterRoomId> {
 
     setState(() {
       if (mistake == true) mistake = false;
-      status = 'Joining..';
+      processingJoinRoom = true;
     });
     QuerySnapshot qs;
     var ref = Firestore.instance;
@@ -137,12 +141,13 @@ class _EnterRoomIdState extends State<EnterRoomId> {
         .getDocuments();
 
     if (qs.documents.length != 0) {
-      status = 'Join';
+      processingJoinRoom = false;
+      documentid = qs.documents[0].documentID;
       Navigator.pop(context);
       Navigator.push(context, createRoute(val, widget.currency));
     } else {
       setState(() {
-        status = 'Join';
+        processingJoinRoom = false;
         mistake = true;
       });
     }

@@ -56,8 +56,8 @@ class _RoomState extends State<Room> {
   void initState() {
     guesserCountDown = GuesserCountDown();
     painterCountDown = PainterCountDown();
-    game = false;
     reactionListener = ReactionListener();
+    game = false;
     super.initState();
   }
 
@@ -82,13 +82,13 @@ class _RoomState extends State<Room> {
               child: Stack(
                 children: [
                   Container(
-                    child: StreamBuilder<QuerySnapshot>(
+                    child: StreamBuilder<DocumentSnapshot>(
                       stream: Firestore.instance
                           .collection('rooms')
-                          .where('id', isEqualTo: roomID)
+                          .document(documentid)
                           .snapshots(),
                       builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                          AsyncSnapshot<DocumentSnapshot> snapshot) {
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           reactionListener.listenReactions(context);
                         });
@@ -98,7 +98,6 @@ class _RoomState extends State<Room> {
                           return Container();
                         else {
                           readRoomData(snapshot);
-
                           if (playersId.indexOf(identity) == -1 && !flag) {
                             addPlayer();
                           }
@@ -134,9 +133,9 @@ class _RoomState extends State<Room> {
         });
   }
 
-  void readRoomData(AsyncSnapshot<QuerySnapshot> snapshot) {
-    roomData = snapshot.data.documents[0].data;
-    documentid = snapshot.data.documents[0].documentID;
+  void readRoomData(AsyncSnapshot<DocumentSnapshot> snapshot) {
+    roomData = snapshot.data.data;
+    // documentid = snapshot.data.documents[0].documentID;
     counter = roomData['counter'];
     players = roomData['users'];
     host = roomData['host'];

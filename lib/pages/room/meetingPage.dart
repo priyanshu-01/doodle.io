@@ -2,89 +2,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scribbl/pages/Select_room/createRoom.dart';
 import 'package:share/share.dart';
 import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../Select_room/selectRoom.dart';
 import 'room.dart';
-
-int roundsLimit = 3;
-
-class DisplayRound extends StatefulWidget {
-  @override
-  _DisplayRoundState createState() => _DisplayRoundState();
-}
-
-class _DisplayRoundState extends State<DisplayRound> {
-  @override
-  Widget build(BuildContext context) {
-    return StepperSwipe(
-      initialValue: roundsLimit,
-      onChanged: (int val) {
-        roundsLimit = val;
-      },
-      direction: Axis.horizontal,
-      secondIncrementDuration: Duration(milliseconds: 500),
-      withPlusMinus: true,
-      dragButtonColor: Color(0xFFE9B123),
-      iconsColor: Colors.blue[900],
-      speedTransitionLimitCount: 3,
-    );
-
-    Container(
-      alignment: Alignment.center,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.chevron_left,
-              size: 45.0,
-            ),
-            onPressed: () {
-              (roundsLimit == 1)
-                  ? null
-                  : setState(() {
-                      roundsLimit = roundsLimit - 1;
-                    });
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(
-              '$roundsLimit',
-              style: TextStyle(
-                fontSize: 20.0,
-              ),
-            ),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.chevron_right,
-              size: 45.0,
-            ),
-            onPressed: () {
-              (roundsLimit == 5)
-                  ? null
-                  : setState(() {
-                      roundsLimit = roundsLimit + 1;
-                    });
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text('Rounds',
-                style: TextStyle(
-                  fontSize: 20.0,
-                )),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class WaitingForFriends extends StatelessWidget {
   @override
@@ -326,10 +249,7 @@ class MeetingPage extends StatelessWidget {
           children: <Widget>[
             Flexible(flex: 2, child: RoomIdentity()),
             Flexible(flex: 4, child: JoiningList()),
-            Flexible(
-                child: (identity == hostId)
-                    ? Center(child: DisplayRound())
-                    : Center(child: WaitingForFriends())),
+            Flexible(child: Center(child: WaitingForFriends())),
             Flexible(flex: 2, child: Center(child: StartStatus())),
           ],
         ),
