@@ -78,7 +78,8 @@ class SelectRoom extends StatefulWidget {
 class _SelectRoomState extends State<SelectRoom> {
   Map _source = {ConnectivityResult.none: false};
   MyConnectivity _connectivity = MyConnectivity.instance;
-
+  bool createRoomPressed = false;
+  bool joinRoomPressed = false;
   String userName;
   _SelectRoomState(this.userName);
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -193,7 +194,9 @@ class _SelectRoomState extends State<SelectRoom> {
                               ),
                             ),
                             alignment: Alignment.center,
-                            onTap: () => onPressedCreateRoom(widget.currency),
+                            onTap: () => (!createRoomPressed)
+                                ? onPressedCreateRoom(widget.currency)
+                                : print('crateRoomTapped'),
                             useCache: true,
                             scaleCoefficient: 0.80,
                           ),
@@ -244,7 +247,9 @@ class _SelectRoomState extends State<SelectRoom> {
                               ),
                             ),
                             scaleCoefficient: 0.80,
-                            onTap: () => onPressedJoinRoom(context, currency),
+                            onTap: () => (!joinRoomPressed)
+                                ? onPressedJoinRoom(context, currency)
+                                : print('joinRoomTapped'),
                           ),
                         ),
                       ],
@@ -260,6 +265,7 @@ class _SelectRoomState extends State<SelectRoom> {
   }
 
   void onPressedCreateRoom(Currency currency) async {
+    createRoomPressed = true;
     await audioPlayer.playSound('click');
     flag = false;
     Random random = Random();
@@ -279,10 +285,12 @@ class _SelectRoomState extends State<SelectRoom> {
           //         ))
 
           );
+      createRoomPressed = false;
     });
   }
 
   void onPressedJoinRoom(BuildContext context, Currency currency) async {
+    joinRoomPressed = true;
     await audioPlayer.playSound('click');
     Timer(
         Duration(
@@ -301,6 +309,7 @@ class _SelectRoomState extends State<SelectRoom> {
         //   height: 30.0,
         // )
       ).show();
+      joinRoomPressed = false;
     });
   }
 

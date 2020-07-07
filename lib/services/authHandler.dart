@@ -61,6 +61,7 @@ Widget fetchFutureAnonymous() {
         if (snapshot.data.documents.length == 0) {
           name = enteredName;
           coins = 200;
+          wordCheck = WordCheck();
           AuthSignIn().createAnonymousUser();
         } else {
           userFirebaseDocument = snapshot.data.documents[0];
@@ -68,10 +69,10 @@ Widget fetchFutureAnonymous() {
           coins = userFirebaseDocument['coins'];
           name = userFirebaseDocument['name'];
           imageUrl = userFirebaseDocument['imageUrl'];
+          wordCheck = WordCheck(userFirebaseDocument: userFirebaseDocument);
           AuthSignIn().activate();
         }
         currency = Currency(coins: coins);
-        wordCheck = WordCheck(userFirebaseDocument);
         return SelectRoom(
           currency: currency,
           email: email,
@@ -97,15 +98,16 @@ Widget fetchFutureGoogle() {
       else {
         if (snapshot.data.documents.length == 0) {
           coins = 200;
+          wordCheck = WordCheck();
           AuthProvider().createGoogleUser();
         } else {
           userFirebaseDocument = snapshot.data.documents[0];
           dataDocId = userFirebaseDocument.documentID;
           coins = userFirebaseDocument['coins'];
+          wordCheck = WordCheck(userFirebaseDocument: userFirebaseDocument);
           AuthProvider().activate();
         }
         currency = Currency(coins: coins);
-        wordCheck = WordCheck(userFirebaseDocument);
         return SelectRoom(
           currency: currency,
           email: email,

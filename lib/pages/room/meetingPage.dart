@@ -142,10 +142,15 @@ class StartStatus extends StatelessWidget {
         padding: const EdgeInsets.only(top: 14.0, bottom: 12.0),
         child: FractionallySizedBox(
           widthFactor: 0.7,
-          child: AutoSizeText('$host will start the Game',
-              maxLines: 1,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.notoSans(color: Colors.white, fontSize: 20.0)),
+          child: Flexible(
+            child: AutoSizeText('$host will start the Game',
+                maxFontSize: 25.0,
+                minFontSize: 10.0,
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                style:
+                    GoogleFonts.notoSans(color: Colors.white, fontSize: 20.0)),
+          ),
         ),
       );
   }
@@ -260,7 +265,7 @@ class RoomIdentity extends StatelessWidget {
                 Column(
                   children: <Widget>[
                     Text(
-                      'Share this with your firends',
+                      'Share this with your friends',
                       style: GoogleFonts.quicksand(
                           color: Colors.white, fontWeight: FontWeight.w700),
                     ),
