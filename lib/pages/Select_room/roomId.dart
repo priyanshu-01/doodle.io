@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scribbl/pages/selectRoom.dart';
+import 'package:scribbl/pages/Select_room/selectRoom.dart';
 import 'package:scribbl/virtualCurrency/data.dart';
-import 'room/room.dart';
+import '../room/room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:beauty_textfield/beauty_textfield.dart';
 

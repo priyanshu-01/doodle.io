@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:scribbl/pages/roundIndicator.dart';
-import 'package:scribbl/pages/selectRoom.dart';
+import 'package:scribbl/pages/Select_room/selectRoom.dart';
 import 'package:scribbl/pages/wordWas.dart';
 import 'painter/painter.dart';
 import '../room/room.dart';
-import '../chooseWord.dart';
+import 'chooseWord.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiver/async.dart';
 import '../Guesser_screen/guesserScreen.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scribbl/pages/selectRoom.dart';
+import 'package:scribbl/pages/Select_room/selectRoom.dart';
 
 class ReactionWidget extends StatefulWidget {
   final Image reaction;
@@ -13,18 +13,17 @@ class ReactionWidget extends StatefulWidget {
 
 class _ReactionWidgetState extends State<ReactionWidget>
     with TickerProviderStateMixin {
-
   AnimationController controllerPhoto;
   CurvedAnimation curvedAnimationPhoto;
 
   AnimationController controllerReaction;
   CurvedAnimation curvedAnimationReaction;
-  
+
   AnimationController waitReaction;
 
   RelativeRectTween relativeRectTween;
 
-  Widget reactionContent=Container();
+  Widget reactionContent = Container();
 
   @override
   void initState() {
@@ -36,18 +35,16 @@ class _ReactionWidgetState extends State<ReactionWidget>
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           setState(() {
-                      reactionContent= widget.reaction;
+            reactionContent = widget.reaction;
           });
           controllerReaction.forward(from: 0.0);
         } else if (status == AnimationStatus.dismissed) {
-         
           widget.hide();
         }
       });
-      
+
     curvedAnimationPhoto =
         CurvedAnimation(parent: controllerPhoto, curve: Curves.easeOutExpo);
-
 
     controllerReaction = AnimationController(
         vsync: this,
@@ -56,31 +53,28 @@ class _ReactionWidgetState extends State<ReactionWidget>
         upperBound: 1.0)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-             waitReaction.forward();
+          waitReaction.forward();
         } else if (status == AnimationStatus.dismissed) {
-           setState(() {
-            reactionContent=Container();
+          setState(() {
+            reactionContent = Container();
           });
           controllerPhoto.reverse(from: 1.0);
         }
       });
 
-      curvedAnimationReaction= CurvedAnimation(
-        parent: controllerReaction,
-        curve: Curves.easeOutExpo
-      );
+    curvedAnimationReaction =
+        CurvedAnimation(parent: controllerReaction, curve: Curves.easeOutExpo);
 
-
-     waitReaction=AnimationController(vsync: this,duration: Duration(milliseconds: 800))
-     ..addStatusListener((status) {
-         if(status==AnimationStatus.completed)
-           controllerReaction.reverse(from: 1.0);
-      });
-     
+    waitReaction =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 800))
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed)
+              controllerReaction.reverse(from: 1.0);
+          });
 
     relativeRectTween = RelativeRectTween(
-      begin: RelativeRect.fromLTRB(totalWidth*0.1 , 0.0, 0.0, 0.0),
-      end: RelativeRect.fromLTRB(0.0, 0.0, totalWidth *0.1, 0.0),
+      begin: RelativeRect.fromLTRB(totalWidth * 0.1, 0.0, 0.0, 0.0),
+      end: RelativeRect.fromLTRB(0.0, 0.0, totalWidth * 0.1, 0.0),
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controllerPhoto.forward(from: 0.0);
@@ -104,8 +98,7 @@ class _ReactionWidgetState extends State<ReactionWidget>
           children: [
             PositionedTransition(
               rect: relativeRectTween.animate(curvedAnimationReaction),
-              child:
-                  reactionContent,
+              child: reactionContent,
             ),
             Align(
               alignment: Alignment.centerRight,

@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scribbl/gift/menu.dart';
 import 'package:scribbl/services/authHandler.dart';
-import '../pages/selectRoom.dart';
+import '../pages/Select_room/selectRoom.dart';
 import '../pages/Guesser_screen/guesserScreen.dart';
 import '../pages/room/room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

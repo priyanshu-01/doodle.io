@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:scribbl/pages/loginPage.dart';
 import 'room/room.dart';
-import 'gameScreen.dart';
+import 'room/gameScreen.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'selectRoom.dart';
+import 'Select_room/selectRoom.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/authHandler.dart';
 

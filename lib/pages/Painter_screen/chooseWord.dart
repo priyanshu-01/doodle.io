@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scribbl/services/authHandler.dart';
-import 'room/room.dart';
+import '../room/room.dart';
 import 'dart:math';
-import 'Painter_screen/painterScreen.dart';
-import 'selectRoom.dart';
+import 'painterScreen.dart';
+import '../Select_room/selectRoom.dart';
 import 'dart:async';
 
 class ChooseWordDialog extends StatefulWidget {

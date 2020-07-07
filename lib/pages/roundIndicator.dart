@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:scribbl/pages/room/room.dart';
-import 'package:scribbl/pages/selectRoom.dart';
+import 'package:scribbl/pages/Select_room/selectRoom.dart';
 
 class RoundIndicator extends StatefulWidget {
   @override

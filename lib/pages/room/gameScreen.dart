@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'Painter_screen/painterScreen.dart';
-import 'Guesser_screen/guesserScreen.dart';
-import 'room/room.dart';
-import 'selectRoom.dart';
+import '../Painter_screen/painterScreen.dart';
+import '../Guesser_screen/guesserScreen.dart';
+import 'room.dart';
+import '../Select_room/selectRoom.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'result.dart';
+import '../result.dart';
 
 List displayNames;
 List displayScores;

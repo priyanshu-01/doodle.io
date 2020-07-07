@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:share/share.dart';
 import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import '../selectRoom.dart';
+import '../Select_room/selectRoom.dart';
 import 'room.dart';
 
 int roundsLimit = 3;

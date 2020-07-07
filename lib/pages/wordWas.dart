@@ -4,7 +4,7 @@ import 'package:scribbl/services/authHandler.dart';
 import 'Guesser_screen/guesserScreen.dart';
 import 'room/room.dart';
 import 'package:quiver/async.dart';
-import 'selectRoom.dart';
+import 'Select_room/selectRoom.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../main.dart';
 import 'package:auto_size_text/auto_size_text.dart';

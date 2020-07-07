@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scribbl/pages/selectRoom.dart';
+import 'package:scribbl/pages/Select_room/selectRoom.dart';
 
 class ColorHolder {
   int selectedColorIndex = 0;

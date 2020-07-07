@@ -7,8 +7,8 @@ import 'package:scribbl/pages/Painter_screen/painterScreen.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:scribbl/virtualCurrency/data.dart';
 import 'package:scribbl/virtualCurrency/virtualCurrency.dart';
-import '../gameScreen.dart';
-import '../selectRoom.dart';
+import 'gameScreen.dart';
+import '../Select_room/selectRoom.dart';
 import '../../services/authHandler.dart';
 import '../Guesser_screen/guesserScreen.dart';
 import '../../reactions/listenReactions.dart';
@@ -42,17 +42,16 @@ List allAttemptedWords = [];
 GuesserCountDown guesserCountDown;
 PainterCountDown painterCountDown;
 
-class CreateRoom extends StatefulWidget {
+class Room extends StatefulWidget {
   final int id;
   final Currency currency;
-  CreateRoom({Key key, @required this.id, @required this.currency})
-      : super(key: key);
+  Room({Key key, @required this.id, @required this.currency}) : super(key: key);
 
   @override
-  _CreateRoomState createState() => _CreateRoomState();
+  _RoomState createState() => _RoomState();
 }
 
-class _CreateRoomState extends State<CreateRoom> {
+class _RoomState extends State<Room> {
   @override
   void initState() {
     guesserCountDown = GuesserCountDown();

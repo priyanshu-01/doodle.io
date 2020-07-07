@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'guesserScreen.dart';
-import '../selectRoom.dart';
+import '../Select_room/selectRoom.dart';
 import '../room/room.dart';
+
 class AnimatedAvatar extends StatefulWidget {
   @override
   _AnimatedAvatarState createState() => _AnimatedAvatarState();
@@ -10,13 +11,11 @@ class AnimatedAvatar extends StatefulWidget {
 
 class _AnimatedAvatarState extends State<AnimatedAvatar>
     with TickerProviderStateMixin {
+  AnimationController controlAvatar;
+  CurvedAnimation curvedAnimationAvatar;
 
-      AnimationController controlAvatar;
-      CurvedAnimation curvedAnimationAvatar;
-
-
-      AnimationController scaleAvatar;
-      CurvedAnimation curvedScaleAvatar;
+  AnimationController scaleAvatar;
+  CurvedAnimation curvedScaleAvatar;
 
   RelativeRectTween relativeRectTween;
   @override
@@ -31,14 +30,10 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
     curvedAnimationAvatar =
         CurvedAnimation(parent: controlAvatar, curve: Curves.easeInBack);
 
-
-     scaleAvatar= AnimationController(
-       vsync: this,
-       duration: Duration(milliseconds: 1000)
-     ); 
-     curvedScaleAvatar = CurvedAnimation(parent: scaleAvatar, curve: Curves.bounceOut);
-
-
+    scaleAvatar = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 1000));
+    curvedScaleAvatar =
+        CurvedAnimation(parent: scaleAvatar, curve: Curves.bounceOut);
 
     double photoSize = 120.0;
     double leftPadding = ((totalWidth / 2) - 50) - photoSize / 2;
@@ -53,21 +48,21 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
           leftPadding,
           topPadding,
           totalWidth - 50 - leftPadding - photoSize,
-          (guessCanvasLength ) - topPadding - photoSize),
+          (guessCanvasLength) - topPadding - photoSize),
       end: RelativeRect.fromLTRB(
-          //totalWidth - 50 - rightIconPadding - denIconSize,
-          leftPadding+(photoSize/2),
-          topIconPadding,
-          //rightIconPadding,
-          totalWidth/2,
-          //(guessCanvasLength / 2) - topIconPadding - denIconSize
-          0.0,
-          ),
+        //totalWidth - 50 - rightIconPadding - denIconSize,
+        leftPadding + (photoSize / 2),
+        topIconPadding,
+        //rightIconPadding,
+        totalWidth / 2,
+        //(guessCanvasLength / 2) - topIconPadding - denIconSize
+        0.0,
+      ),
     );
-
 
     super.initState();
   }
+
   void animateAvatarFunc(BuildContext context) {
     if (avatarAnimation == animateAvatar.reset) {
       print('reset');
@@ -80,16 +75,17 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
       controlAvatar.forward(from: 0.0);
     }
   }
+
   @override
   Widget build(BuildContext context) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       animateAvatarFunc(context);
       scaleAvatar.forward();
     }); //called each time build gets completed
 
     return Container(
       width: totalWidth - 50,
-      height: guessCanvasLength ,
+      height: guessCanvasLength,
       child: Stack(
         children: <Widget>[
           PositionedTransition(
@@ -97,15 +93,17 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
             child: Container(
               child: ScaleTransition(
                 scale: curvedScaleAvatar,
-                              child: ClipOval(
-                  child:(playersId.indexOf(denId)!=-1)?
-                   Image.network(
-                    playersImage[playersId.indexOf(denId)],
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover,
-                  ):
-                  CircleAvatar(backgroundColor: Colors.brown,),
+                child: ClipOval(
+                  child: (playersId.indexOf(denId) != -1)
+                      ? Image.network(
+                          playersImage[playersId.indexOf(denId)],
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        )
+                      : CircleAvatar(
+                          backgroundColor: Colors.brown,
+                        ),
                 ),
               ),
             ),
@@ -114,8 +112,9 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
       ),
     );
   }
+
   @override
-  void dispose() { 
+  void dispose() {
     controlAvatar.dispose();
     scaleAvatar.dispose();
     super.dispose();

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scribbl/pages/enterName.dart';
 import 'package:scribbl/services/anon.dart';
 import 'package:scribbl/services/authService.dart';
-import '../pages/selectRoom.dart';
+import '../pages/Select_room/selectRoom.dart';
 import '../pages/signIn.dart';
 import '../pages/loginPage.dart';
 import 'package:flutter/services.dart';
