@@ -130,6 +130,7 @@ class _RoomState extends State<Room> {
         ),
         onWillPop: () {
           leaveRoomAlert(context, players, counter);
+          // return;
         });
   }
 
@@ -181,7 +182,6 @@ class _RoomState extends State<Room> {
       title: "Leave Room ?",
       style: AlertStyle(
           backgroundColor: Color(0xFFFFF1E9),
-          //backgroundColor: Colors.red[600],
           animationType: AnimationType.grow,
           animationDuration: Duration(milliseconds: 200),
           alertBorder: RoundedRectangleBorder(
@@ -197,13 +197,9 @@ class _RoomState extends State<Room> {
           color: Color(0xFFFF4893),
           onPressed: () {
             Navigator.pop(context);
-            // if (hostId != identity) {
-            //   Navigator.pop(context);
-            // }
             Navigator.pop(context);
             removeMe();
           },
-          // color: Colors.white,
         ),
         DialogButton(
           radius: BorderRadius.circular(20.0),

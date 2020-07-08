@@ -270,8 +270,8 @@ class _WordWasContentState extends State<WordWasContent>
   }
 
   void sort() {
-    sortedPlayers = players;
-    sortedScore = tempScore;
+    sortedPlayers = players.sublist(0);
+    sortedScore = tempScore.sublist(0);
     int temp;
     String temp2;
     for (int x = 0; x < sortedScore.length - 1; x++) {
