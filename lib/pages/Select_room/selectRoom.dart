@@ -24,7 +24,7 @@ import 'functions.dart';
 AudioPlayer audioPlayer;
 
 ReactionListener reactionListener;
-double effectiveLength = 0;
+// double effectiveLength = 0;
 String userNam;
 String identity;
 int id;
@@ -32,6 +32,7 @@ bool initialiseDimension = true;
 bool online;
 double totalWidth;
 double totalLength;
+double keyboardHeight;
 List wordList;
 
 Map<String, Color> color = {
@@ -85,9 +86,10 @@ class _SelectRoomState extends State<SelectRoom> {
   void performRebuildCalculations() {
     resumed = true;
     if (initialiseDimension) {
-      effectiveLength = MediaQuery.of(context).size.height;
+      // effectiveLength = MediaQuery.of(context).size.height;
       totalLength = MediaQuery.of(context).size.height;
-      guessCanvasLength = ((effectiveLength - 50) * 0.6) * (7 / 8);
+      keyboardHeight = totalLength * 0.3;
+      // guessCanvasLength = ((totalLength - 50) * 0.6) * (7 / 8);
       totalWidth = MediaQuery.of(context).size.width;
       initialiseDimension = false;
     }
@@ -135,6 +137,7 @@ class _SelectRoomState extends State<SelectRoom> {
     return ChangeNotifierProvider(
       create: (context) => widget.currency,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         key: _scaffoldKey,
         drawer: DrawerContent(
           imageUrl: widget.imageUrl,

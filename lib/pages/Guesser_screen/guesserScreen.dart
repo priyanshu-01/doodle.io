@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
+import 'package:scribbl/pages/enterName.dart';
 import '../roundIndicator.dart';
 import 'guesser.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
@@ -22,7 +23,7 @@ bool timerRunning = false;
 final messageHolder = TextEditingController();
 String message = '';
 double guessCanvasLength;
-bool keyboardState;
+bool keyboardState = false;
 String newMessage;
 Color textAndChat = Colors.grey[200];
 //Color(0xFFFFF1E9);
@@ -31,21 +32,98 @@ String tempDenId;
 AnimationController controlGift;
 enum animateAvatar { start, done, reset }
 var avatarAnimation;
-
+bool keyboardSet = false;
+List popUpStack;
+int popUpaAdder = 0;
+int popUpRemover = 0;
 // int currentG = 92;
 
-class GuesserScreen extends StatefulWidget {
-  @override
-  _GuesserScreenState createState() => _GuesserScreenState();
-}
-
-class _GuesserScreenState extends State<GuesserScreen> {
+class GuesserScreen extends StatelessWidget {
   //Color textAndChat= Color(0xFFECC5C0);
 
+  @override
+  Widget build(BuildContext context) {
+    return Stack(children: <Widget>[
+      Container(
+          color: Colors.white,
+          constraints: BoxConstraints.expand(),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                  child: GestureDetector(
+                      onTap: () {
+                        if (controlGift.value == 1.0) {
+                          controlGift.reverse(from: 1.0);
+                        }
+                      },
+                      child: GuessWaitShow())),
+              TextBox(),
+              RoundIndicator(),
+              KeyboardListener()
+            ],
+          )),
+      Positioned(
+          left: 50.0, bottom: keyboardHeight + 110.0, child: PopUpChat()),
+      StackChild(position: 'guesser')
+    ]);
+  }
+}
+
+class PopUpChat extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    if (chat.length > popUpaAdder) popUpaAdder = chat.length;
+    popUpStack = chat.sublist(popUpRemover);
+    return Container(
+      decoration: BoxDecoration(border: Border.all()),
+      // color: Colors.green,
+      height: totalLength * 0.3,
+      width: totalWidth * 0.45,
+      child: ListView.builder(
+          reverse: true,
+          itemCount: popUpaAdder - popUpRemover,
+          itemBuilder: (BuildContext context, int index) {
+            String both = popUpStack[popUpStack.length - 1 - index];
+            String n = both.substring(both.indexOf('[') + 1, both.indexOf(']'));
+            String m = both.substring(both.indexOf(']') + 1);
+            return Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 2.0, vertical: 1.0),
+              child: Container(
+                  child: RichText(
+                textAlign: TextAlign.left,
+                softWrap: true,
+                overflow: TextOverflow.fade,
+                textScaleFactor: 0.9,
+                text: new TextSpan(
+                  text: '$n ',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                  children: <TextSpan>[
+                    new TextSpan(
+                      text: m,
+                      style: DefaultTextStyle.of(context).style,
+                    ),
+                  ],
+                ),
+              )),
+            );
+          }),
+    );
+  }
+}
+
+class KeyboardListener extends StatefulWidget {
+  @override
+  _KeyboardListenerState createState() => _KeyboardListenerState();
+}
+
+class _KeyboardListenerState extends State<KeyboardListener> {
   StreamSubscription subscription;
+
   @override
   void initState() {
-    guessCanvasLength = (((effectiveLength * 0.6) - 70) *
+    guessCanvasLength = ((totalLength - 50 - 20 - keyboardHeight) *
         (7 / 8)); //50 is textField and 20 is roundIndicator
     super.initState();
     keyboardState = KeyboardVisibility.isVisible;
@@ -61,37 +139,27 @@ class _GuesserScreenState extends State<GuesserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Stack(children: <Widget>[
-          Container(
-              color: Colors.white,
-              constraints: BoxConstraints.expand(),
-              child: Column(
-                children: <Widget>[
-                  Flexible(
-                      flex: 6,
-                      child: GestureDetector(
-                          onTap: () {
-                            if (controlGift.value == 1.0) {
-                              controlGift.reverse(from: 1.0);
-                            }
-                          },
-                          child: GuessWaitShow())),
-                  TextBox(),
-                  RoundIndicator(),
-                  Flexible(
-                    flex: (keyboardState) ? 0 : 4,
-                    child: Container(
-                      child: Stack(
-                        children: <Widget>[ChatBox(), AnimatedGift()],
-                      ),
-                    ),
-                  ),
-                ],
-              )),
-          StackChild(position: 'guesser')
-        ]),
+    if (!keyboardSet && keyboardState) {
+      keyboardSet = true;
+      // subscription.cancel();
+      // subscription = KeyboardVisibility.onChange.listen((bool visible) {
+      //   print('build subscription active');
+      //   keyboardState = visible;
+      //   if (keyboardState && controlGift.value == 1.0) {
+      //     controlGift.value = 0.0;
+      //   }
+      // });
+      setState(() {
+        print('keyboard set');
+        keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+        guessCanvasLength =
+            (((totalLength) - 50 - 20 - keyboardHeight) * (7 / 8));
+      });
+    }
+    return Container(
+      height: keyboardHeight,
+      child: Stack(
+        children: <Widget>[ChatBox(), AnimatedGift()],
       ),
     );
   }
@@ -313,6 +381,7 @@ class _TextBoxState extends State<TextBox> {
           Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 10.0),
               child: InkWell(
+                enableFeedback: false,
                 child: const Image(
                   image: AssetImage('assets/icons/gift.gif'),
                 ),
@@ -357,41 +426,42 @@ class _TextBoxState extends State<TextBox> {
               onSubmitted: (String a) => onSend(),
             ),
           ),
-          (message == '')
-              ? (keyboardState)
-                  ? IconButton(
-                      icon: Icon(
-                        Icons.keyboard_arrow_down,
-                        size: 30.0,
-                        color: Color(0xFFFF4893),
-                      ),
-                      onPressed: () {
-                        fn.unfocus();
-                        // FocusScope.of(context).unfocus();
-                      },
-                    )
-                  : IconButton(
-                      icon: Icon(
-                        Icons.keyboard_arrow_up,
-                        size: 30.0,
-                        color: Color(0xFFFF4893),
-                      ),
-                      onPressed: () {
-                        fn.requestFocus();
-                      },
-                    )
-              : IconButton(
-                  icon: Icon(
-                    Icons.send,
-                    //color: Color(0xFF16162E),
-                    color: Color(0xFFFF4893),
-                    //  color: Color(0xFF1A2F77),
-                    //   color: Color(0xFFA74AC7),
-                    size: 30.0,
-                  ),
-                  //onPressed:=>onSend(),
-                  onPressed: () => onSend(),
-                ),
+          // (message == '')
+          //     ? (keyboardState)
+          //         ? IconButton(
+          //             icon: Icon(
+          //               Icons.keyboard_arrow_down,
+          //               size: 30.0,
+          //               color: Color(0xFFFF4893),
+          //             ),
+          //             onPressed: () {
+          //               fn.unfocus();
+          //               // FocusScope.of(context).unfocus();
+          //             },
+          //           )
+          //         : IconButton(
+          //             icon: Icon(
+          //               Icons.keyboard_arrow_up,
+          //               size: 30.0,
+          //               color: Color(0xFFFF4893),
+          //             ),
+          //             onPressed: () {
+          //               fn.requestFocus();
+          //             },
+          //           )
+          //     :
+          IconButton(
+            icon: Icon(
+              Icons.send,
+              //color: Color(0xFF16162E),
+              color: Color(0xFFFF4893),
+              //  color: Color(0xFF1A2F77),
+              //   color: Color(0xFFA74AC7),
+              size: 30.0,
+            ),
+            //onPressed:=>onSend(),
+            onPressed: () => onSend(),
+          ),
         ],
       ),
     );
@@ -417,7 +487,7 @@ class _TextBoxState extends State<TextBox> {
       }
     }
     message = '';
-    fn.unfocus();
+    // fn.unfocus();
   }
 
   void showPopup(context) {

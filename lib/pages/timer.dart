@@ -37,6 +37,8 @@ class _TimeAndWordState extends State<TimeAndWord> {
   int q = 0, w = 0, e = 0, r = 0;
   @override
   void initState() {
+    print('value of counter is $counter');
+    print('revealed is  $revealed');
     places = getClues();
     initialiseTime();
     super.initState();
@@ -44,10 +46,11 @@ class _TimeAndWordState extends State<TimeAndWord> {
 
   void addRevealedLettersIfNeeded() {
     if (current == q) {
-      revealed.add(places[counter++]);
+      revealed.add(places[counter++]); //error
     } else if (current == w) {
       if (places.length > 1) {
-        revealed.add(places[counter++]);
+        revealed.add(places[
+            counter++]); //error here places is short and counter goes out of bound;
       }
     } else if (current == e) {
       if (places.length > 2) {

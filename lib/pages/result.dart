@@ -129,14 +129,14 @@ class _ResultContentState extends State<ResultContent>
                             Text('$name',
                                 style: GoogleFonts.notoSans(
                                     color: Colors.black,
-                                    fontSize: effectiveLength / 28)),
+                                    fontSize: totalLength / 28)),
                             //Text(':',style: GoogleFonts.notoSans(color: Colors.black, fontSize: 20.0)),
                             Text('+ $score',
                                 style: GoogleFonts.notoSans(
                                     color: (score == 0)
                                         ? Colors.red[800]
                                         : Colors.green[600],
-                                    fontSize: effectiveLength / 28))
+                                    fontSize: totalLength / 28))
                           ],
                         ),
                       ),

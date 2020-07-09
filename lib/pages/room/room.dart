@@ -78,6 +78,7 @@ class _RoomState extends State<Room> {
           ],
           // create: (context) => widget.currency,
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             body: SafeArea(
               child: Stack(
                 children: [
