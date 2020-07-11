@@ -18,6 +18,8 @@ class PainterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    popUpAdder = chat.length;
+    popUpRemover = chat.length;
     return Stack(children: <Widget>[
       Container(
         color: Colors.white,

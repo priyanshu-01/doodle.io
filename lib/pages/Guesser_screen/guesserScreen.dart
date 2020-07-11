@@ -33,8 +33,8 @@ AnimationController controlGift;
 enum animateAvatar { start, done, reset }
 var avatarAnimation;
 bool keyboardSet = false;
-List popUpStack;
-int popUpaAdder = 0;
+List popUpStack = [];
+int popUpAdder = 0;
 int popUpRemover = 0;
 // int currentG = 92;
 
@@ -69,44 +69,73 @@ class GuesserScreen extends StatelessWidget {
   }
 }
 
-class PopUpChat extends StatelessWidget {
+class PopUpChat extends StatefulWidget {
+  @override
+  _PopUpChatState createState() => _PopUpChatState();
+}
+
+class _PopUpChatState extends State<PopUpChat> {
   @override
   Widget build(BuildContext context) {
-    if (chat.length > popUpaAdder) popUpaAdder = chat.length;
-    popUpStack = chat.sublist(popUpRemover);
+    print('popUpAdder= $popUpAdder');
+    print('popUpRemover= $popUpRemover');
+    if (chat.length > popUpAdder) {
+      int future = chat.length - popUpAdder;
+      popUpAdder = chat.length;
+      Timer(
+          Duration(
+            seconds: 3,
+          ), () {
+        setState(() {
+          popUpRemover = popUpRemover +
+              future; //the value of future might change in less than 2 seconds
+        });
+      });
+    }
+    popUpStack = (popUpRemover < chat.length) ? chat.sublist(popUpRemover) : [];
     return Container(
-      decoration: BoxDecoration(border: Border.all()),
+      // decoration: BoxDecoration(border: Border.all()),
       // color: Colors.green,
       height: totalLength * 0.3,
       width: totalWidth * 0.45,
       child: ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
           reverse: true,
-          itemCount: popUpaAdder - popUpRemover,
+          itemCount: popUpStack.length,
           itemBuilder: (BuildContext context, int index) {
             String both = popUpStack[popUpStack.length - 1 - index];
             String n = both.substring(both.indexOf('[') + 1, both.indexOf(']'));
             String m = both.substring(both.indexOf(']') + 1);
-            return Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 2.0, vertical: 1.0),
-              child: Container(
-                  child: RichText(
-                textAlign: TextAlign.left,
-                softWrap: true,
-                overflow: TextOverflow.fade,
-                textScaleFactor: 0.9,
-                text: new TextSpan(
-                  text: '$n ',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black),
-                  children: <TextSpan>[
-                    new TextSpan(
-                      text: m,
-                      style: DefaultTextStyle.of(context).style,
-                    ),
-                  ],
-                ),
-              )),
+            return Container(
+              color: Colors.white,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 2.0, vertical: 1.0),
+                child: RichText(
+                    textAlign: TextAlign.left,
+                    softWrap: true,
+                    overflow: TextOverflow.fade,
+                    textScaleFactor: 0.9,
+                    text: (m != 'd123')
+                        ? new TextSpan(
+                            text: '$n ',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                            children: <TextSpan>[
+                              new TextSpan(
+                                text: m,
+                                style: DefaultTextStyle.of(context).style,
+                              ),
+                            ],
+                          )
+                        : TextSpan(
+                            text: '$n guessed',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green),
+                          )),
+              ),
             );
           }),
     );
@@ -141,14 +170,6 @@ class _KeyboardListenerState extends State<KeyboardListener> {
   Widget build(BuildContext context) {
     if (!keyboardSet && keyboardState) {
       keyboardSet = true;
-      // subscription.cancel();
-      // subscription = KeyboardVisibility.onChange.listen((bool visible) {
-      //   print('build subscription active');
-      //   keyboardState = visible;
-      //   if (keyboardState && controlGift.value == 1.0) {
-      //     controlGift.value = 0.0;
-      //   }
-      // });
       setState(() {
         print('keyboard set');
         keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
@@ -479,6 +500,9 @@ class _TextBoxState extends State<TextBox> {
           if (guessersId.length < counter - 2) showPopup(context);
           calculateScore();
           updateGuesserId();
+          newMessage = '$identity[$userNam]$message';
+          chat.add(newMessage);
+          sendMessage();
         }
       } else {
         newMessage = '$identity[$userNam]$message';
