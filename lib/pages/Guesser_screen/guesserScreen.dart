@@ -43,29 +43,31 @@ class GuesserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: <Widget>[
-      Container(
-          color: Colors.white,
-          constraints: BoxConstraints.expand(),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                  child: GestureDetector(
-                      onTap: () {
-                        if (controlGift.value == 1.0) {
-                          controlGift.reverse(from: 1.0);
-                        }
-                      },
-                      child: GuessWaitShow())),
-              TextBox(),
-              RoundIndicator(),
-              KeyboardListener()
-            ],
-          )),
-      Positioned(
-          left: 50.0, bottom: keyboardHeight + 110.0, child: PopUpChat()),
-      StackChild(position: 'guesser')
-    ]);
+    return Container(
+        color: Colors.white,
+        constraints: BoxConstraints.expand(),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: GestureDetector(
+                  onTap: () {
+                    if (controlGift.value == 1.0) {
+                      controlGift.reverse(from: 1.0);
+                    }
+                  },
+                  child: Stack(
+                    children: [
+                      GuessWaitShow(),
+                      Positioned(left: 50.0, bottom: 40.0, child: PopUpChat()),
+                      StackChild(position: 'guesser')
+                    ],
+                  )),
+            ),
+            TextBox(),
+            RoundIndicator(),
+            KeyboardListener()
+          ],
+        ));
   }
 }
 
@@ -77,8 +79,6 @@ class PopUpChat extends StatefulWidget {
 class _PopUpChatState extends State<PopUpChat> {
   @override
   Widget build(BuildContext context) {
-    print('popUpAdder= $popUpAdder');
-    print('popUpRemover= $popUpRemover');
     if (chat.length > popUpAdder) {
       int future = chat.length - popUpAdder;
       popUpAdder = chat.length;
@@ -106,36 +106,40 @@ class _PopUpChatState extends State<PopUpChat> {
             String both = popUpStack[popUpStack.length - 1 - index];
             String n = both.substring(both.indexOf('[') + 1, both.indexOf(']'));
             String m = both.substring(both.indexOf(']') + 1);
-            return Container(
-              color: Colors.white,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 2.0, vertical: 1.0),
-                child: RichText(
-                    textAlign: TextAlign.left,
-                    softWrap: true,
-                    overflow: TextOverflow.fade,
-                    textScaleFactor: 0.9,
-                    text: (m != 'd123')
-                        ? new TextSpan(
-                            text: '$n ',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                            children: <TextSpan>[
-                              new TextSpan(
-                                text: m,
-                                style: DefaultTextStyle.of(context).style,
-                              ),
-                            ],
-                          )
-                        : TextSpan(
-                            text: '$n guessed',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green),
-                          )),
-              ),
+            return Row(
+              children: [
+                Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 2.0, vertical: 1.0),
+                    child: RichText(
+                        textAlign: TextAlign.left,
+                        softWrap: true,
+                        overflow: TextOverflow.fade,
+                        textScaleFactor: 0.9,
+                        text: (m != 'd123')
+                            ? new TextSpan(
+                                text: '$n ',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                                children: <TextSpan>[
+                                  new TextSpan(
+                                    text: m,
+                                    style: DefaultTextStyle.of(context).style,
+                                  ),
+                                ],
+                              )
+                            : TextSpan(
+                                text: '$n guessed',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green),
+                              )),
+                  ),
+                ),
+              ],
             );
           }),
     );
@@ -174,7 +178,9 @@ class _KeyboardListenerState extends State<KeyboardListener> {
         print('keyboard set');
         keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
         guessCanvasLength =
-            (((totalLength) - 50 - 20 - keyboardHeight) * (7 / 8));
+            ((totalLength - 50 - 20 - keyboardHeight) * (7 / 8));
+        avatarTopPadding = (guessCanvasLength / 4) - (avatarPhotoSize / 2);
+        avatarTopIconPadding = guessCanvasLength;
       });
     }
     return Container(

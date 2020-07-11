@@ -4,6 +4,11 @@ import 'guesserScreen.dart';
 import '../Select_room/selectRoom.dart';
 import '../room/room.dart';
 
+double avatarTopPadding;
+double avatarTopIconPadding;
+double avatarPhotoSize = 120.0;
+double avatarLeftPadding;
+
 class AnimatedAvatar extends StatefulWidget {
   @override
   _AnimatedAvatarState createState() => _AnimatedAvatarState();
@@ -35,30 +40,11 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
     curvedScaleAvatar =
         CurvedAnimation(parent: scaleAvatar, curve: Curves.bounceOut);
 
-    double photoSize = 120.0;
-    double leftPadding = ((totalWidth / 2) - 50) - photoSize / 2;
-    double topPadding = ((guessCanvasLength / 2) / 2) - (photoSize / 2);
+    avatarPhotoSize = 120.0;
+    avatarLeftPadding = ((totalWidth / 2) - 50) - avatarPhotoSize / 2;
 
-    double denIconSize = 50.0;
-    double rightIconPadding = 5.0;
-    double topIconPadding = guessCanvasLength;
-
-    relativeRectTween = RelativeRectTween(
-      begin: RelativeRect.fromLTRB(
-          leftPadding,
-          topPadding,
-          totalWidth - 50 - leftPadding - photoSize,
-          (guessCanvasLength) - topPadding - photoSize),
-      end: RelativeRect.fromLTRB(
-        //totalWidth - 50 - rightIconPadding - denIconSize,
-        leftPadding + (photoSize / 2),
-        topIconPadding,
-        //rightIconPadding,
-        totalWidth / 2,
-        //(guessCanvasLength / 2) - topIconPadding - denIconSize
-        0.0,
-      ),
-    );
+    avatarTopPadding = (guessCanvasLength / 4) - (avatarPhotoSize / 2);
+    avatarTopIconPadding = guessCanvasLength;
 
     super.initState();
   }
@@ -82,7 +68,22 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
       animateAvatarFunc(context);
       scaleAvatar.forward();
     }); //called each time build gets completed
-
+    relativeRectTween = RelativeRectTween(
+      begin: RelativeRect.fromLTRB(
+          avatarLeftPadding,
+          avatarTopPadding,
+          totalWidth - 50 - avatarLeftPadding - avatarPhotoSize,
+          (guessCanvasLength * (3 / 4)) - (avatarPhotoSize / 2)),
+      end: RelativeRect.fromLTRB(
+        //totalWidth - 50 - rightIconPadding - denIconSize,
+        avatarLeftPadding + (avatarPhotoSize / 2),
+        avatarTopIconPadding,
+        //rightIconPadding,
+        totalWidth / 2,
+        //(guessCanvasLength / 2) - topIconPadding - denIconSize
+        0.0,
+      ),
+    );
     return Container(
       width: totalWidth - 50,
       height: guessCanvasLength,

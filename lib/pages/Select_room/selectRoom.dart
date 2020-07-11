@@ -89,6 +89,7 @@ class _SelectRoomState extends State<SelectRoom> {
       // effectiveLength = MediaQuery.of(context).size.height;
       totalLength = MediaQuery.of(context).size.height;
       keyboardHeight = totalLength * 0.3;
+      guessCanvasLength = ((totalLength - 50 - 20 - keyboardHeight) * (7 / 8));
       // guessCanvasLength = ((totalLength - 50) * 0.6) * (7 / 8);
       totalWidth = MediaQuery.of(context).size.width;
       initialiseDimension = false;
