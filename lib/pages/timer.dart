@@ -142,8 +142,8 @@ class WordHint extends StatelessWidget {
       child: FractionallySizedBox(
         widthFactor: word.length / 17,
         child: Container(
-          //alignment: Alignment.bottomCenter,
-          //color: Colors.orange[50],
+          // alignment: Alignment.bottomCenter,
+          // color: Colors.orange[50],
           child: ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               scrollDirection: Axis.horizontal,
