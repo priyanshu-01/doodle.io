@@ -6,17 +6,17 @@ import '../Painter_screen/colorPanel.dart';
 
 int ind1 = 0, ind2 = 0;
 List<Offset> pointsG = <Offset>[];
-int indStore;
+int indStore; //might be useless
+int pStore;
+int pointerVal = 0;
 
 class Guesser extends StatefulWidget {
+  // AnimationController controller;
   @override
   _GuesserState createState() => _GuesserState();
 }
 
-class _GuesserState extends State<Guesser> with SingleTickerProviderStateMixin {
-  int pStore;
-  int pointerVal = 0;
-  AnimationController controller;
+class _GuesserState extends State<Guesser> {
   ColorHolder colorHolder;
   @override
   void initState() {
@@ -26,19 +26,6 @@ class _GuesserState extends State<Guesser> with SingleTickerProviderStateMixin {
     ind2 = 0;
     colorHolder = ColorHolder();
     super.initState();
-    controller = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 01),
-      // value: 1.0,
-      lowerBound: 0.0,
-      upperBound: 1.0,
-    );
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -58,68 +45,26 @@ class _GuesserState extends State<Guesser> with SingleTickerProviderStateMixin {
     ind2 = dex[roomData['pointer']];
     pointerVal = roomData['pointer'];
     refactor();
-    if (pStore != pointerVal) //undertesting if
-    {
-      if (pStore > pointerVal && roomData['length'] != 0) {
-        ind1 = dex[roomData['pointer']];
-        ind2 = dex[roomData['pointer'] + 1]; //error caught by crashlytics
-        controller.duration = Duration(milliseconds: (ind2 - ind1) * 17);
-        controller.reverse(from: 1.0);
-      } else {
-        controller.duration = Duration(milliseconds: (ind2 - ind1) * 17);
-        controller.forward(from: 0.0);
-      }
-    }
-    return FractionallySizedBox(
-      heightFactor: 1.0,
-      child: Container(
-        color: Colors.white,
-        //color: textAndChat,
-        child: Column(
-          children: <Widget>[
-            Flexible(
-              flex: 7,
-              child: Stack(
-                children: [
-                  //pointerVal-1
-                  for (int i = 0; i < dex.indexOf(ind1); i++)
-                    RepaintBoundary(
-                      child: new CustomPaint(
-                        foregroundPainter: CacheGuesser(
-                            points: pointsG,
-                            dex: dex,
-                            sketcher: i,
-                            color: colorHolder
-                                .colors[roomData['colorIndexStack'][i + 1]],
-                            // pointerVal: pointerVal,
-                            colorHolder: colorHolder),
-                        child: Container(),
-                      ),
-                    ),
-                  RepaintBoundary(
-                    child: new CustomPaint(
-                      painter: Signature(
-                          points: pointsG,
-                          animation: controller,
-                          colorHolder: colorHolder),
-                      child: Container(),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Flexible(
-              flex: 1,
-              child: Container(
-                //  color: Colors.orange[100],
-                // height: 40.0,
-                color: Colors.white,
-                child: TimeAndWord(),
-              ),
-            ),
-          ],
+
+    return Column(
+      children: <Widget>[
+        Flexible(
+          flex: 7,
+          child: GuesserStrokes(
+            colorHolder: colorHolder,
+            dex: dex,
+          ),
         ),
-      ),
+        Flexible(
+          flex: 1,
+          child: Container(
+            //  color: Colors.orange[100],
+            // height: 40.0,
+            color: Colors.white,
+            child: TimeAndWord(),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -171,7 +116,6 @@ class CacheGuesser extends CustomPainter {
   List dex;
   int sketcher;
   Color color;
-  // int pointerVal;
   ColorHolder colorHolder;
   Paint paintObj = new Paint()
     ..color = Colors.black
@@ -182,17 +126,7 @@ class CacheGuesser extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     paintObj.color = color;
-    // paint..color= Colors.blue;   use this way to add colors later
     for (int i = dex[sketcher]; i < dex[sketcher + 1]; i++) {
-      // if (roomData['indices'].indexOf(i) != -1) {
-      //   if (colorHolder.colors[roomData['colorIndexStack']
-      //           [roomData['indices'].indexOf(i) + 1]] !=
-      //       paintObj.color) {
-      //     paintObj.color = colorHolder.colors[roomData['colorIndexStack']
-      //         [roomData['indices'].indexOf(i) + 1]];
-      //   }
-      // }
-
       if ((points[i] != null && points[i] != Offset(-1, -1)) &&
           (points[i + 1] != null && points[i + 1] != Offset(-1, -1))) {
         canvas.drawLine(points[i], points[i + 1], paintObj);
@@ -204,12 +138,6 @@ class CacheGuesser extends CustomPainter {
 
   @override
   bool shouldRepaint(CacheGuesser oldDelegate) => false;
-  //  {
-  //   if (oldDelegate.pointerVal != pointerVal) {
-  //     return true;
-  //   } else
-  //     return false;
-  // }
 }
 
 void refactor() {
@@ -242,5 +170,82 @@ double alterValue2(double x) {
     double v = (x / denCanvasLength) * guessCanvasLength;
     v = v + ((denCanvasLength - guessCanvasLength) / 2.3);
     return v;
+  }
+}
+
+class GuesserStrokes extends StatefulWidget {
+  final List dex;
+  final ColorHolder colorHolder;
+  GuesserStrokes({
+    @required this.dex,
+    @required this.colorHolder,
+  });
+
+  @override
+  _GuesserStrokesState createState() => _GuesserStrokesState();
+}
+
+class _GuesserStrokesState extends State<GuesserStrokes>
+    with SingleTickerProviderStateMixin {
+  AnimationController controller;
+  @override
+  void initState() {
+    controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 01),
+      // value: 1.0,
+      lowerBound: 0.0,
+      upperBound: 1.0,
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (pStore != pointerVal) //undertesting if
+    {
+      if (pStore > pointerVal && roomData['length'] != 0) {
+        ind1 = widget.dex[roomData['pointer']];
+        ind2 =
+            widget.dex[roomData['pointer'] + 1]; //error caught by crashlytics
+        controller.duration = Duration(milliseconds: (ind2 - ind1) * 17);
+        controller.reverse(from: 1.0);
+      } else {
+        controller.duration = Duration(milliseconds: (ind2 - ind1) * 17);
+        controller.forward(from: 0.0);
+      }
+    }
+    return Stack(
+      children: [
+        for (int i = 0; i < widget.dex.indexOf(ind1); i++)
+          RepaintBoundary(
+            child: new CustomPaint(
+              foregroundPainter: CacheGuesser(
+                  points: pointsG,
+                  dex: widget.dex,
+                  sketcher: i,
+                  color: widget
+                      .colorHolder.colors[roomData['colorIndexStack'][i + 1]],
+                  colorHolder: widget.colorHolder),
+              child: Container(),
+            ),
+          ),
+        RepaintBoundary(
+          child: new CustomPaint(
+            painter: Signature(
+                points: pointsG,
+                animation: controller,
+                colorHolder: widget.colorHolder),
+            child: Container(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }

@@ -33,9 +33,9 @@ AnimationController controlGift;
 enum animateAvatar { start, done, reset }
 var avatarAnimation;
 bool keyboardSet = false;
-List popUpStack = [];
-int popUpAdder = 0;
-int popUpRemover = 0;
+List popUpStack;
+int popUpAdder;
+int popUpRemover;
 // int currentG = 92;
 
 class GuesserScreen extends StatelessWidget {
@@ -78,70 +78,111 @@ class PopUpChat extends StatefulWidget {
 
 class _PopUpChatState extends State<PopUpChat> {
   @override
+  void initState() {
+    popUpAdder = chat.length;
+    popUpRemover = chat.length;
+    popUpStack = [];
+    super.initState();
+  }
+
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+
+  Widget buildRemovedItem(
+      BuildContext context, int a, Animation<double> animation) {
+    return _buildItem(context, a, animation);
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (chat.length > popUpAdder) {
       int future = chat.length - popUpAdder;
       popUpAdder = chat.length;
+      for (int temp = 1; temp <= future; temp++) {
+        //adding at popUpAdder basically
+        _listKey.currentState.insertItem(0,
+            duration: const Duration(milliseconds: 150)); //might give error
+      }
       Timer(
           Duration(
             seconds: 3,
           ), () {
-        setState(() {
-          popUpRemover = popUpRemover +
-              future; //the value of future might change in less than 2 seconds
-        });
+        // setState(() {
+        for (int a = chat.length - popUpRemover - 1;
+            a < chat.length - popUpRemover - 1 + future;
+            a++) {
+          popUpRemover++;
+          _listKey.currentState.removeItem(
+            a,
+            (BuildContext context, Animation<double> animation) =>
+                buildRemovedItem(context, a, animation),
+            duration: const Duration(milliseconds: 200),
+          );
+        }
+
+        //the value of future might change in less than 2 seconds
+        // });
       });
+      popUpStack =
+          (popUpRemover < chat.length) ? chat.sublist(popUpRemover) : [];
     }
-    popUpStack = (popUpRemover < chat.length) ? chat.sublist(popUpRemover) : [];
+
     return Container(
       // decoration: BoxDecoration(border: Border.all()),
       // color: Colors.green,
       height: totalLength * 0.3,
       width: totalWidth * 0.45,
-      child: ListView.builder(
+      child: AnimatedList(
+          key: _listKey,
           physics: NeverScrollableScrollPhysics(),
           reverse: true,
-          itemCount: popUpStack.length,
-          itemBuilder: (BuildContext context, int index) {
-            String both = popUpStack[popUpStack.length - 1 - index];
-            String n = both.substring(both.indexOf('[') + 1, both.indexOf(']'));
-            String m = both.substring(both.indexOf(']') + 1);
-            return Row(
-              children: [
-                Container(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 2.0, vertical: 1.0),
-                    child: RichText(
-                        textAlign: TextAlign.left,
-                        softWrap: true,
-                        overflow: TextOverflow.fade,
-                        textScaleFactor: 0.9,
-                        text: (m != 'd123')
-                            ? new TextSpan(
-                                text: '$n ',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                                children: <TextSpan>[
-                                  new TextSpan(
-                                    text: m,
-                                    style: DefaultTextStyle.of(context).style,
-                                  ),
-                                ],
-                              )
-                            : TextSpan(
-                                text: '$n guessed',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green),
-                              )),
-                  ),
-                ),
-              ],
-            );
-          }),
+          initialItemCount: popUpStack.length,
+          itemBuilder: (BuildContext context, int index, animation) =>
+              _buildItem(context, index, animation)),
+    );
+  }
+
+  _buildItem(
+    BuildContext context,
+    int index,
+    Animation<double> animation,
+  ) {
+    String both = popUpStack[popUpStack.length - 1 - index];
+    String n = both.substring(both.indexOf('[') + 1, both.indexOf(']'));
+    String m = both.substring(both.indexOf(']') + 1);
+    return Row(
+      children: [
+        Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 1.0),
+            child: FadeTransition(
+              opacity: animation,
+              child: RichText(
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  overflow: TextOverflow.fade,
+                  textScaleFactor: 0.9,
+                  text: (m != 'd123')
+                      ? new TextSpan(
+                          text: '$n ',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.black),
+                          children: <TextSpan>[
+                            new TextSpan(
+                              text: m,
+                              style: DefaultTextStyle.of(context).style,
+                            ),
+                          ],
+                        )
+                      : TextSpan(
+                          text: '$n guessed',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.green),
+                        )),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
