@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scribbl/ProviderManager/data.dart';
 import '../../room/room.dart';
 import '../../timer.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,6 +40,7 @@ class PainterState extends State<Painter> {
 
   @override
   Widget build(BuildContext context) {
+    // Provider.of<CustomPainterData>(context);
     return Column(
       children: <Widget>[
         Flexible(

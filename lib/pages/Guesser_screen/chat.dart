@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:scribbl/ProviderManager/data.dart';
 import 'package:scribbl/pages/room/room.dart';
 import '../Select_room/selectRoom.dart';
 import 'guesserScreen.dart';
@@ -31,6 +33,7 @@ class ChatBox extends StatelessWidget {
 class ChatList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Provider.of<ChatData>(context);
     int lastIndex = roomData['$identity Chat'];
     if (lastIndex != null &&
         chat[lastIndex].substring(0, chat[lastIndex].indexOf('[')) !=

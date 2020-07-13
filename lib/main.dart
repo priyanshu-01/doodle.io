@@ -11,6 +11,7 @@ import 'package:flutter/widgets.dart';
 import 'audioPlayer/audioPlayer.dart';
 import 'package:flutter/foundation.dart';
 import 'testingCode/animatedList.dart';
+import 'testingCode/provider/ProviderWorking.dart';
 
 bool resumed = true;
 
@@ -27,6 +28,7 @@ void main() {
       // home: Scaffold(body: WordWasContent()),
       // home: AnimatedListSample(),
       // home: AnimatedListExample(),
+      // home: ProviderWorking(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.red),
     ));

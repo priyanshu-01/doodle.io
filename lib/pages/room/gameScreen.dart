@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scribbl/ProviderManager/data.dart';
 import '../Painter_screen/painterScreen.dart';
 import '../Guesser_screen/guesserScreen.dart';
 import 'room.dart';
@@ -13,6 +15,7 @@ String docId;
 class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Provider.of<GameScreenData>(context);
     // return GuesserScreen();
     if (round <= numberOfRounds) {
       if (denId == identity) {

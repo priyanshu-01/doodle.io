@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scribbl/ProviderManager/data.dart';
 import '../room/room.dart';
 import '../timer.dart';
 import 'guesserScreen.dart';
@@ -30,29 +32,13 @@ class _GuesserState extends State<Guesser> {
 
   @override
   Widget build(BuildContext context) {
-    pointsG = [];
-    if (roomData['length'] == 0) {
-      pointsG = [];
-      ind1 = 0;
-      ind2 = 0;
-    }
-    pStore = pointerVal;
-    List dex = roomData['indices'];
-    if (roomData['pointer'] == 0)
-      ind1 = 0;
-    else
-      ind1 = dex[roomData['pointer'] - 1];
-    ind2 = dex[roomData['pointer']];
-    pointerVal = roomData['pointer'];
-    refactor();
-
     return Column(
       children: <Widget>[
         Flexible(
           flex: 7,
           child: GuesserStrokes(
             colorHolder: colorHolder,
-            dex: dex,
+            // dex: roomData['indices'],
           ),
         ),
         Flexible(
@@ -174,10 +160,10 @@ double alterValue2(double x) {
 }
 
 class GuesserStrokes extends StatefulWidget {
-  final List dex;
+  // final List dex;
   final ColorHolder colorHolder;
   GuesserStrokes({
-    @required this.dex,
+    // @required this.dex,
     @required this.colorHolder,
   });
 
@@ -202,12 +188,28 @@ class _GuesserStrokesState extends State<GuesserStrokes>
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<CustomPainterData>(context);
+    pointsG = [];
+    if (roomData['length'] == 0) {
+      pointsG = [];
+      ind1 = 0;
+      ind2 = 0;
+    }
+    pStore = pointerVal;
+    if (roomData['pointer'] == 0)
+      ind1 = 0;
+    else
+      ind1 = roomData['indices'][roomData['pointer'] - 1];
+    ind2 = roomData['indices'][roomData['pointer']];
+    pointerVal = roomData['pointer'];
+    refactor();
+
     if (pStore != pointerVal) //undertesting if
     {
       if (pStore > pointerVal && roomData['length'] != 0) {
-        ind1 = widget.dex[roomData['pointer']];
-        ind2 =
-            widget.dex[roomData['pointer'] + 1]; //error caught by crashlytics
+        ind1 = roomData['indices'][roomData['pointer']];
+        ind2 = roomData['indices']
+            [roomData['pointer'] + 1]; //error caught by crashlytics
         controller.duration = Duration(milliseconds: (ind2 - ind1) * 17);
         controller.reverse(from: 1.0);
       } else {
@@ -217,12 +219,12 @@ class _GuesserStrokesState extends State<GuesserStrokes>
     }
     return Stack(
       children: [
-        for (int i = 0; i < widget.dex.indexOf(ind1); i++)
+        for (int i = 0; i < roomData['indices'].indexOf(ind1); i++)
           RepaintBoundary(
             child: new CustomPaint(
               foregroundPainter: CacheGuesser(
                   points: pointsG,
-                  dex: widget.dex,
+                  dex: roomData['indices'],
                   sketcher: i,
                   color: widget
                       .colorHolder.colors[roomData['colorIndexStack'][i + 1]],

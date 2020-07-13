@@ -63,17 +63,19 @@ class StartStatus extends StatelessWidget {
     else
       return Padding(
         padding: const EdgeInsets.only(top: 14.0, bottom: 12.0),
-        child: FractionallySizedBox(
-          widthFactor: 0.7,
-          child: Flexible(
-            child: AutoSizeText('$host will start the Game',
-                maxFontSize: 25.0,
-                minFontSize: 10.0,
-                maxLines: 1,
-                textAlign: TextAlign.center,
-                style:
-                    GoogleFonts.notoSans(color: Colors.white, fontSize: 20.0)),
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
+              child: AutoSizeText('$host will start the Game',
+                  maxFontSize: 25.0,
+                  minFontSize: 10.0,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.notoSans(
+                      color: Colors.white, fontSize: 20.0)),
+            ),
+          ],
         ),
       );
   }

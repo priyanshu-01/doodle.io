@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scribbl/ProviderManager/data.dart';
 import 'package:scribbl/pages/roundIndicator.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
 import 'package:scribbl/pages/wordWas.dart';
@@ -9,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiver/async.dart';
 import '../Guesser_screen/guesserScreen.dart';
 import '../Guesser_screen/chat.dart';
+import '../../ProviderManager/manager.dart';
 
 String choosenWord;
 bool timerRunning2 = false;
@@ -61,6 +64,8 @@ class _ChooseOrDrawState extends State<ChooseOrDraw> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<GuessersIdData>(context);
+
     if (word != '*') //this is true when it should not be
     {
       if (painterCountDown.current > 1 && counter - 1 != guessersId.length) {

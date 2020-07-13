@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:scribbl/ProviderManager/manager.dart';
 import 'package:scribbl/audioPlayer/audioPlayer.dart';
 import 'package:scribbl/services/authHandler.dart';
 import 'package:scribbl/virtualCurrency/data.dart';
@@ -302,7 +303,7 @@ class _SelectRoomState extends State<SelectRoom> {
 Route createRoute(int id, Currency currency) {
   CurvedAnimation curvedTransition;
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => Room(
+    pageBuilder: (context, animation, secondaryAnimation) => Manager(
       id: id,
       currency: currency,
     ),

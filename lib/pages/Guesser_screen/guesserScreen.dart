@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scribbl/ProviderManager/data.dart';
 import 'package:scribbl/pages/enterName.dart';
 import '../roundIndicator.dart';
 import 'guesser.dart';
@@ -18,6 +20,7 @@ import 'package:flutter/rendering.dart';
 import '../../gift/gift_contents.dart';
 import 'animatedAvatar.dart';
 import 'chat.dart';
+import '../../ProviderManager/manager.dart';
 
 bool timerRunning = false;
 final messageHolder = TextEditingController();
@@ -94,6 +97,7 @@ class _PopUpChatState extends State<PopUpChat> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<ChatData>(context);
     if (chat.length > popUpAdder) {
       int future = chat.length - popUpAdder;
       popUpAdder = chat.length;
@@ -244,6 +248,11 @@ class StackChild extends StatelessWidget {
   StackChild({this.position});
   @override
   Widget build(BuildContext context) {
+    Provider.of<GuessersIdData>(context);
+    if (roomData[identity] == '$denId $round' &&
+        guessersId.indexOf(identity) == -1) {
+      updateScore();
+    } //update score if not updated
     return Container(
       height: position == 'guesser' ? guessCanvasLength : denCanvasLength,
       child: Row(
@@ -360,6 +369,8 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
   var subG;
   @override
   Widget build(BuildContext context) {
+    Provider.of<GuessersIdData>(context);
+
     if (word != '*') {
       if (guesserCountDown.current > 3 && counter - 1 != guessersId.length) {
         if (!timerRunning || tempDenId != denId) {
