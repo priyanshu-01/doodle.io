@@ -142,6 +142,10 @@ class SingleStroke extends StatefulWidget {
       _SingleStrokeState(painterData: painterData);
 }
 
+//  dex: roomData['indices'],
+//     sketcher: i,
+//     color: widget
+//         .colorHolder.colors[roomData['colorIndexStack'][i + 1]],
 class _SingleStrokeState extends State<SingleStroke> {
   final PainterData painterData;
   _SingleStrokeState({this.painterData});
@@ -149,21 +153,19 @@ class _SingleStrokeState extends State<SingleStroke> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        RepaintBoundary(
-          child: CustomPaint(
-            child: Container(
-              color: Colors.white,
-              constraints: BoxConstraints.expand(),
+        for (int i = 0; i < painterData.p; i++)
+          RepaintBoundary(
+            child: CustomPaint(
+              child: Container(),
+              foregroundPainter: new CacheDrawing(
+                  points: painterData.pointsD,
+                  indices: painterData.indices,
+                  color: painterData
+                      .colorHolder.colors[painterData.colorIndexStack[i + 1]],
+                  sketcher: i),
+              size: Size.infinite,
             ),
-            foregroundPainter: new CacheDrawing(
-                points: painterData.pointsD,
-                indices: painterData.indices,
-                p: painterData.p,
-                colorHolder: painterData.colorHolder,
-                colorIndexStack: painterData.colorIndexStack),
-            size: Size.infinite,
           ),
-        ),
         RepaintBoundary(
           child: new GestureDetector(
             onPanStart: (DragStartDetails details) {

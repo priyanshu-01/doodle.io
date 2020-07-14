@@ -45,9 +45,8 @@ class Signature extends CustomPainter {
 class CacheDrawing extends CustomPainter {
   List<Offset> points;
   List<int> indices;
-  int p;
-  ColorHolder colorHolder;
-  List<int> colorIndexStack;
+  Color color;
+  int sketcher;
   Paint paintObj = new Paint()
     ..color = Colors.black
     ..strokeCap = StrokeCap.round
@@ -55,20 +54,19 @@ class CacheDrawing extends CustomPainter {
   CacheDrawing(
       {this.points,
       this.indices,
-      this.p,
-      this.colorHolder,
-      this.colorIndexStack});
+      @required this.color,
+      @required this.sketcher});
   @override
   void paint(Canvas canvas, Size size) {
-    //paint.color=Colors.blue;
-    for (int i = 0; i < indices[p]; i++) {
-      if (indices.indexOf(i) != -1) {
-        if (colorHolder.colors[colorIndexStack[indices.indexOf(i) + 1]] !=
-            paintObj.color) {
-          paintObj.color =
-              colorHolder.colors[colorIndexStack[indices.indexOf(i) + 1]];
-        }
-      }
+    paintObj.color = color;
+    for (int i = indices[sketcher]; i < indices[sketcher + 1]; i++) {
+      // if (indices.indexOf(i) != -1) {
+      //   if (colorHolder.colors[colorIndexStack[indices.indexOf(i) + 1]] !=
+      //       paintObj.color) {
+      //     paintObj.color =
+      //         colorHolder.colors[colorIndexStack[indices.indexOf(i) + 1]];
+      //   }
+      // }
 
       if ((points[i] != null && points[i] != Offset(-1, -1)) &&
           (points[i + 1] != null && points[i + 1] != Offset(-1, -1))) {
@@ -81,10 +79,5 @@ class CacheDrawing extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CacheDrawing oldDelegate) {
-    if (oldDelegate.p != p) {
-      return true;
-    } else
-      return false;
-  }
+  bool shouldRepaint(CacheDrawing oldDelegate) => false;
 }
