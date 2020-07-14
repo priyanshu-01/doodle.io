@@ -168,19 +168,19 @@ class _PopUpChatState extends State<PopUpChat> {
                   textScaleFactor: 0.9,
                   text: (m != 'd123')
                       ? new TextSpan(
-                          text: '$n ',
-                          style: TextStyle(
+                          text: '$n :',
+                          style: GoogleFonts.ubuntu(
                               fontWeight: FontWeight.bold, color: Colors.black),
                           children: <TextSpan>[
                             new TextSpan(
                               text: m,
-                              style: DefaultTextStyle.of(context).style,
+                              style: GoogleFonts.ubuntu(),
                             ),
                           ],
                         )
                       : TextSpan(
                           text: '$n guessed',
-                          style: TextStyle(
+                          style: GoogleFonts.ubuntu(
                               fontWeight: FontWeight.bold, color: Colors.green),
                         )),
             ),
@@ -457,27 +457,30 @@ class _TextBoxState extends State<TextBox> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 10.0),
-              child: InkWell(
-                enableFeedback: false,
-                child: const Image(
-                  image: AssetImage('assets/icons/gift.gif'),
+          Container(
+              width: totalWidth * 0.15,
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: InkWell(
+                  enableFeedback: false,
+                  child: const Image(
+                    image: AssetImage('assets/icons/gift.gif'),
+                  ),
+                  onTap: () {
+                    if (fn.hasFocus) {
+                      fn.unfocus();
+                      controlGift.forward(from: 0.0);
+                    } else {
+                      (controlGift.value == 0.0)
+                          ? controlGift.forward(from: 0.0)
+                          : controlGift.reverse();
+                    }
+                  },
                 ),
-                onTap: () {
-                  if (fn.hasFocus) {
-                    fn.unfocus();
-                    controlGift.forward(from: 0.0);
-                  } else {
-                    (controlGift.value == 0.0)
-                        ? controlGift.forward(from: 0.0)
-                        : controlGift.reverse();
-                  }
-                },
               )),
           Container(
             width: totalWidth * 0.7,
-            color: Colors.white,
+            // color: Colors.red,
             height: 50.0,
             child: TextField(
               style: GoogleFonts.ubuntu(
@@ -505,42 +508,39 @@ class _TextBoxState extends State<TextBox> {
               onSubmitted: (String a) => onSend(),
             ),
           ),
-          // (message == '')
-          //     ? (keyboardState)
-          //         ? IconButton(
-          //             icon: Icon(
-          //               Icons.keyboard_arrow_down,
-          //               size: 30.0,
-          //               color: Color(0xFFFF4893),
-          //             ),
-          //             onPressed: () {
-          //               fn.unfocus();
-          //               // FocusScope.of(context).unfocus();
-          //             },
-          //           )
-          //         : IconButton(
-          //             icon: Icon(
-          //               Icons.keyboard_arrow_up,
-          //               size: 30.0,
-          //               color: Color(0xFFFF4893),
-          //             ),
-          //             onPressed: () {
-          //               fn.requestFocus();
-          //             },
-          //           )
-          //     :
-          IconButton(
-            icon: Icon(
-              Icons.send,
-              //color: Color(0xFF16162E),
-              color: Color(0xFFFF4893),
-              //  color: Color(0xFF1A2F77),
-              //   color: Color(0xFFA74AC7),
-              size: 30.0,
+          Container(
+            width: totalWidth * 0.15,
+            // color: Colors.yellow,
+            child: MaterialButton(
+              onPressed: () => onSend(),
+              color: Colors.blue,
+              textColor: Colors.white,
+              child: Icon(
+                Icons.send,
+                size: 26,
+              ),
+              padding: EdgeInsets.all(10),
+              shape: CircleBorder(),
+              elevation: 14.0,
+              splashColor: Colors.white,
             ),
-            //onPressed:=>onSend(),
-            onPressed: () => onSend(),
           ),
+          // IconButton(
+          //   color: Colors.blue,
+          //   enableFeedback: false,
+          //   highlightColor: Colors.red,
+          //   splashColor: Colors.green,
+          //   icon: Icon(
+          //     Icons.send,
+          //     //color: Color(0xFF16162E),
+          //     // color: Color(0xFFFF4893),
+          //     //  color: Color(0xFF1A2F77),
+          //     //   color: Color(0xFFA74AC7),
+          //     size: 30.0,
+          //   ),
+          //   //onPressed:=>onSend(),
+          //   onPressed: () => onSend(),
+          // ),
         ],
       ),
     );

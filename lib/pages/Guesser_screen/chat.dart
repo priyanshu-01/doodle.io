@@ -67,7 +67,7 @@ class ChatList extends StatelessWidget {
                                 color: Color(0xFF504A4B),
                               ),
                               borderRadius: BorderRadius.circular(10.0),
-                              color: Color(0xFF504A4B),
+                              color: Colors.white,
                             ),
                             child: Padding(
                               padding:
@@ -76,7 +76,7 @@ class ChatList extends StatelessWidget {
                                 children: [
                                   Text('$m',
                                       style: GoogleFonts.ubuntu(
-                                          color: Colors.white,
+                                          color: Color(0xFF504A4B),
                                           fontSize: 10.0,
                                           fontWeight: FontWeight.bold)),
                                 ],
