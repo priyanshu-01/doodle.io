@@ -30,33 +30,38 @@ class TimeAndWord extends StatefulWidget {
 }
 
 class _TimeAndWordState extends State<TimeAndWord> {
-  int current = 0;
+  int current;
   List<int> places = new List();
-  List<int> revealed = [];
-  int counter = 0;
-  int q = 0, w = 0, e = 0, r = 0;
+  List<int> revealed;
+  int counter;
+  int q, w, e, r;
   @override
   void initState() {
-    print('value of counter is $counter');
-    print('revealed is  $revealed');
+    current = 0;
+    counter = 0;
+    revealed = [];
+    q = 0;
+    w = 0;
+    e = 0;
+    r = 0;
     places = getClues();
     initialiseTime();
     super.initState();
   }
 
   void addRevealedLettersIfNeeded() {
-    if (current == q) {
+    if (current == q && counter == 0) {
       revealed.add(places[counter++]); //error
-    } else if (current == w) {
+    } else if (current == w && counter == 1) {
       if (places.length > 1) {
         revealed.add(places[
             counter++]); //error here places is short and counter goes out of bound;
       }
-    } else if (current == e) {
+    } else if (current == e && counter == 2) {
       if (places.length > 2) {
         revealed.add(places[counter++]);
       }
-    } else if (current == r) {
+    } else if (current == r && counter == 3) {
       if (places.length > 3) {
         revealed.add(places[counter++]);
       }
