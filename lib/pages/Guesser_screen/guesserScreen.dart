@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,9 +37,10 @@ AnimationController controlGift;
 enum animateAvatar { start, done, reset }
 var avatarAnimation;
 bool keyboardSet = false;
-List popUpStack;
+// List popUpStack;
 int popUpAdder;
 int popUpRemover;
+// int buildGotCompleted;
 // int currentG = 92;
 
 class GuesserScreen extends StatelessWidget {
@@ -84,7 +86,8 @@ class _PopUpChatState extends State<PopUpChat> {
   void initState() {
     popUpAdder = chat.length;
     popUpRemover = chat.length;
-    popUpStack = [];
+    // popUpStack = [];
+    // buildGotCompleted = chat.length;
     super.initState();
   }
 
@@ -92,42 +95,49 @@ class _PopUpChatState extends State<PopUpChat> {
 
   Widget buildRemovedItem(
       BuildContext context, int a, Animation<double> animation) {
-    return _buildItem(context, a, animation);
+    return _buildToBeRemovedItem(context, a, animation);
   }
 
   @override
   Widget build(BuildContext context) {
     Provider.of<ChatData>(context);
-    if (chat.length > popUpAdder) {
-      int future = chat.length - popUpAdder;
-      popUpAdder = chat.length;
-      for (int temp = 1; temp <= future; temp++) {
-        //adding at popUpAdder basically
+
+    int lastIndex = roomData['$identity Chat'];
+    if (lastIndex != null &&
+        chat[lastIndex].substring(0, chat[lastIndex].indexOf('[')) !=
+            identity) {
+      chat = chat + [newMessage];
+      sendMessage();
+    }
+
+    while (popUpAdder < chat.length) {
+      if (_listKey.currentState != null)
         _listKey.currentState.insertItem(0,
             duration: const Duration(milliseconds: 150)); //might give error
-      }
+
+      popUpAdder++;
+      // popUpStack =
+      //     (popUpRemover < chat.length) ? chat.sublist(popUpRemover) : [];
       Timer(
           Duration(
             seconds: 3,
           ), () {
-        // setState(() {
-        for (int a = chat.length - popUpRemover - 1;
-            a < chat.length - popUpRemover - 1 + future;
-            a++) {
-          popUpRemover++;
+        popUpRemover++;
+        if (_listKey.currentState != null)
           _listKey.currentState.removeItem(
-            a,
-            (BuildContext context, Animation<double> animation) =>
-                buildRemovedItem(context, a, animation),
+            popUpAdder - popUpRemover,
+            (BuildContext context, Animation<double> animation) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                // popUpStack = (popUpRemover < chat.length)
+                //     ? chat.sublist(popUpRemover)
+                //     : [];
+                // buildGotCompleted++;
+              });
+              return buildRemovedItem(context, popUpRemover - 1, animation);
+            },
             duration: const Duration(milliseconds: 200),
           );
-        }
-
-        //the value of future might change in less than 2 seconds
-        // });
       });
-      popUpStack =
-          (popUpRemover < chat.length) ? chat.sublist(popUpRemover) : [];
     }
 
     return Container(
@@ -139,7 +149,7 @@ class _PopUpChatState extends State<PopUpChat> {
           key: _listKey,
           physics: NeverScrollableScrollPhysics(),
           reverse: true,
-          initialItemCount: popUpStack.length,
+          initialItemCount: 0,
           itemBuilder: (BuildContext context, int index, animation) =>
               _buildItem(context, index, animation)),
     );
@@ -150,39 +160,119 @@ class _PopUpChatState extends State<PopUpChat> {
     int index,
     Animation<double> animation,
   ) {
-    String both = popUpStack[popUpStack.length - 1 - index];
+    String both = chat[chat.length - 1 - index]; //Doubt here
     String n = both.substring(both.indexOf('[') + 1, both.indexOf(']'));
     String m = both.substring(both.indexOf(']') + 1);
     return Row(
       children: [
         Container(
-          color: Colors.white,
+          // color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 1.0),
             child: FadeTransition(
               opacity: animation,
-              child: RichText(
-                  textAlign: TextAlign.left,
-                  softWrap: true,
-                  overflow: TextOverflow.fade,
-                  textScaleFactor: 0.9,
-                  text: (m != 'd123')
-                      ? new TextSpan(
-                          text: '$n :',
-                          style: GoogleFonts.ubuntu(
-                              fontWeight: FontWeight.bold, color: Colors.black),
-                          children: <TextSpan>[
-                            new TextSpan(
-                              text: m,
-                              style: GoogleFonts.ubuntu(),
-                            ),
-                          ],
-                        )
-                      : TextSpan(
-                          text: '$n guessed',
-                          style: GoogleFonts.ubuntu(
-                              fontWeight: FontWeight.bold, color: Colors.green),
-                        )),
+              child: Container(
+                width: totalWidth * 0.45 - 4,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Container(
+                        color: Colors.white,
+                        child: RichText(
+                            textAlign: TextAlign.left,
+                            softWrap: true,
+                            overflow: TextOverflow.fade,
+                            textScaleFactor: 0.9,
+                            maxLines: 4,
+                            text: (m != 'd123')
+                                ? new TextSpan(
+                                    text: '$n :',
+                                    style: GoogleFonts.ubuntu(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                    children: <TextSpan>[
+                                      new TextSpan(
+                                        text: m,
+                                        style: GoogleFonts.ubuntu(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  )
+                                : TextSpan(
+                                    text: '$n guessed',
+                                    style: GoogleFonts.ubuntu(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green),
+                                  )),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _buildToBeRemovedItem(
+    BuildContext context,
+    int index,
+    Animation<double> animation,
+  ) {
+    String both = chat[index];
+    String n = both.substring(both.indexOf('[') + 1, both.indexOf(']'));
+    String m = both.substring(both.indexOf(']') + 1);
+    return Row(
+      children: [
+        Container(
+          // color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 1.0),
+            child: FadeTransition(
+              opacity: animation,
+              child: Container(
+                width: totalWidth * 0.45 - 4,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      child: Container(
+                        color: Colors.white,
+                        child: RichText(
+                            textAlign: TextAlign.left,
+                            softWrap: true,
+                            overflow: TextOverflow.fade,
+                            textScaleFactor: 0.9,
+                            maxLines: 4,
+                            text: (m != 'd123')
+                                ? new TextSpan(
+                                    text: '$n :',
+                                    style: GoogleFonts.ubuntu(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                    children: <TextSpan>[
+                                      new TextSpan(
+                                        text: m,
+                                        style: GoogleFonts.ubuntu(
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  )
+                                : TextSpan(
+                                    text: '$n guessed',
+                                    style: GoogleFonts.ubuntu(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green),
+                                  )),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),

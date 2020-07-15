@@ -224,7 +224,7 @@ void rebuildMinimumWidgets() {
     print('rebuilding guessers');
     guessersIdData.rebuildGuessersId();
   } else if (roomData['$identity Chat'] != cacheRoomData['$identity Chat'] ||
-      roomData['chat'].length != cacheRoomData['chat'].length) {
+      !listEquals(roomData['chat'], cacheRoomData['chat'])) {
     print('rebuilding chat');
     chatData.rebuildChat();
   } else if (roomData['pointer'] != cacheRoomData['pointer']) {

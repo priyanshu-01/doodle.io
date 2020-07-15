@@ -34,13 +34,7 @@ class ChatList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<ChatData>(context);
-    int lastIndex = roomData['$identity Chat'];
-    if (lastIndex != null &&
-        chat[lastIndex].substring(0, chat[lastIndex].indexOf('[')) !=
-            identity) {
-      chat = chat + [newMessage];
-      sendMessage();
-    }
+
     return ListView.builder(
       reverse: true,
       itemCount: chat.length,
@@ -49,6 +43,9 @@ class ChatList extends StatelessWidget {
         String i = both.substring(0, both.indexOf('['));
         String n = both.substring(both.indexOf('[') + 1, both.indexOf(']'));
         String m = both.substring(both.indexOf(']') + 1);
+        if (m == 'd123') {
+          m = 'Guessed';
+        }
         return Container(
           child: Column(
             crossAxisAlignment: (identity.toString() == i)
@@ -76,7 +73,9 @@ class ChatList extends StatelessWidget {
                                 children: [
                                   Text('$m',
                                       style: GoogleFonts.ubuntu(
-                                          color: Color(0xFF504A4B),
+                                          color: (m == 'Guessed')
+                                              ? Colors.green
+                                              : Color(0xFF504A4B),
                                           fontSize: 10.0,
                                           fontWeight: FontWeight.bold)),
                                 ],
@@ -134,6 +133,9 @@ class ChatList extends StatelessWidget {
                                   NameOfOthers(iden: i, nam: n),
                                   Text('$m',
                                       style: GoogleFonts.ubuntu(
+                                          color: (m == 'Guessed')
+                                              ? Colors.green
+                                              : Colors.black,
                                           fontSize: 10.0,
                                           fontWeight: FontWeight.bold)),
                                 ],
@@ -167,7 +169,8 @@ class NameOfOthers extends StatelessWidget {
         child: Text('$nam',
             style: GoogleFonts.ubuntu(
                 //   color: Color(0xFFA74AC7),
-                color: Color(0xFFFF4893),
+                // color: Color(0xFFFF4893),
+                color: Colors.blue,
                 fontSize: 10.0,
                 fontWeight: FontWeight.bold)),
       );
