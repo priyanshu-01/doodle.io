@@ -75,14 +75,10 @@ class _WordWasState extends State<WordWas> {
         print('WordWas 2 .... 5 seconds over');
       }
       changeDenIfNeeded();
-      // setState(() {
-
-      // });
       current = duration.elapsed.inSeconds;
     });
     sub.onDone(() {
       sub.cancel();
-      //  changeDen();
     });
   }
 
