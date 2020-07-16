@@ -209,7 +209,7 @@ class _GuesserStrokesState extends State<GuesserStrokes>
       if (pStore > pointerVal && roomData['length'] != 0) {
         ind1 = roomData['indices'][roomData['pointer']];
         ind2 = roomData['indices']
-            [roomData['pointer'] + 1]; //error caught by crashlytics
+            [roomData['pointer'] + 1]; //error caught by crashlytics +1
         controller.duration = Duration(milliseconds: (ind2 - ind1) * 17);
         controller.reverse(from: 1.0);
       } else {

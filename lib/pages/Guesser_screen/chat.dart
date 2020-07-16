@@ -92,7 +92,8 @@ class ChatList extends StatelessWidget {
                               radius: 13.0,
                               backgroundColor: Colors.grey[100],
                               backgroundImage: NetworkImage(playersImage[
-                                  playersId.indexOf(i)]), //error by crashlytics
+                                  playersId
+                                      .indexOf(i)]), //error by crashlytics+1
                             ),
                           )
                         ],

@@ -37,8 +37,8 @@ class _WordWasState extends State<WordWas> {
     startTimer();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (identity == denId) {
-        currency.setCoins =
-            currency.remainingCoins + tempScore[playersId.indexOf(denId)];
+        currency.setCoins = currency.remainingCoins +
+            tempScore[playersId.indexOf(denId)]; //error by crashlytics
       } else {
         currency.setCoins = currency.remainingCoins + score;
         score = 0;

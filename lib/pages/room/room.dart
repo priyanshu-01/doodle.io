@@ -7,7 +7,6 @@ import 'package:scribbl/virtualCurrency/data.dart';
 import 'gameScreen.dart';
 import '../Select_room/selectRoom.dart';
 import '../../services/authHandler.dart';
-import '../Guesser_screen/guesserScreen.dart';
 import 'meetingPage.dart';
 
 bool game;
@@ -86,24 +85,15 @@ void addPlayer() {
 }
 
 Future<void> removeMe() async {
-  List playerRemoved = players;
-  List identityRemoved = playersId;
-  List tempScoreRemoved = tempScore;
-  List finalScoreRemoved = finalScore;
-  int count = counter - 1;
+  counter = counter - 1;
   int plInd = playersId.indexOf(identity);
-  playerRemoved.removeAt(plInd);
-  identityRemoved.removeAt(plInd);
-  tempScoreRemoved.removeAt(plInd);
-  finalScoreRemoved.removeAt(plInd);
-  await Firestore.instance.collection('rooms').document(documentid).updateData({
-    'users': playerRemoved,
-    'counter': count,
-    'users_id': identityRemoved,
-    'tempScore': tempScoreRemoved,
-    'finalScore': finalScoreRemoved
-  });
-  if (playerRemoved.length == 0) {
+  players.removeAt(plInd);
+  playersId.removeAt(plInd);
+  tempScore.removeAt(plInd);
+  finalScore.removeAt(plInd);
+  playersImage.removeAt(plInd);
+  updatePlayerData();
+  if (players.length == 0) {
     // del doc
     await Firestore.instance
         .collection('rooms')
@@ -118,8 +108,7 @@ Future<void> removeMe() async {
       await Firestore.instance
           .collection('rooms')
           .document(documentid)
-          .updateData(
-              {'host': playerRemoved[0], 'host_id': identityRemoved[0]});
+          .updateData({'host': players[0], 'host_id': playersId[0]});
     }
     if (denId == identity) {
       changeDen('room.dart line 433');
