@@ -70,7 +70,7 @@ class _ManagerState extends State<Manager> {
   Widget build(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: true,
           body: SafeArea(
               child: MultiProvider(
                   providers: [
