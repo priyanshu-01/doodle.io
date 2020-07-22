@@ -36,6 +36,78 @@ const List<Map> reactionsMenu = [
     'price': 20,
   },
   {
+    'name': 'SmileFace',
+    'image': const Image(
+      image: AssetImage('assets/reactions/smileFace.png'),
+    ),
+    'currency': currencyType.coins,
+    'price': 20,
+  },
+  {
+    'name': 'explodingHead',
+    'image': const Image(
+      image: AssetImage('assets/reactions/explodingHead.png'),
+    ),
+    'currency': currencyType.coins,
+    'price': 20,
+  },
+  {
+    'name': 'faceBlowingAKiss',
+    'image': const Image(
+      image: AssetImage('assets/reactions/faceBlowingAKiss.png'),
+    ),
+    'currency': currencyType.coins,
+    'price': 20,
+  },
+  {
+    'name': 'kissMark',
+    'image': const Image(
+      image: AssetImage('assets/reactions/kissMark.png'),
+    ),
+    'currency': currencyType.coins,
+    'price': 20,
+  },
+  {
+    'name': 'lightBulb',
+    'image': const Image(
+      image: AssetImage('assets/reactions/lightBulb.png'),
+    ),
+    'currency': currencyType.coins,
+    'price': 20,
+  },
+  {
+    'name': 'pileOfPoo',
+    'image': const Image(
+      image: AssetImage('assets/reactions/pileOfPoo.png'),
+    ),
+    'currency': currencyType.coins,
+    'price': 20,
+  },
+  {
+    'name': 'smilingFaceWithHeartEyes',
+    'image': const Image(
+      image: AssetImage('assets/reactions/smilingFaceWithHeartEyes.png'),
+    ),
+    'currency': currencyType.coins,
+    'price': 20,
+  },
+  {
+    'name': 'starStruck',
+    'image': const Image(
+      image: AssetImage('assets/reactions/starStruck.png'),
+    ),
+    'currency': currencyType.coins,
+    'price': 20,
+  },
+  {
+    'name': 'thinkingFace',
+    'image': const Image(
+      image: AssetImage('assets/reactions/thinkingFace.png'),
+    ),
+    'currency': currencyType.coins,
+    'price': 20,
+  },
+  {
     'name': 'MiddleFinger',
     'image': const Image(
       image: AssetImage('assets/reactions/middleFinger.png'),

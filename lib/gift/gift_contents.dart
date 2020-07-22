@@ -29,21 +29,22 @@ class _AnimatedGiftState extends State<AnimatedGift>
 
   AnimationController controllerGiftSize;
   CurvedAnimation curvedAnimationGiftSize;
-
+  List offsetAnimations;
   @override
   void initState() {
     controlGift = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 250),
       lowerBound: 0.0,
       upperBound: 1.0,
     )..addStatusListener((status) {
-        if (status == AnimationStatus.completed) controllerGiftSize.forward();
+        if (status == AnimationStatus.forward)
+          controllerGiftSize.forward(from: 0.0);
         if (status == AnimationStatus.dismissed) controllerGiftSize.reset();
       });
 
     controllerGiftSize =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
     curvedAnimationGiftSize = CurvedAnimation(
         parent: controllerGiftSize, curve: Curves.easeInOutBack);
 
@@ -60,6 +61,34 @@ class _AnimatedGiftState extends State<AnimatedGift>
           0.0,
           0.0,
         ));
+
+    offsetAnimations = [
+      Tween<Offset>(
+        begin: const Offset(-0.5, -0.5),
+        end: Offset.zero,
+      ).animate(curvedAnimationGiftSize),
+      Tween<Offset>(
+        begin: const Offset(-1.0, -0.5),
+        end: Offset.zero,
+      ).animate(curvedAnimationGiftSize),
+      Tween<Offset>(
+        begin: const Offset(-1.5, -0.5),
+        end: Offset.zero,
+      ).animate(curvedAnimationGiftSize),
+      Tween<Offset>(
+        begin: const Offset(-0.5, -1.5),
+        end: Offset.zero,
+      ).animate(curvedAnimationGiftSize),
+      Tween<Offset>(
+        begin: const Offset(-1.0, -1.5),
+        end: Offset.zero,
+      ).animate(curvedAnimationGiftSize),
+      Tween<Offset>(
+        begin: const Offset(-1.5, -1.5),
+        end: Offset.zero,
+      ).animate(curvedAnimationGiftSize),
+    ];
+
     super.initState();
   }
 
@@ -74,8 +103,6 @@ class _AnimatedGiftState extends State<AnimatedGift>
     return (keyboardState)
         ? Container()
         : Container(
-            // constraints: BoxConstraints.expand(),
-            //color: Colors.red,
             child: Stack(children: <Widget>[
               PositionedTransition(
                 rect: relativeRectTween.animate(controlGift),
@@ -88,9 +115,9 @@ class _AnimatedGiftState extends State<AnimatedGift>
                     width: totalWidth - 20,
                     child: GridView.builder(
                         itemCount: reactionsMenu.length,
-                        scrollDirection: Axis.horizontal,
+                        scrollDirection: Axis.vertical,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2),
+                            crossAxisCount: 3),
                         itemBuilder: (BuildContext context, int index) {
                           return InkWell(
                             onTap: () {
@@ -104,26 +131,48 @@ class _AnimatedGiftState extends State<AnimatedGift>
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(15.0),
-                              child: ScaleTransition(
-                                scale: curvedAnimationGiftSize,
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                      border:
-                                          Border.all(color: Colors.grey[200]),
-                                      borderRadius: BorderRadius.circular(15.0),
-                                      // color: Colors.grey[100],
-                                      gradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: [
-                                            Colors.grey[50],
-                                            Colors.grey[200]
-                                          ]),
-                                    ),
-                                    child: Item(
-                                      index: index,
-                                    )),
-                              ),
+                              child: (index <= 5)
+                                  ? SlideTransition(
+                                      position: offsetAnimations[index],
+                                      child: ScaleTransition(
+                                        scale: curvedAnimationGiftSize,
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Colors.grey[200]),
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                              // color: Colors.grey[100],
+                                              gradient: LinearGradient(
+                                                  begin: Alignment.topCenter,
+                                                  end: Alignment.bottomCenter,
+                                                  colors: [
+                                                    Colors.grey[50],
+                                                    Colors.grey[200]
+                                                  ]),
+                                            ),
+                                            child: Item(
+                                              index: index,
+                                            )),
+                                      ))
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                        border:
+                                            Border.all(color: Colors.grey[200]),
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                        // color: Colors.grey[100],
+                                        gradient: LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [
+                                              Colors.grey[50],
+                                              Colors.grey[200]
+                                            ]),
+                                      ),
+                                      child: Item(
+                                        index: index,
+                                      )),
                             ),
                           );
                         })),
