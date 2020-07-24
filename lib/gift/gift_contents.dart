@@ -8,14 +8,7 @@ import '../pages/Guesser_screen/guesserScreen.dart';
 import '../pages/room/room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// List reactions = [
-//   'assets/reactions/thumbUp.png',
-//   'assets/reactions/thumbDown.png',
-//   'assets/reactions/middleFinger.png',
-//   'assets/reactions/fire.png',
-//   'assets/reactions/heart.png',
-// ];
-final Image CoinImage = const Image(image: AssetImage('assets/icons/coin.png'));
+final Image coinImage = const Image(image: AssetImage('assets/icons/coin.png'));
 
 class AnimatedGift extends StatefulWidget {
   @override
@@ -34,7 +27,7 @@ class _AnimatedGiftState extends State<AnimatedGift>
   void initState() {
     controlGift = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 200),
       lowerBound: 0.0,
       upperBound: 1.0,
     )..addStatusListener((status) {
@@ -44,9 +37,9 @@ class _AnimatedGiftState extends State<AnimatedGift>
       });
 
     controllerGiftSize =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
-    curvedAnimationGiftSize = CurvedAnimation(
-        parent: controllerGiftSize, curve: Curves.easeInOutBack);
+        AnimationController(vsync: this, duration: Duration(milliseconds: 900));
+    curvedAnimationGiftSize =
+        CurvedAnimation(parent: controllerGiftSize, curve: Curves.elasticInOut);
 
     relativeRectTween = RelativeRectTween(
         begin: RelativeRect.fromLTRB(
@@ -107,13 +100,15 @@ class _AnimatedGiftState extends State<AnimatedGift>
               PositionedTransition(
                 rect: relativeRectTween.animate(controlGift),
                 child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.white),
-                    ),
                     constraints: BoxConstraints.expand(),
-                    width: totalWidth - 20,
+                    // width: totalWidth - 20,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [Colors.blue[300], Colors.blue[600]],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter)),
                     child: GridView.builder(
+                        physics: BouncingScrollPhysics(),
                         itemCount: reactionsMenu.length,
                         scrollDirection: Axis.vertical,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -139,7 +134,7 @@ class _AnimatedGiftState extends State<AnimatedGift>
                                         child: Container(
                                             decoration: BoxDecoration(
                                               border: Border.all(
-                                                  color: Colors.grey[200]),
+                                                  color: Colors.blue[200]),
                                               borderRadius:
                                                   BorderRadius.circular(15.0),
                                               // color: Colors.grey[100],
@@ -147,8 +142,9 @@ class _AnimatedGiftState extends State<AnimatedGift>
                                                   begin: Alignment.topCenter,
                                                   end: Alignment.bottomCenter,
                                                   colors: [
-                                                    Colors.grey[50],
-                                                    Colors.grey[200]
+                                                    Colors.white,
+                                                    // Colors.yellow[100],
+                                                    Colors.yellow[400]
                                                   ]),
                                             ),
                                             child: Item(
@@ -158,7 +154,7 @@ class _AnimatedGiftState extends State<AnimatedGift>
                                   : Container(
                                       decoration: BoxDecoration(
                                         border:
-                                            Border.all(color: Colors.grey[200]),
+                                            Border.all(color: Colors.blue[200]),
                                         borderRadius:
                                             BorderRadius.circular(15.0),
                                         // color: Colors.grey[100],
@@ -166,8 +162,8 @@ class _AnimatedGiftState extends State<AnimatedGift>
                                             begin: Alignment.topCenter,
                                             end: Alignment.bottomCenter,
                                             colors: [
-                                              Colors.grey[50],
-                                              Colors.grey[200]
+                                              Colors.white,
+                                              Colors.yellow[400]
                                             ]),
                                       ),
                                       child: Item(
@@ -231,7 +227,7 @@ class Item extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Flexible(child: CoinImage),
+                    Flexible(child: coinImage),
                     SizedBox(
                       width: 4.0,
                     ),

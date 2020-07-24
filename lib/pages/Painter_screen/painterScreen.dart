@@ -32,17 +32,7 @@ class PainterScreen extends StatelessWidget {
               flex: 2,
             ),
             RoundIndicator(),
-            Flexible(
-              flex: 1,
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(width: 1.0, color: textAndChat),
-                    color: textAndChat
-                    // color: Colors.blueAccent[100]
-                    ),
-                child: ChatList(),
-              ),
-            )
+            Flexible(flex: 1, child: ChatBox())
           ],
         ),
       ),

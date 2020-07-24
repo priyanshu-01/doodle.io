@@ -102,7 +102,10 @@ class _KeyboardListenerState extends State<KeyboardListener> {
       return Container(
         height: (keyboardState) ? 0 : keyboardHeight,
         child: Stack(
-          children: <Widget>[ChatBox(), AnimatedGift()],
+          children: <Widget>[
+            (keyboardState) ? Container() : ChatBox(),
+            AnimatedGift()
+          ],
         ),
       );
     });

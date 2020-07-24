@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'data.dart';
+import '../gift/gift_contents.dart';
 
 class VirtualCurrency extends StatelessWidget {
   @override
@@ -64,9 +65,7 @@ class _VirtualCurrencyChangerState extends State<VirtualCurrencyChanger>
         children: [
           Padding(
             padding: const EdgeInsets.all(5.0),
-            child: const Image(
-              image: AssetImage('assets/icons/coin.png'),
-            ),
+            child: coinImage,
           ),
           AnimatedBuilder(
               animation: controller,
@@ -111,19 +110,14 @@ class VirtualCurrencyContent extends StatelessWidget {
   VirtualCurrencyContent({this.currency});
   @override
   Widget build(BuildContext context) {
-    print('currency changed');
+    print('rebuilding constant currency ');
     return Container(
         height: 40.0,
         // color: Colors.white,
         // width: 100.0,
         child: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: const Image(
-                image: AssetImage('assets/icons/coin.png'),
-              ),
-            ),
+            Padding(padding: const EdgeInsets.all(5.0), child: coinImage),
             Text(
               commas(currency.remainingCoins),
               style: GoogleFonts.fredokaOne(

@@ -9,24 +9,22 @@ import 'guesserScreen.dart';
 class ChatBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return (keyboardState)
-        ? Container()
-        : FractionallySizedBox(
-            heightFactor: 1.0,
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1.0, color: textAndChat),
-                  color: textAndChat
-                  //  color: Color(0xFFFFF1E9)
-                  //color: Color(0xFFFABBB9),
-                  // color: Colors.blueAccent[100]
-                  ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ChatList(),
-              ),
-            ),
-          );
+    return Container(
+      decoration: BoxDecoration(
+          color: textAndChat,
+          gradient: LinearGradient(
+              colors: [Colors.yellow[200], Colors.yellow[700]],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter)
+          //  color: Color(0xFFFFF1E9)
+          //color: Color(0xFFFABBB9),
+          // color: Colors.blueAccent[100]
+          ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ChatList(),
+      ),
+    );
   }
 }
 
@@ -36,6 +34,7 @@ class ChatList extends StatelessWidget {
     Provider.of<ChatData>(context);
 
     return ListView.builder(
+      physics: BouncingScrollPhysics(),
       reverse: true,
       itemCount: chat.length,
       itemBuilder: (BuildContext context, int index) {
@@ -61,8 +60,9 @@ class ChatList extends StatelessWidget {
                           Container(
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: Color(0xFF504A4B),
-                              ),
+                                  width: 1.0,
+                                  // color: Color(0xFF504A4B),
+                                  color: Colors.yellow[300]),
                               borderRadius: BorderRadius.circular(10.0),
                               color: Colors.white,
                             ),
@@ -121,7 +121,10 @@ class ChatList extends StatelessWidget {
                           ),
                           Container(
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey[300]),
+                              border: Border.all(
+                                  color:
+                                      //  Colors.grey[300]
+                                      Colors.blue[300]),
                               borderRadius: BorderRadius.circular(10.0),
                               color: Colors.white,
                             ),

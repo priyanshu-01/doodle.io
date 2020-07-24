@@ -16,8 +16,9 @@ class ChooseWordDialog extends StatefulWidget {
 class _ChooseWordDialogState extends State<ChooseWordDialog> {
   List displayWords = [' ', ' ', ' '];
 
-  Color wordBack;
-  Color wordText;
+  Color wordBack = Colors.black;
+  Color wordText = Colors.white;
+  TextStyle wordStyle;
 
   bool switcher = false;
 
@@ -26,6 +27,11 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
   Duration duration = Duration(milliseconds: 1000);
   @override
   void initState() {
+    wordStyle = GoogleFonts.poppins(
+        color: wordText,
+        fontSize: 18.0,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 1.5);
     getWords();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
@@ -37,10 +43,10 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
 
   @override
   Widget build(BuildContext context) {
-    //wordBack= Color(0xFFFFE5B4);
-    wordBack = null;
+    // wordBack = Color(0xFF504A4B);
+    // wordBack = Colors.black;
+
     // wordText=Color(0xFF1A2F77);
-    wordText = Colors.black;
     return Stack(
       children: [
         Container(
@@ -66,7 +72,7 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
                       GoogleFonts.notoSans(color: Colors.black, fontSize: 25.0),
                 ),
                 SizedBox(
-                  height: totalLength * 0.05,
+                  height: totalLength * 0.07,
                 ),
                 Container(
                     height: 200.0,
@@ -76,11 +82,10 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
                         FlatButton(
                           color: wordBack,
                           shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10.0)),
+                              borderRadius: new BorderRadius.circular(20.0)),
                           child: Text(
                             displayWords[0].toUpperCase(),
-                            style: GoogleFonts.poppins(
-                                color: wordText, fontSize: 18.0),
+                            style: wordStyle,
                           ),
                           onPressed: () {
                             setState(() {
@@ -91,12 +96,9 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
                         FlatButton(
                           color: wordBack,
                           shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10.0)),
-                          child: Text(
-                            displayWords[1].toUpperCase(),
-                            style: GoogleFonts.poppins(
-                                color: wordText, fontSize: 18.0),
-                          ),
+                              borderRadius: new BorderRadius.circular(20.0)),
+                          child: Text(displayWords[1].toUpperCase(),
+                              style: wordStyle),
                           onPressed: () {
                             setState(() {
                               onWordPressed(displayWords[1]);
@@ -106,12 +108,9 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
                         FlatButton(
                           color: wordBack,
                           shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10.0)),
-                          child: Text(
-                            displayWords[2].toUpperCase(),
-                            style: GoogleFonts.poppins(
-                                color: wordText, fontSize: 18.0),
-                          ),
+                              borderRadius: new BorderRadius.circular(20.0)),
+                          child: Text(displayWords[2].toUpperCase(),
+                              style: wordStyle),
                           onPressed: () {
                             setState(() {
                               onWordPressed(displayWords[2]);

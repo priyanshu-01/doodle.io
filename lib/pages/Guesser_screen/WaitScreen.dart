@@ -8,27 +8,29 @@ import '../Select_room/selectRoom.dart';
 import '../../main.dart';
 import '../Painter_screen/painterScreen.dart';
 
-var waitSub;
-int waitCurrent = 0;
-
 class WaitScreen extends StatefulWidget {
   @override
   _WaitScreenState createState() => _WaitScreenState();
 }
 
-class _WaitScreenState extends State<WaitScreen> with TickerProviderStateMixin {
-  String waitDenId;
-  int end = 15 + (counter * 2);
-  double topPadding = totalLength * 0.5;
+class _WaitScreenState extends State<WaitScreen>
+    with SingleTickerProviderStateMixin {
+  // String waitDenId;
+  var waitSub;
+  int waitCurrent;
+  int end;
+  double topPadding;
 
   AnimationController spinKitController;
   void initState() {
     avatarAnimation = animateAvatar.reset;
-    waitDenId = denId;
+    // waitDenId = denId;
+    topPadding = totalLength * 0.5;
+    end = 15 + (counter * 2);
     waitCurrent = 0;
     spinKitController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: Duration(milliseconds: 750),
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
@@ -43,7 +45,6 @@ class _WaitScreenState extends State<WaitScreen> with TickerProviderStateMixin {
   void dispose() {
     waitCurrent = 0;
     waitSub.cancel();
-    //spinKitController.dispose();
     super.dispose();
   }
 
@@ -61,18 +62,17 @@ class _WaitScreenState extends State<WaitScreen> with TickerProviderStateMixin {
     });
     waitSub.onDone(() {
       waitSub.cancel();
-      //  changeDen();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (waitDenId != denId) {
-      waitDenId = denId;
-      waitCurrent = 0;
-      waitSub.cancel();
-      startTimer();
-    }
+    // if (waitDenId != denId) {
+    //   waitDenId = denId;
+    //   waitCurrent = 0;
+    //   waitSub.cancel();
+    //   startTimer();
+    // }
     return Stack(
       children: [
         Container(
@@ -85,7 +85,7 @@ class _WaitScreenState extends State<WaitScreen> with TickerProviderStateMixin {
           left: totalWidth * 0.27,
           top: topPadding,
           onEnd: () {
-            spinKitController.repeat();
+            // spinKitController.repeat();
           },
           child: Container(
             child: Column(
@@ -139,8 +139,9 @@ class _WaitScreenState extends State<WaitScreen> with TickerProviderStateMixin {
     } else {
       distance = counter + m - d;
     }
-    if (waitCurrent == 13 + (distance * 2) && resumed && online)
+    if (waitCurrent == 13 + (distance * 2) && resumed && online) {
       changeDen(
           'WaitScreen.dart line 131 and value of waitCurrent is $waitCurrent');
+    }
   }
 }
