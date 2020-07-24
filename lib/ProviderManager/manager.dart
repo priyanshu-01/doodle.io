@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:scribbl/pages/Guesser_screen/countDown.dart';
+import 'package:scribbl/pages/Guesser_screen/guesserScreen.dart';
 import 'package:scribbl/pages/Painter_screen/painterCountDown.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
 import 'package:scribbl/pages/room/room.dart';
@@ -12,6 +13,7 @@ import 'package:scribbl/virtualCurrency/data.dart';
 import 'package:scribbl/virtualCurrency/virtualCurrency.dart';
 import 'data.dart';
 import 'package:flutter/foundation.dart';
+import '../pages/Guesser_screen/guesser.dart';
 
 Map cacheRoomData;
 GuesserCountDown guesserCountDown;
@@ -229,6 +231,22 @@ void rebuildMinimumWidgets() {
     chatData.rebuildChat();
   } else if (roomData['pointer'] != cacheRoomData['pointer']) {
     print('rebuilding custom painters');
-    customPainterData.rebuildCustomPainter();
+    compute(parseGuesserStrokesData, {
+      'roomData': roomData,
+      'denCanvasLength': denCanvasLength,
+      'guessCanvasLength': guessCanvasLength,
+      'pointerVal': pointerVal
+    }).then((value) {
+      pointsG = value['pointsG'];
+      ind1 = value['ind1'];
+      ind2 = value['ind2'];
+      pStore = value['pStore'];
+      pointerVal = value['pointerVal'];
+
+      // setState(() {
+      //   buildOptimiser = false;
+      // });
+      customPainterData.rebuildGuesserCustomPainter();
+    });
   }
 }

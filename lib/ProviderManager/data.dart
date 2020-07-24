@@ -26,7 +26,7 @@ class GuessersIdData extends ChangeNotifier {
 }
 
 class CustomPainterData extends ChangeNotifier {
-  void rebuildCustomPainter() {
+  void rebuildGuesserCustomPainter() {
     notifyListeners();
   }
 }
