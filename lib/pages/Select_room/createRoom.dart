@@ -84,8 +84,9 @@ class _MakeRoomState extends State<MakeRoom> {
     Random random = Random();
     double randomNumber;
     randomNumber = random.nextDouble();
-    double d = randomNumber * 1000000;
+    double d = randomNumber * 100000000;
     id = d.toInt();
+    id = id * pow(10, 8 - id.toString().length);
     print(id);
     addRoom(widget.uid)
         .whenComplete(() => Timer(Duration(milliseconds: 150), () {

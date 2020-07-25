@@ -103,7 +103,7 @@ class _ResultContentState extends State<ResultContent>
           child:
               // Text('The word was $word')
               Text(
-            'Doodle.io',
+            'Doodle Friends',
             style: GoogleFonts.notoSans(color: Colors.black, fontSize: 25.0),
           ),
         ),

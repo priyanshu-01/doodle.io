@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scribbl/pages/Select_room/createRoom.dart';
 import 'package:share/share.dart';
-import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../Select_room/selectRoom.dart';
 import 'room.dart';
@@ -178,7 +177,7 @@ class RoomIdentity extends StatelessWidget {
             child: Text(
               'Room id : $roomID',
               style: GoogleFonts.quicksand(
-                  fontSize: 20.0,
+                  fontSize: 17.0,
                   color: Colors.white,
                   fontWeight: FontWeight.w700),
             ),
@@ -207,7 +206,8 @@ class RoomIdentity extends StatelessWidget {
                     size: 30.0,
                   ),
                   onPressed: () {
-                    Share.share('Room id $roomID');
+                    Share.share(
+                        'Hey! I want to play Doodle Friends with you, Join me using this Room id :                                       "$roomID"');
                   },
                 )
               ],
