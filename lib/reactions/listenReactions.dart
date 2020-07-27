@@ -27,10 +27,10 @@ class ReactionListener {
     if (reactionRecord.length != playersId.length && game == false)
       initialiseRecord();
 
-    roomData.forEach((key, value) async {
+    roomData.forEach((key, value) {
       if (reactionRecord.containsKey(key) && value != reactionRecord[key]) {
         Timer(Duration(milliseconds: 350), () async {
-          await audioPlayer.playSound('notification');
+          audioPlayer.playSound('reaction');
         });
         String keyStr = key.toString();
         String id = keyStr.substring(0, keyStr.indexOf(' '));

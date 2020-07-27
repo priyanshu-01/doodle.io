@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:scribbl/ProviderManager/data.dart';
 import '../../room/room.dart';
 import '../../timer.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -58,7 +56,7 @@ class PainterState extends State<Painter> {
               children: <Widget>[
                 Text(
                   '$word',
-                  style: GoogleFonts.lexendGiga(),
+                  style: GoogleFonts.lexendGiga(fontWeight: FontWeight.w800),
                 ),
                 Time(),
                 Row(

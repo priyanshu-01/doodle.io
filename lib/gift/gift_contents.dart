@@ -27,7 +27,7 @@ class _AnimatedGiftState extends State<AnimatedGift>
   void initState() {
     controlGift = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 250),
       lowerBound: 0.0,
       upperBound: 1.0,
     )..addStatusListener((status) {
@@ -37,9 +37,9 @@ class _AnimatedGiftState extends State<AnimatedGift>
       });
 
     controllerGiftSize =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 900));
+        AnimationController(vsync: this, duration: Duration(milliseconds: 800));
     curvedAnimationGiftSize =
-        CurvedAnimation(parent: controllerGiftSize, curve: Curves.elasticInOut);
+        CurvedAnimation(parent: controllerGiftSize, curve: Curves.easeOutBack);
 
     relativeRectTween = RelativeRectTween(
         begin: RelativeRect.fromLTRB(

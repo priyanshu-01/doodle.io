@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'guesserScreen.dart';
 import '../Select_room/selectRoom.dart';
 import '../room/room.dart';
@@ -35,8 +34,8 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
     curvedAnimationAvatar =
         CurvedAnimation(parent: controlAvatar, curve: Curves.easeInBack);
 
-    scaleAvatar = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 1000));
+    scaleAvatar =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     curvedScaleAvatar =
         CurvedAnimation(parent: scaleAvatar, curve: Curves.bounceOut);
 

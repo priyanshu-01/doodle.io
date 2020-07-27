@@ -259,9 +259,9 @@ class _SelectRoomState extends State<SelectRoom> {
     );
   }
 
-  void onPressedCreateRoom(Currency currency) async {
+  void onPressedCreateRoom(Currency currency) {
     createRoomPressed = true;
-    await audioPlayer.playSound('click');
+    audioPlayer.playSound('click');
     Timer(
         Duration(
           milliseconds: 150,
@@ -280,9 +280,9 @@ class _SelectRoomState extends State<SelectRoom> {
     // Navigator.pop(context);
   }
 
-  void onPressedJoinRoom(BuildContext context, Currency currency) async {
+  void onPressedJoinRoom(BuildContext context, Currency currency) {
     joinRoomPressed = true;
-    await audioPlayer.playSound('click');
+    audioPlayer.playSound('click');
     Timer(
         Duration(
           milliseconds: 150,

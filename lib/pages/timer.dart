@@ -18,7 +18,7 @@ class _TimeState extends State<Time> {
     return Container(
       child: Text(
         painterCountDown.current.toString(),
-        style: GoogleFonts.lexendGiga(),
+        style: GoogleFonts.lexendGiga(fontWeight: FontWeight.w800),
       ),
     );
   }
@@ -78,7 +78,7 @@ class _TimeAndWordState extends State<TimeAndWord> {
       children: <Widget>[
         Text(
           '$current',
-          style: GoogleFonts.lexendGiga(),
+          style: GoogleFonts.lexendGiga(fontWeight: FontWeight.w800),
         ),
         WordHint(
           revealed: revealed,
@@ -141,47 +141,48 @@ class _TimeAndWordState extends State<TimeAndWord> {
 class WordHint extends StatelessWidget {
   final List revealed;
   WordHint({this.revealed});
+  String rev;
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: FractionallySizedBox(
-        widthFactor: word.length / 17,
-        child: Container(
-          // alignment: Alignment.bottomCenter,
-          // color: Colors.orange[50],
-          child: ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemCount: word.length,
-              itemBuilder: (_, int h) {
-                if (word.indexOf(' ') == h) {
-                  return Container(
+    return Container(
+      // color: Colors.blue,
+      child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (int h = 0; h < word.length; h++)
+              (word[h] == ' ')
+                  ? Container(
                       alignment: Alignment.center,
                       child: Text(
                         '  ',
                         style: TextStyle(fontSize: 15.0),
-                      ));
-                } else {
-                  if (revealed.indexOf(h) == -1) {
-                    return Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          '_ ',
-                          style: TextStyle(fontSize: 15.0),
-                        ));
-                  } else {
-                    String rev = word[h];
-                    return Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          '$rev ',
-                          style: TextStyle(fontSize: 15.0),
-                        ));
-                  }
-                }
-              }),
-        ),
-      ),
+                      ))
+                  : (assignRevValue(h))
+                      ? Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            '_ ',
+                            style: TextStyle(
+                                fontSize: 15.0, fontWeight: FontWeight.w800),
+                          ))
+                      : Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            '$rev ',
+                            style: TextStyle(
+                                fontSize: 15.0, fontWeight: FontWeight.w800),
+                          ))
+          ]),
     );
+  }
+
+  bool assignRevValue(int h) {
+    if (revealed.indexOf(h) == -1) {
+      return true;
+    } else {
+      rev = word[h];
+      return false;
+    }
   }
 }

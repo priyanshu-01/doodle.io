@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:scribbl/ProviderManager/data.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
 import 'package:scribbl/pages/room/room.dart';
-
 import 'guesserScreen.dart';
 
 class PopUpChat extends StatefulWidget {
@@ -18,8 +17,6 @@ class _PopUpChatState extends State<PopUpChat> {
   void initState() {
     popUpAdder = chat.length;
     popUpRemover = chat.length;
-    // popUpStack = [];
-    // buildGotCompleted = chat.length;
     super.initState();
   }
 
@@ -44,37 +41,28 @@ class _PopUpChatState extends State<PopUpChat> {
 
     while (popUpAdder < chat.length) {
       if (_listKey.currentState != null)
-        _listKey.currentState.insertItem(0,
-            duration: const Duration(milliseconds: 150)); //might give error
+        _listKey.currentState
+            .insertItem(0, duration: const Duration(milliseconds: 150));
 
       popUpAdder++;
-      // popUpStack =
-      //     (popUpRemover < chat.length) ? chat.sublist(popUpRemover) : [];
       Timer(
           Duration(
-            seconds: 3,
+            milliseconds: 2700,
           ), () {
         popUpRemover++;
         if (_listKey.currentState != null)
           _listKey.currentState.removeItem(
             popUpAdder - popUpRemover,
             (BuildContext context, Animation<double> animation) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                // popUpStack = (popUpRemover < chat.length)
-                //     ? chat.sublist(popUpRemover)
-                //     : [];
-                // buildGotCompleted++;
-              });
+              WidgetsBinding.instance.addPostFrameCallback((_) {});
               return buildRemovedItem(context, popUpRemover - 1, animation);
             },
-            duration: const Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 500),
           );
       });
     }
 
     return Container(
-      // decoration: BoxDecoration(border: Border.all()),
-      // color: Colors.green,
       height: totalLength * 0.3,
       width: totalWidth * 0.45,
       child: AnimatedList(
@@ -83,16 +71,16 @@ class _PopUpChatState extends State<PopUpChat> {
           reverse: true,
           initialItemCount: 0,
           itemBuilder: (BuildContext context, int index, animation) =>
-              _buildItem(context, index, animation)),
+              BuildItem(context: context, index: index, animation: animation)),
     );
   }
 
-  _buildItem(
+  _buildToBeRemovedItem(
     BuildContext context,
     int index,
     Animation<double> animation,
   ) {
-    String both = chat[chat.length - 1 - index]; //Doubt here
+    String both = chat[index];
     String n = both.substring(both.indexOf('[') + 1, both.indexOf(']'));
     String m = both.substring(both.indexOf(']') + 1);
     return Row(
@@ -109,6 +97,7 @@ class _PopUpChatState extends State<PopUpChat> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Flexible(
+                      flex: 1,
                       child: Container(
                         color: Colors.white,
                         child: RichText(
@@ -148,30 +137,39 @@ class _PopUpChatState extends State<PopUpChat> {
       ],
     );
   }
+}
 
-  _buildToBeRemovedItem(
-    BuildContext context,
-    int index,
-    Animation<double> animation,
-  ) {
-    String both = chat[index];
+class BuildItem extends StatelessWidget {
+  final BuildContext context;
+  final int index;
+  final Animation<double> animation;
+  BuildItem({
+    this.context,
+    this.index,
+    this.animation,
+  });
+  @override
+  Widget build(BuildContext context) {
+    String both = chat[chat.length - 1 - index]; //Doubt here
     String n = both.substring(both.indexOf('[') + 1, both.indexOf(']'));
     String m = both.substring(both.indexOf(']') + 1);
+    if (m == 'd123') audioPlayer.playSound('someoneGuessed');
     return Row(
       children: [
         Container(
           // color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 1.0),
-            child: FadeTransition(
-              opacity: animation,
+            child: SizeTransition(
+              sizeFactor: animation,
+              axis: Axis.vertical,
+              // alignment: Alignment.bottomCenter,
               child: Container(
                 width: totalWidth * 0.45 - 4,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Flexible(
-                      flex: 1,
                       child: Container(
                         color: Colors.white,
                         child: RichText(

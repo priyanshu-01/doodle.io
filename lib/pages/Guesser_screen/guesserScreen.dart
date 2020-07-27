@@ -4,6 +4,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scribbl/ProviderManager/data.dart';
+import 'package:spring_button/spring_button.dart';
 import '../roundIndicator.dart';
 import 'guesser.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
@@ -348,7 +349,7 @@ class _TextBoxState extends State<TextBox> {
                 child: InkWell(
                   enableFeedback: false,
                   child: const Image(
-                    image: AssetImage('assets/icons/gift.gif'),
+                    image: AssetImage('assets/icons/reactionSymbol.png'),
                   ),
                   onTap: () {
                     if (fn.hasFocus) {
@@ -395,36 +396,42 @@ class _TextBoxState extends State<TextBox> {
           Container(
             width: totalWidth * 0.15,
             // color: Colors.yellow,
-            child: MaterialButton(
-              onPressed: () => onSend(),
-              color: Colors.blue,
-              textColor: Colors.white,
-              child: Icon(
-                Icons.send,
-                size: 26,
+            child: SpringButton(
+              SpringButtonType.OnlyScale,
+              Container(
+                decoration:
+                    BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+                // width: 20.0,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.send,
+                    size: 26,
+                    color: Colors.white,
+                  ),
+                ),
+
+                // child: MaterialButton(
+                //   onPressed: () => null,
+                //   // onSend(),
+                //   color: Colors.blue,
+                //   textColor: Colors.white,
+                //   child: Icon(
+                //     Icons.send,
+                //     size: 26,
+                //   ),
+                //   padding: EdgeInsets.all(10),
+                //   shape: CircleBorder(),
+                //   elevation: 14.0,
+                //   splashColor: Colors.white,
+                // ),
               ),
-              padding: EdgeInsets.all(10),
-              shape: CircleBorder(),
-              elevation: 14.0,
-              splashColor: Colors.white,
+              scaleCoefficient: 0.4,
+              onTap: () => onSend(),
+              alignment: Alignment.center,
+              useCache: true,
             ),
-          ),
-          // IconButton(
-          //   color: Colors.blue,
-          //   enableFeedback: false,
-          //   highlightColor: Colors.red,
-          //   splashColor: Colors.green,
-          //   icon: Icon(
-          //     Icons.send,
-          //     //color: Color(0xFF16162E),
-          //     // color: Color(0xFFFF4893),
-          //     //  color: Color(0xFF1A2F77),
-          //     //   color: Color(0xFFA74AC7),
-          //     size: 30.0,
-          //   ),
-          //   //onPressed:=>onSend(),
-          //   onPressed: () => onSend(),
-          // ),
+          )
         ],
       ),
     );

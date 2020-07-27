@@ -9,7 +9,9 @@ class AudioPlayer {
     // int notification = ;
     soundTracks = {
       'click': createSounds('assets/sounds/button_click.mp3'),
-      'notification': createSounds('assets/sounds/notification.mp3')
+      'reaction': createSounds('assets/sounds/reaction.mp3'),
+      'colorChange': createSounds('assets/sounds/colorChange.mp3'),
+      'someoneGuessed': createSounds('assets/sounds/someoneGuessed.mp3'),
     };
   }
 
