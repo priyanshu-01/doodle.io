@@ -26,6 +26,7 @@ class AuthSignIn {
       'active': true,
       'imageUrl': imageUrl,
       'attemptedWords': [],
+      'gamesPlayed': 0,
     }).then((value) {
       dataDocId = value.documentID;
     });

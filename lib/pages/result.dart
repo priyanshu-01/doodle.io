@@ -15,6 +15,7 @@ class Result extends StatefulWidget {
 class _ResultState extends State<Result> {
   @override
   void initState() {
+    gamesPlayed++;
     if (check == signInMethod.google)
       updateUserDataGoogle();
     else
@@ -38,7 +39,8 @@ Future<void> updateUserDataGoogle() async {
   // int score = finalScore[playersId.indexOf(identity)];
   await Firestore.instance.collection('users google').document(i).updateData({
     'coins': currency.remainingCoins,
-    'attemptedWords': wordCheck.myAttemptedWords
+    'attemptedWords': wordCheck.myAttemptedWords,
+    'gamesPlayed': gamesPlayed,
   });
 }
 
@@ -55,7 +57,8 @@ Future<void> updateUserDataAnonymous() async {
       .document(i)
       .updateData({
     'coins': currency.remainingCoins,
-    'attemptedWords': wordCheck.myAttemptedWords
+    'attemptedWords': wordCheck.myAttemptedWords,
+    'gamesPlayed': gamesPlayed,
   });
 }
 

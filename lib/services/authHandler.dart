@@ -17,6 +17,7 @@ String name = '  ', email = '  ', imageUrl = '  ', uid = '  ';
 int coins;
 String dataDocId = '  ';
 DocumentSnapshot userFirebaseDocument;
+int gamesPlayed;
 
 class AuthHandler extends StatelessWidget {
   @override
@@ -70,6 +71,8 @@ Widget fetchFutureAnonymous() {
           name = userFirebaseDocument['name'];
           imageUrl = userFirebaseDocument['imageUrl'];
           wordCheck = WordCheck(userFirebaseDocument: userFirebaseDocument);
+          gamesPlayed = userFirebaseDocument['gamesPlayed'];
+          (gamesPlayed == null) ? gamesPlayed = 0 : null;
           AuthSignIn().activate();
         }
         currency = Currency(coins: coins);
@@ -105,6 +108,8 @@ Widget fetchFutureGoogle() {
           dataDocId = userFirebaseDocument.documentID;
           coins = userFirebaseDocument['coins'];
           wordCheck = WordCheck(userFirebaseDocument: userFirebaseDocument);
+          gamesPlayed = userFirebaseDocument['gamesPlayed'];
+          (gamesPlayed == null) ? gamesPlayed = 0 : null;
           AuthProvider().activate();
         }
         currency = Currency(coins: coins);

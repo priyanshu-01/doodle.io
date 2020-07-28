@@ -153,7 +153,7 @@ class BuildItem extends StatelessWidget {
     String both = chat[chat.length - 1 - index]; //Doubt here
     String n = both.substring(both.indexOf('[') + 1, both.indexOf(']'));
     String m = both.substring(both.indexOf(']') + 1);
-    if (m == 'd123') audioPlayer.playSound('someoneGuessed');
+    // if (m == 'd123') audioPlayer.playSound('someoneGuessed');
     return Row(
       children: [
         Container(

@@ -47,6 +47,7 @@ class AuthProvider {
       'imageUrl': imageUrl,
       'active': true,
       'attemptedWords': [],
+      'gamesPlayed': 0,
     }).then((value) {
       dataDocId = value.documentID;
     });
