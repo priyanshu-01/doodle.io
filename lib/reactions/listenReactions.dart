@@ -24,22 +24,24 @@ class ReactionListener {
   }
 
   void listenReactions(BuildContext context) {
-    if (reactionRecord.length != playersId.length && game == false)
-      initialiseRecord();
+    if (reactionRecord.length != playersId.length
+        // && game == false
+        ) initialiseRecord();
 
-    roomData.forEach((key, value) {
-      if (reactionRecord.containsKey(key) && value != reactionRecord[key]) {
+    roomData['userData'].forEach((key, value) {
+      if (reactionRecord.containsKey(key) &&
+          value['lastReaction'] != reactionRecord[key]) {
         Timer(Duration(milliseconds: 350), () async {
           audioPlayer.playSound('reaction');
         });
-        String keyStr = key.toString();
-        String id = keyStr.substring(0, keyStr.indexOf(' '));
-
-        int index = extractIndex(value);
+        // String keyStr = key.toString();
+        // String id = keyStr.substring(0, keyStr.indexOf(' '));
+        String id = key.toString();
+        int index = extractIndex(value['lastReaction']);
 
         showReaction(context, reactionImage(index), senderImage(id));
 
-        reactionRecord[key] = value;
+        reactionRecord[key] = value['lastReaction'];
       }
     });
   }
@@ -47,8 +49,8 @@ class ReactionListener {
   void initialiseRecord() {
     playersId.forEach((element) {
       reactionRecord.update(
-        '$element reaction',
-        (value) => '',
+        '$element',
+        (value) => null,
         ifAbsent: () => null,
       );
     });

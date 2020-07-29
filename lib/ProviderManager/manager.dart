@@ -201,8 +201,10 @@ void readRoomData() {
   //should rebuild guesser/painter
   //if pointer changes
 
-  (roomData['$identity denChangeTrack'] != null)
-      ? denChangeTrack = roomData['$identity denChangeTrack']
+  (roomData['userData'] != null &&
+          roomData['userData'][identity] != null &&
+          roomData['userData'][identity]['denChangeTrack'] != null)
+      ? denChangeTrack = roomData['userData'][identity]['denChangeTrack']
       : denChangeTrack = [];
   numberOfRounds = roomData['numberOfRounds'];
   allAttemptedWords = roomData['allAttemptedWords'];
@@ -221,11 +223,13 @@ void rebuildMinimumWidgets() {
       roomData['round'] != cacheRoomData['round']) {
     print('rebuilding game screen');
     gameScreenData.rebuildGameScreen();
-  } else if (roomData['$identity'] != cacheRoomData['$identity'] ||
+  } else if (roomData['userData'][identity]['lastGuess'] !=
+          cacheRoomData['userData'][identity]['lastGuess'] ||
       !listEquals(roomData['guessersId'], cacheRoomData['guessersId'])) {
     print('rebuilding guessers');
     guessersIdData.rebuildGuessersId();
-  } else if (roomData['$identity Chat'] != cacheRoomData['$identity Chat'] ||
+  } else if (roomData['userData'][identity]['lastMessageIndex'] !=
+          cacheRoomData['userData'][identity]['lastMessageIndex'] ||
       !listEquals(roomData['chat'], cacheRoomData['chat'])) {
     print('rebuilding chat');
     chatData.rebuildChat();
@@ -242,10 +246,6 @@ void rebuildMinimumWidgets() {
       ind2 = value['ind2'];
       pStore = value['pStore'];
       pointerVal = value['pointerVal'];
-
-      // setState(() {
-      //   buildOptimiser = false;
-      // });
       customPainterData.rebuildGuesserCustomPainter();
     });
   }

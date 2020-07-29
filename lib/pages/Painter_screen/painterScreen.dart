@@ -139,6 +139,6 @@ Future<void> changeDen(String source) async {
     'guessersId': [],
     'tempScore': tempScore,
     'round': round,
-    '$identity denChangeTrack': denChangeTrack
+    'userData.$identity.denChangeTrack': denChangeTrack
   });
 }

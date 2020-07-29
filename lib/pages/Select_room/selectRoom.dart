@@ -346,6 +346,7 @@ Future<void> addRoom(String uid) async {
     'ypos': [],
     'allAttemptedWords': [],
     'colorIndexStack': [0],
+    'userData': {},
   }).catchError((e) {
     print('error $e');
   }).then((value) => documentid = value.documentID);

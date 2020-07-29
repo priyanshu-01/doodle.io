@@ -181,7 +181,7 @@ class _AnimatedGiftState extends State<AnimatedGift>
     await Firestore.instance
         .collection('rooms')
         .document(documentid)
-        .updateData({'$identity reaction': '$index $switcher'});
+        .updateData({'userData.$identity.lastReaction': '$index $switcher'});
   }
 }
 

@@ -134,7 +134,7 @@ class StackChild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<GuessersIdData>(context);
-    if (roomData[identity] == '$denId $round' &&
+    if (roomData['userData'][identity]['lastGuess'] == '$denId $round' &&
         guessersId.indexOf(identity) == -1) {
       updateScore();
     } //update score if not updated
@@ -212,10 +212,8 @@ double checkLeftSideContainerHeight(String position) {
 }
 
 Future<void> sendMessage() async {
-  await Firestore.instance
-      .collection('rooms')
-      .document(documentid)
-      .updateData({'chat': chat, '$identity Chat': chat.length - 1});
+  await Firestore.instance.collection('rooms').document(documentid).updateData(
+      {'chat': chat, 'userData.$identity.lastMessageIndex': chat.length - 1});
 }
 
 Future<void> updateScore() async {
@@ -481,7 +479,7 @@ class _TextBoxState extends State<TextBox> {
         .collection('rooms')
         .document(documentid)
         .updateData({
-      '$identity': '$denId $round',
+      'userData.$identity.lastGuess': '$denId $round',
     });
   }
 

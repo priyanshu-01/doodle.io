@@ -31,7 +31,7 @@ class _PopUpChatState extends State<PopUpChat> {
   Widget build(BuildContext context) {
     Provider.of<ChatData>(context);
 
-    int lastIndex = roomData['$identity Chat'];
+    int lastIndex = roomData['userData'][identity]['lastMessageIndex'];
     if (lastIndex != null &&
         chat[lastIndex].substring(0, chat[lastIndex].indexOf('[')) !=
             identity) {

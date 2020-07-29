@@ -123,6 +123,12 @@ Future<void> updatePlayerData() async {
     'users_id': playersId,
     'tempScore': tempScore,
     'finalScore': finalScore,
-    'usersImage': playersImage
+    'usersImage': playersImage,
+    'userData.$identity': {
+      'lastGuess': '',
+      'lastMessageIndex': null,
+      'denChangeTrack': [],
+      'lastReaction': null,
+    }
   });
 }

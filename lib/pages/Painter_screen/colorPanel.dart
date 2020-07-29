@@ -175,4 +175,10 @@ class _SelectedColorBuilderState extends State<SelectedColorBuilder>
       ),
     );
   }
+
+  @override
+  void dispose() {
+    scaleAnimation.dispose();
+    super.dispose();
+  }
 }
