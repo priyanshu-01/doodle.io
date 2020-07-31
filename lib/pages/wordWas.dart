@@ -10,17 +10,20 @@ import '../main.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 List sortedPlayers;
-// = [
+//  = [
 //   'developer',
 //   'dev',
 //   'developer ksaalcalichaovo',
 //   'devesdasloper',
-//   'dedveloper',
-//   'dedveloper',
-//   'dedveloper',
+//   // 'dedveloper',
+//   // 'dedveloper',
+//   // 'dedveloper',
 // ];
 List sortedScore;
-// = [450, 450, 450, 450, 450, 100, 1000]; //CHANGE LATER
+//  = [
+//   450, 0, 450, 450,
+// //  450, 100, 1000
+// ]; //CHANGE LATER
 
 class WordWas extends StatefulWidget {
   @override
@@ -101,22 +104,23 @@ class WordHeading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
           'Word was',
           style: GoogleFonts.openSans(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 20.0,
-            //fontWeight: FontWeight.bold,
+            // fontWeight: FontWeight.bold,
           ),
         ),
         AutoSizeText(
+          // 'word',
           '$word',
-          //'$word',
           style: GoogleFonts.openSans(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 26.0,
             // fontWeight: FontWeight.bold,
           ),
@@ -134,26 +138,76 @@ class WordWasContent extends StatefulWidget {
 
 class _WordWasContentState extends State<WordWasContent>
     with SingleTickerProviderStateMixin {
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+  var addItemsToList;
   AnimationController controller;
   double sc;
   int score;
+  Duration insertDuration;
+  int addItem;
+  Color wordContainerColor;
+  Color listContainerBorderColor;
+  int listAnimationDurationMilliseconds;
   @override
   void initState() {
+    wordContainerColor = Colors.white;
+    listContainerBorderColor = Colors.white;
+    addItem = 0;
+    listAnimationDurationMilliseconds = playersId.length * 200;
+    if (listAnimationDurationMilliseconds > 1000)
+      listAnimationDurationMilliseconds = 1000;
     sort();
     controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: Duration(milliseconds: 300),
       // value: 1.0,
       lowerBound: 0.0,
       upperBound: 1.0,
     );
-    controller.forward(from: 0.0);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        wordContainerColor = Colors.black;
+        listContainerBorderColor = Colors.black;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _startTimer();
+        });
+      });
+    });
     super.initState();
+  }
+
+  void _startTimer() {
+    insertDuration = Duration(
+        milliseconds:
+            (listAnimationDurationMilliseconds / (sortedPlayers.length))
+                .floor());
+    CountdownTimer countDownTimer = new CountdownTimer(
+        new Duration(milliseconds: listAnimationDurationMilliseconds + 200),
+        new Duration(
+            milliseconds:
+                (listAnimationDurationMilliseconds / (sortedPlayers.length))
+                    .floor()));
+
+    addItemsToList = countDownTimer.listen(null);
+
+    addItemsToList.onData((duration) {
+      if (addItem < sortedPlayers.length) {
+        _listKey.currentState.insertItem(addItem++, duration: insertDuration);
+      }
+    });
+
+    addItemsToList.onDone(() {
+      controller.forward(from: 0.0);
+      addItem = 0;
+      addItemsToList.cancel();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // _startTimer();
     return Container(
+      alignment: Alignment.center,
       color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -163,101 +217,143 @@ class _WordWasContentState extends State<WordWasContent>
               flex: 5,
               child:
                   // Text('The word was $word')
-                  const WordHeading()),
+                  FractionallySizedBox(
+                widthFactor: 0.75,
+                child: AnimatedContainer(
+                    duration: Duration(milliseconds: 500),
+                    decoration: BoxDecoration(
+                        color: wordContainerColor,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20.0),
+                          topRight: Radius.circular(20.0),
+                        )),
+                    child: const WordHeading()),
+              )),
           Flexible(
             flex: 14,
-            child: Container(
-              child: ListView.builder(
-                  itemCount: sortedPlayers.length,
-                  //  itemCount: 10,
-                  itemBuilder: (_, int a) {
-                    String name = sortedPlayers[a];
-                    //  int score = sortedScore[a]*controller.value;
+            child: FractionallySizedBox(
+              // alignment: Alignment.center,
+              widthFactor: 0.75,
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 500),
+                // alignment: Alignment.center,
+                // color: listContainerBorderColor,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        width: 1.0, color: listContainerBorderColor)),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: AnimatedList(
+                      key: _listKey,
+                      physics: BouncingScrollPhysics(),
+                      initialItemCount: 0,
+                      //  itemCount: 10,
+                      itemBuilder: (_, int a, Animation animation) {
+                        String name = sortedPlayers[a];
+                        //  int score = sortedScore[a]*controller.value;
 
-                    int b = a + 1;
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: FractionallySizedBox(
-                        widthFactor: 0.65,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              border: Border.all(color: Colors.grey[200]),
-                              borderRadius: BorderRadius.circular(12.0)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 4.0, horizontal: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Flexible(
-                                  flex: 9,
+                        int b = a + 1;
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: FractionallySizedBox(
+                            widthFactor: 0.9,
+                            child: SizeTransition(
+                              sizeFactor: animation,
+                              axis: Axis.vertical,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    // color: Colors.grey[200],
+                                    color: Colors.black,
+                                    border: Border.all(
+                                        // color: Colors.grey[200]
+                                        ),
+                                    borderRadius: BorderRadius.circular(12.0)),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 4.0, horizontal: 8.0),
                                   child: Row(
-                                    children: [
-                                      Text('$b',
-                                          style: GoogleFonts.notoSans(
-                                              color: Colors.black,
-                                              fontSize: totalWidth / 20,
-                                              // fontSize: 300 / 20, //CHANGE LATER
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      Flexible(
+                                        flex: 9,
+                                        child: Row(
+                                          children: [
+                                            Text('$b',
+                                                style: GoogleFonts.notoSans(
+                                                    // color: Colors.black,
+                                                    color: Colors.white,
+                                                    // fontSize: totalWidth / 20,
+                                                    fontSize:
+                                                        300 / 20, //CHANGE LATER
 
-                                              fontWeight: (name == userNam)
-                                                  ? FontWeight.w800
-                                                  : FontWeight.normal)),
-                                      SizedBox(
-                                        width: 8.0,
+                                                    fontWeight: (name ==
+                                                            userNam)
+                                                        ? FontWeight.w800
+                                                        : FontWeight.normal)),
+                                            SizedBox(
+                                              width: 8.0,
+                                            ),
+                                            Flexible(
+                                              child: AutoSizeText('$name',
+                                                  maxLines: 1,
+                                                  style: GoogleFonts.notoSans(
+                                                      // color: Colors.black,
+                                                      color: Colors.white,
+                                                      // fontSize: totalWidth /
+                                                      // 20,
+                                                      //CHANGE LATER
+                                                      fontSize: 300 /
+                                                          20, //CHANGE LATER
+
+                                                      fontWeight: (name ==
+                                                              userNam)
+                                                          ? FontWeight.w800
+                                                          : FontWeight.normal)),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                       Flexible(
-                                        child: AutoSizeText('$name',
-                                            maxLines: 1,
-                                            style: GoogleFonts.notoSans(
-                                                color: Colors.black,
-                                                fontSize: totalWidth /
-                                                    20, //CHANGE LATER
-                                                // fontSize:
-                                                // 300 / 20, //CHANGE LATER
+                                        flex: 4,
+                                        child: AnimatedBuilder(
+                                          animation: controller,
+                                          builder: (BuildContext context,
+                                              Widget child) {
+                                            sc = sortedScore[a] *
+                                                controller.value;
+                                            score = sc.toInt();
+                                            return
+                                                // Temp();
 
-                                                fontWeight: (name == userNam)
-                                                    ? FontWeight.w800
-                                                    : FontWeight.normal)),
-                                      ),
+                                                Row(
+                                              children: [
+                                                Text('+ $score',
+                                                    style: GoogleFonts.notoSans(
+                                                        color: (score == 0)
+                                                            ? Colors.red
+                                                            : Colors.green,
+                                                        // fontSize: totalWidth /
+                                                        //     20
+                                                        // CHANGE LATER
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: 300 / 20)),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
-                                Flexible(
-                                  flex: 4,
-                                  child: AnimatedBuilder(
-                                    animation: controller,
-                                    builder:
-                                        (BuildContext context, Widget child) {
-                                      sc = sortedScore[a] * controller.value;
-                                      score = sc.toInt();
-                                      return
-                                          // Temp();
-
-                                          Row(
-                                        children: [
-                                          Text('+ $score',
-                                              style: GoogleFonts.notoSans(
-                                                  color: (score == 0)
-                                                      ? Colors.red[800]
-                                                      : Colors.green[600],
-                                                  fontSize: totalWidth /
-                                                      20 //  CHANGE LATER
-                                                  // fontSize: 300 / 20
-                                                  )),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                )
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    );
-                  }),
+                        );
+                      }),
+                ),
+              ),
             ),
           )
         ],
