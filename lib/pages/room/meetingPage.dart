@@ -21,8 +21,9 @@ class WaitingForFriends extends StatelessWidget {
           //   style: TextStyle(color: Colors.white,
           // ),
           SpinKitThreeBounce(
-            color: Colors.yellow,
+            color: Colors.yellow[700],
             size: 40.0,
+            duration: Duration(milliseconds: 800),
           ),
         ],
       ),
@@ -34,17 +35,22 @@ class StartStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (identity == hostId)
-      return RaisedButton(
-          animationDuration: Duration(seconds: 1),
-          onPressed: (counter > 1)
-              ? () {
-                  game = true;
-                  startGame();
-                }
-              : null,
-          disabledColor: Colors.grey[700],
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+      return InkWell(
+        onTap: (counter > 1)
+            ? () {
+                audioPlayer.playSound('click');
+                game = true;
+                startGame();
+              }
+            : null,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: (counter > 1) ? Colors.green[700] : Colors.grey[700],
+            ),
+            borderRadius: BorderRadius.circular(18.0),
+            color: (counter > 1) ? Colors.green[700] : Colors.grey[700],
+          ),
           child: Padding(
             padding:
                 const EdgeInsets.symmetric(vertical: 15.0, horizontal: 22.0),
@@ -56,9 +62,9 @@ class StartStatus extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                     fontSize: 23.0)),
           ),
-          color: Colors.green[700]
-          // Color(0xFFFF4893),
-          );
+        ),
+        // Color(0xFFFF4893),
+      );
     else
       return Padding(
         padding: const EdgeInsets.only(top: 14.0, bottom: 12.0),
@@ -83,7 +89,9 @@ class StartStatus extends StatelessWidget {
     await Firestore.instance
         .collection('rooms')
         .document(documentid)
-        .updateData({'game': game, 'numberOfRounds': roundsLimit});
+        .updateData({
+      'game': game,
+    });
   }
 }
 
@@ -104,55 +112,73 @@ class JoiningList extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(top: 12.0),
               child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
                   itemCount: counter,
                   itemBuilder: (BuildContext context, int a) {
-                    return Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 4.0, left: 4.0, right: 4.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.blue[200],
-                                  // Color(0xFFFFD5D5)
-                                ),
-                                borderRadius: BorderRadius.circular(12.0),
-                                color: Colors.blue[200],
-                                gradient: LinearGradient(colors: [
-                                  Colors.blue[700],
-                                  Colors.blue[300]
-                                ])
-                                //  Color(0xFFFFD5D5),
-                                ),
-                            child: Row(
-                              // mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 9.0),
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.grey[100],
-                                      backgroundImage:
-                                          NetworkImage(playersImage[a]),
-                                      radius: 20.0,
-                                    )),
-                                Text(
-                                  players[a],
-                                  style: GoogleFonts.notoSans(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 20.0,
-                                      color: Colors.black),
-                                ),
-                              ],
-                            ),
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: 4.0, left: 4.0, right: 4.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.yellow[700],
+                            // Color(0xFFFFD5D5)
                           ),
+                          borderRadius: BorderRadius.circular(12.0),
+                          color: Colors.yellow[700],
+                          // gradient: LinearGradient(colors: [
+                          //   Colors.blue[700],
+                          //   Colors.blue[300]
+                          // ]
+                          // )
+                          //  Color(0xFFFFD5D5),
                         ),
-                        //  Divider(color: Color(0xFFFFEBCD),
-                        //  thickness: 2.0,
-                        //  indent: 60.0,
-                        //  )
-                      ],
+                        child: Row(
+                          // mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 9.0),
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.black,
+                                  radius: 21.5,
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.grey[100],
+                                    backgroundImage:
+                                        NetworkImage(playersImage[a]),
+                                    radius: 20.0,
+                                  ),
+                                )),
+                            Text(
+                              players[a],
+                              style: GoogleFonts.fredokaOne(
+                                letterSpacing: 1.4,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 20.0,
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(
+                                      // bottomLeft
+                                      offset: Offset(-1.0, -1.0),
+                                      color: Colors.black),
+                                  Shadow(
+                                      // bottomRight
+                                      offset: Offset(1.0, -1.0),
+                                      color: Colors.black),
+                                  Shadow(
+                                      // topRight
+                                      offset: Offset(2.0, 2.0),
+                                      color: Colors.black),
+                                  Shadow(
+                                      // topLeft
+                                      offset: Offset(-1.0, 1.0),
+                                      color: Colors.black),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   }),
             ),
@@ -239,19 +265,28 @@ class MeetingPage extends StatelessWidget {
     return Center(
       child: Container(
         decoration: BoxDecoration(
-          gradient: RadialGradient(radius: 0.8, colors: [
-            Colors.white,
-            Colors.blue[300],
-            Color(0xFF000080),
-            // Colors.blue[900],
-          ]),
+          gradient: RadialGradient(
+              center: Alignment(0.0, -0.2),
+              radius: 0.8,
+              colors: [
+                Colors.white,
+                Colors.blue[300],
+                Color(0xFF000080),
+                // Colors.blue[900],
+              ]),
         ),
         // color: Color(0xFFFFF1E9),
         child: Column(
           children: <Widget>[
             Flexible(flex: 2, child: RoomIdentity()),
             Flexible(flex: 4, child: JoiningList()),
-            Flexible(child: Center(child: WaitingForFriends())),
+            Flexible(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                WaitingForFriends(),
+              ],
+            )),
             Flexible(flex: 2, child: Center(child: StartStatus())),
           ],
         ),
