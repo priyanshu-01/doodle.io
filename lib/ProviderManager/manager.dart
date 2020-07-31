@@ -6,7 +6,9 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:scribbl/pages/Guesser_screen/countDown.dart';
 import 'package:scribbl/pages/Guesser_screen/guesserScreen.dart';
 import 'package:scribbl/pages/Painter_screen/painterCountDown.dart';
+import 'package:scribbl/pages/Select_room/createRoom.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
+import 'package:scribbl/pages/result.dart';
 import 'package:scribbl/pages/room/room.dart';
 import 'package:scribbl/reactions/listenReactions.dart';
 import 'package:scribbl/virtualCurrency/data.dart';
@@ -24,10 +26,15 @@ ChatData chatData;
 GuessersIdData guessersIdData;
 CustomPainterData customPainterData;
 
+List displayNames;
+List displayScores;
+String docId;
+
 class Manager extends StatefulWidget {
   final int id;
   final Currency currency;
-  Manager({Key key, @required this.id, @required this.currency})
+  final GlobalKey key;
+  Manager({this.key, @required this.id, @required this.currency})
       : super(key: key);
 
   @override
@@ -35,7 +42,7 @@ class Manager extends StatefulWidget {
 }
 
 class _ManagerState extends State<Manager> {
-  StreamSubscription<DocumentSnapshot> subscription;
+  StreamSubscription<DocumentSnapshot> firestoreRoomDataSubscription;
   @override
   void initState() {
     guesserCountDown = GuesserCountDown();
@@ -48,10 +55,11 @@ class _ManagerState extends State<Manager> {
     guessersIdData = GuessersIdData();
     customPainterData = CustomPainterData();
     game = false;
+    denChangeTrack = [];
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   reactionListener.listenReactions(context);
     // });
-    subscription = Firestore.instance
+    firestoreRoomDataSubscription = Firestore.instance
         .collection('rooms')
         .document(documentid)
         .snapshots()
@@ -59,74 +67,86 @@ class _ManagerState extends State<Manager> {
       cacheRoomData = roomData;
       roomData = event.data;
       readRoomData();
-      if (cacheRoomData == null)
-        myRoomData.rebuildRoom();
-      else
-        rebuildMinimumWidgets();
-      reactionListener.listenReactions(context);
+      if (round > numberOfRounds) {
+        docId = documentid;
+        displayNames = players;
+        displayScores = finalScore;
+        setState(() {});
+      } else {
+        if (cacheRoomData == null)
+          myRoomData.rebuildRoom();
+        else
+          rebuildMinimumWidgets();
+        reactionListener.listenReactions(context);
+      }
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          body: SafeArea(
-              child: MultiProvider(
-                  providers: [
-                ChangeNotifierProvider.value(value: widget.currency),
-                ChangeNotifierProvider(
-                  create: (context) => guesserCountDown,
-                ),
-                ChangeNotifierProvider(
-                  create: (context) => painterCountDown,
-                ),
-                ChangeNotifierProvider(
-                  create: (context) => myRoomData,
-                ),
-                ChangeNotifierProvider(
-                  create: (context) => gameScreenData,
-                ),
-                ChangeNotifierProvider(
-                  create: (context) => chatData,
-                ),
-                ChangeNotifierProvider(
-                  create: (context) => guessersIdData,
-                ),
-                ChangeNotifierProvider(
-                  create: (context) => customPainterData,
-                )
-              ],
-                  child: Stack(
-                    children: [
-                      Room(
-                        id: widget.id,
-                        currency: widget.currency,
-                      ),
-                      Positioned(
-                          right: 0.0, top: 0.0, child: VirtualCurrency()),
-                    ],
-                  ))
+    if (round > numberOfRounds) {
+      firestoreRoomDataSubscription.cancel();
+      return Result();
+    } else
+      return WillPopScope(
+          child: Scaffold(
+            resizeToAvoidBottomInset: true,
+            body: SafeArea(
+                child: MultiProvider(
+                    providers: [
+                  ChangeNotifierProvider.value(value: widget.currency),
+                  ChangeNotifierProvider(
+                    create: (context) => guesserCountDown,
+                  ),
+                  ChangeNotifierProvider(
+                    create: (context) => painterCountDown,
+                  ),
+                  ChangeNotifierProvider(
+                    create: (context) => myRoomData,
+                  ),
+                  ChangeNotifierProvider(
+                    create: (context) => gameScreenData,
+                  ),
+                  ChangeNotifierProvider(
+                    create: (context) => chatData,
+                  ),
+                  ChangeNotifierProvider(
+                    create: (context) => guessersIdData,
+                  ),
+                  ChangeNotifierProvider(
+                    create: (context) => customPainterData,
+                  )
+                ],
+                    child: Stack(
+                      children: [
+                        Room(
+                          id: widget.id,
+                          currency: widget.currency,
+                        ),
+                        Positioned(
+                            right: 0.0, top: 0.0, child: VirtualCurrency()),
+                      ],
+                    ))
 
-              //
+                //
 
-              ),
-        ),
-        onWillPop: () {
-          leaveRoomAlert(context, players, counter);
-          // return;
-        });
+                ),
+          ),
+          onWillPop: () {
+            leaveRoomAlert(context, firestoreRoomDataSubscription);
+            // return;
+          });
   }
 
   @override
   void dispose() {
-    subscription.cancel();
+    firestoreRoomDataSubscription.cancel();
     super.dispose();
   }
 
-  void leaveRoomAlert(BuildContext context, List players, int counter) {
+  void leaveRoomAlert(
+      BuildContext context, StreamSubscription firestoreRoomDataSubscription) {
     Alert(
       content: SizedBox(
         height: 50.0,
@@ -150,6 +170,7 @@ class _ManagerState extends State<Manager> {
           ),
           color: Color(0xFFFF4893),
           onPressed: () {
+            firestoreRoomDataSubscription.cancel();
             Navigator.pop(context);
             Navigator.pop(context);
             removeMe();
@@ -216,6 +237,12 @@ void rebuildMinimumWidgets() {
       !listEquals(roomData['users_id'], cacheRoomData['users_id']) ||
       roomData['host_id'] != cacheRoomData['host_id']) {
     print('rebuilding room');
+    if (roomData['userData'].containsKey(identity) &&
+        roomData['userData']['myStatus'] == 'joined' &&
+        playersId.indexOf(identity) == -1) {
+      addPlayer();
+    } //add player if not added
+    reactionListener.updateReactionRecord();
     myRoomData.rebuildRoom();
   } else if (roomData['den_id'] != cacheRoomData['den_id'] ||
       roomData['denCanvasLength'] != cacheRoomData['denCanvasLength'] ||
@@ -227,6 +254,7 @@ void rebuildMinimumWidgets() {
           cacheRoomData['userData'][identity]['lastGuess'] ||
       !listEquals(roomData['guessersId'], cacheRoomData['guessersId'])) {
     print('rebuilding guessers');
+    audioPlayer.playSound('someoneGuessed');
     guessersIdData.rebuildGuessersId();
   } else if (roomData['userData'][identity]['lastMessageIndex'] !=
           cacheRoomData['userData'][identity]['lastMessageIndex'] ||

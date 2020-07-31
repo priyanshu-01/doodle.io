@@ -8,12 +8,13 @@ import '../pages/Select_room/selectRoom.dart';
 import '../gift/gift_contents.dart';
 
 class ReactionListener {
-  Map reactionRecord = {};
+  Map reactionRecord;
 
   List vacantSpaces;
   Map spaces;
 
   ReactionListener() {
+    reactionRecord = {};
     spaces = {0: false, 1: false, 2: false, 3: false};
     vacantSpaces = [
       totalLength * 0.16,
@@ -24,12 +25,13 @@ class ReactionListener {
   }
 
   void listenReactions(BuildContext context) {
-    if (reactionRecord.length != playersId.length
-        // && game == false
-        ) initialiseRecord();
+    // if (reactionRecord.length != playersId.length
+    //     // && game == false
+    //     ) initialiseRecord();
 
     roomData['userData'].forEach((key, value) {
       if (reactionRecord.containsKey(key) &&
+          // value['lastReaction'] != null &&
           value['lastReaction'] != reactionRecord[key]) {
         Timer(Duration(milliseconds: 350), () async {
           audioPlayer.playSound('reaction');
@@ -46,13 +48,14 @@ class ReactionListener {
     });
   }
 
-  void initialiseRecord() {
-    playersId.forEach((element) {
-      reactionRecord.update(
-        '$element',
-        (value) => null,
-        ifAbsent: () => null,
-      );
+  void updateReactionRecord() {
+    roomData['userData'].forEach((key, value) {
+      if (!reactionRecord.containsKey(key))
+        reactionRecord.update(
+          '$key',
+          (value) => roomData['userData']['$key']['lastReaction'],
+          ifAbsent: () => roomData['userData']['$key']['lastReaction'],
+        );
     });
   }
 

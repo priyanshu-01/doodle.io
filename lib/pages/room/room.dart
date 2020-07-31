@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:scribbl/ProviderManager/data.dart';
-import 'package:scribbl/pages/Painter_screen/painterScreen.dart';
 import 'package:scribbl/virtualCurrency/data.dart';
 import 'gameScreen.dart';
 import '../Select_room/selectRoom.dart';
@@ -26,12 +25,11 @@ List tempScore = new List();
 List finalScore = new List();
 int round = 1;
 double denCanvasLength;
-int numberOfRounds = 3;
 Map roomData;
 List chat = [];
 bool flag = false;
 String documentid;
-List denChangeTrack;
+List denChangeTrack = [];
 Map<String, dynamic> record;
 List allAttemptedWords = [];
 
@@ -48,14 +46,10 @@ class Room extends StatelessWidget {
     if (roomData == null)
       return Container();
     else {
-      if (playersId.indexOf(identity) == -1 && !flag) {
-        addPlayer();
-      } //add player if not added
-
       if (game == false) {
         if (currency.coinsAmountColor != Colors.white) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            currency.coinsColor = Colors.black;
+            currency.coinsColor = Colors.white;
           });
         }
         return MeetingPage();
@@ -80,43 +74,47 @@ void addPlayer() {
   tempScore = tempScore + [0];
   finalScore = finalScore + [0];
   playersImage = playersImage + [imageUrl];
-  updatePlayerData();
+  updatePlayerData('joined');
   flag = true;
 }
 
 Future<void> removeMe() async {
   counter = counter - 1;
-  int plInd = playersId.indexOf(identity);
-  players.removeAt(plInd);
-  playersId.removeAt(plInd);
-  tempScore.removeAt(plInd);
-  finalScore.removeAt(plInd);
-  playersImage.removeAt(plInd);
-  updatePlayerData();
-  if (players.length == 0) {
-    // del doc
-    await Firestore.instance
-        .collection('rooms')
-        .document(documentid)
-        .delete()
-        .catchError((e) {
-      print(e);
-      print('its an error');
-    });
-  } else {
-    if (hostId == identity) {
+  int myIndex = playersId.indexOf(identity);
+  players.removeAt(myIndex);
+  playersId.removeAt(myIndex);
+  tempScore.removeAt(myIndex);
+  finalScore.removeAt(myIndex);
+  playersImage.removeAt(myIndex);
+  updatePlayerData('left').then((value) async {
+    if (players.length == 0) {
+      // del doc
       await Firestore.instance
           .collection('rooms')
           .document(documentid)
-          .updateData({'host': players[0], 'host_id': playersId[0]});
+          .delete()
+          .catchError((e) {
+        print(e);
+        print('its an error');
+      });
+    } else {
+      if (hostId == identity) {
+        await Firestore.instance
+            .collection('rooms')
+            .document(documentid)
+            .updateData(
+                {'host': players[0], 'host_id': playersId[0]}).whenComplete(() {
+          if (denId == identity)
+            changeDenWhileLeaving('room.dart line 433', myIndex);
+        });
+      } else if (denId == identity) {
+        changeDenWhileLeaving('room.dart line 433', myIndex);
+      }
     }
-    if (denId == identity) {
-      changeDen('room.dart line 433');
-    }
-  }
+  });
 }
 
-Future<void> updatePlayerData() async {
+Future<void> updatePlayerData(String myStatus) async {
   await Firestore.instance.collection('rooms').document(documentid).updateData({
     'users': players,
     'counter': counter,
@@ -125,10 +123,55 @@ Future<void> updatePlayerData() async {
     'finalScore': finalScore,
     'usersImage': playersImage,
     'userData.$identity': {
+      'name': userNam,
+      'myStatus': myStatus,
       'lastGuess': '',
       'lastMessageIndex': null,
-      'denChangeTrack': [],
+      'denChangeTrack': denChangeTrack,
       'lastReaction': null,
     }
+  });
+}
+
+Future<void> changeDenWhileLeaving(String source, int myIndex) async {
+  record = {
+    'name': userNam,
+    'beforeChangeDenId': denId,
+    'beforeChangeDenName': userNam,
+    'round': round,
+    'myIndex': 'left',
+    'indexOfDenner': 'left',
+    'word': word,
+    'source': source,
+    'guessersId': guessersId,
+    'no. of guessers': guessersId.length
+  };
+  denChangeTrack = denChangeTrack + [record];
+  word = '*';
+  int s = myIndex - 1;
+  if (s == players.length - 1) {
+    s = 0;
+    round = round + 1;
+  } else
+    s = s + 1;
+  for (int k = 0; k < tempScore.length; k++) {
+    tempScore[k] = 0;
+  }
+
+  await Firestore.instance.collection('rooms').document(documentid).updateData({
+    'den': players[s],
+    'den_id': playersId[s],
+    'xpos': {},
+    'ypos': {},
+    'word': '*',
+    'length': 0,
+    'wordChosen': false,
+    'indices': [0],
+    'colorIndexStack': [0],
+    'pointer': 0,
+    'guessersId': [],
+    'tempScore': tempScore,
+    'round': round,
+    'userData.$identity.denChangeTrack': denChangeTrack
   });
 }

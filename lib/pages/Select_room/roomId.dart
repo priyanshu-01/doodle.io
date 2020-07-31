@@ -6,6 +6,7 @@ import 'package:scribbl/virtualCurrency/data.dart';
 import '../room/room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:beauty_textfield/beauty_textfield.dart';
+import '../../ProviderManager/manager.dart';
 
 bool mistake = false;
 String enteredId;
@@ -63,7 +64,9 @@ class _EnterRoomIdState extends State<EnterRoomId> {
             onTap: () => (!processingJoinRoom)
                 ? {
                     flag = false,
-                    (enteredId != "" && (!enteredId.contains(' ')))
+                    (enteredId != "" &&
+                            enteredId != null &&
+                            (!enteredId.contains(' ')))
                         ? val = int.parse(enteredId)
                         : val = 0,
                     getDetails(context)
@@ -127,29 +130,33 @@ class _EnterRoomIdState extends State<EnterRoomId> {
   }
 
   Future<void> getDetails(BuildContext context) async {
-    await audioPlayer.playSound('click');
+    audioPlayer.playSound('click');
 
     setState(() {
       if (mistake == true) mistake = false;
       processingJoinRoom = true;
     });
-    QuerySnapshot qs;
+    // QuerySnapshot qs;
     var ref = Firestore.instance;
-    qs = await ref
+    await ref
         .collection("rooms")
         .where('id', isEqualTo: val)
-        .getDocuments();
-
-    if (qs.documents.length != 0) {
-      processingJoinRoom = false;
-      documentid = qs.documents[0].documentID;
-      Navigator.pop(context);
-      Navigator.push(context, createRoute(val, widget.currency));
-    } else {
-      setState(() {
+        .getDocuments()
+        .then((value) {
+      if (value.documents.length != 0) {
         processingJoinRoom = false;
-        mistake = true;
-      });
-    }
+        documentid = value.documents[0].documentID;
+        roomData = value.documents[0].data;
+        readRoomData();
+        if (playersId.indexOf(identity) == -1) addPlayer();
+        Navigator.pop(context);
+        Navigator.push(context, createRoute(val, widget.currency));
+      } else {
+        setState(() {
+          processingJoinRoom = false;
+          mistake = true;
+        });
+      }
+    });
   }
 }

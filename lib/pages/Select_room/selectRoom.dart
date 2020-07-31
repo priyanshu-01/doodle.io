@@ -25,16 +25,17 @@ import 'functions.dart';
 AudioPlayer audioPlayer;
 
 ReactionListener reactionListener;
-// double effectiveLength = 0;
 String userNam;
 String identity;
 int id;
 bool initialiseDimension = true;
-bool online;
+bool online = true;
 double totalWidth;
 double totalLength;
 double keyboardHeight;
 List wordList;
+double myDenCanvasLength;
+// GlobalKey managerKey;
 
 Map<String, Color> color = {
   //'bg2': Color(0xFF2994b2),
@@ -89,6 +90,7 @@ class _SelectRoomState extends State<SelectRoom> {
     if (initialiseDimension) {
       // effectiveLength = MediaQuery.of(context).size.height;
       totalLength = MediaQuery.of(context).size.height;
+      myDenCanvasLength = (totalLength - 20) * (2 / 3) * (9 / 11);
       keyboardHeight = totalLength * 0.3;
       guessCanvasLength = ((totalLength - 50 - 20 - keyboardHeight) * (7 / 8));
       // guessCanvasLength = ((totalLength - 50) * 0.6) * (7 / 8);
@@ -101,16 +103,6 @@ class _SelectRoomState extends State<SelectRoom> {
     }
     String first = userNam.substring(0, userNam.indexOf(' ') + 1);
     userNam = first;
-    switch (_source.keys.toList()[0]) {
-      case ConnectivityResult.none:
-        online = false;
-        break;
-      case ConnectivityResult.mobile:
-        online = true;
-        break;
-      case ConnectivityResult.wifi:
-        online = true;
-    }
   }
 
   @override
@@ -122,8 +114,23 @@ class _SelectRoomState extends State<SelectRoom> {
     identity = widget.uid;
     _connectivity.initialise();
     _connectivity.myStream.listen((source) {
-      setState(() => _source = source);
+      // setState(
+      //   () =>
+      _source = source;
+      //  );
+      switch (_source.keys.toList()[0]) {
+        case ConnectivityResult.none:
+          online = false;
+          break;
+        case ConnectivityResult.mobile:
+          online = true;
+          break;
+        case ConnectivityResult.wifi:
+          online = true;
+      }
+      print('is online: $online');
     });
+
     super.initState();
   }
 
@@ -149,7 +156,7 @@ class _SelectRoomState extends State<SelectRoom> {
         body: SafeArea(
           child: Container(
             decoration: new BoxDecoration(
-              color: color['bg'],
+              // color: Colors.transparent,
               gradient: RadialGradient(radius: 1.0, colors: [
                 Colors.blue[200],
                 Color(0xFF000080),
@@ -332,7 +339,7 @@ Future<void> addRoom(String uid) async {
     'host_id': uid,
     'den': userNam,
     'den_id': uid,
-    'numberOfRounds': 3,
+    'numberOfRounds': numberOfRounds,
     'round': 1,
     'word': '*',
     'wordChosen': false,
@@ -349,7 +356,14 @@ Future<void> addRoom(String uid) async {
     'userData': {},
   }).catchError((e) {
     print('error $e');
-  }).then((value) => documentid = value.documentID);
+  }).then((value) async {
+    documentid = value.documentID;
+    await value.get().then((value) {
+      roomData = value.data;
+      readRoomData();
+      addPlayer();
+    });
+  });
 }
 
 class ButtonCreateRoom extends StatelessWidget {
