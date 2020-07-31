@@ -119,6 +119,10 @@ class _KeyboardListenerState extends State<KeyboardListener> {
     guessCanvasLength = ((totalLength - 50 - 20 - keyboardHeight) * (7 / 8));
     avatarTopPadding = (guessCanvasLength / 4) - (avatarPhotoSize / 2);
     avatarTopIconPadding = guessCanvasLength;
+    if (word == '*')
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        gameScreenData.rebuildGameScreen();
+      });
   }
 
   @override
@@ -446,7 +450,7 @@ class _TextBoxState extends State<TextBox> {
         if (guessersId.indexOf(identity) == -1) {
           if (guessersId.length < counter - 2) showPopup(context);
           calculateScore();
-          updateGuesserId();
+          updateGuesserIdAndScore();
           newMessage = '$identity[$userNam]$message';
           chat.add(newMessage);
           sendMessage();
@@ -458,7 +462,6 @@ class _TextBoxState extends State<TextBox> {
       }
     }
     message = '';
-    // fn.unfocus();
   }
 
   void showPopup(context) {
@@ -472,15 +475,6 @@ class _TextBoxState extends State<TextBox> {
         duration: Duration(seconds: 1),
         color: Colors.green[700])
       ..show();
-  }
-
-  Future<void> updateGuesserId() async {
-    await Firestore.instance
-        .collection('rooms')
-        .document(documentid)
-        .updateData({
-      'userData.$identity.lastGuess': '$denId $round',
-    });
   }
 
   void calculateScore() {
@@ -498,5 +492,35 @@ class _TextBoxState extends State<TextBox> {
     //2 percentage of people who have already guessed
 
     //claculate score for denner
+  }
+
+  Future<void> updateGuesserIdAndScore() async {
+    int place = playersId.indexOf(identity);
+    tempScore[place] = score;
+    int previousScore = finalScore[place];
+    int newScore = previousScore + score;
+    finalScore[place] = newScore;
+    guessersId = guessersId + [identity];
+    int ind = playersId.indexOf(denId);
+    int sum = 0;
+    for (int k = 0; k < tempScore.length; k++) {
+      if (k == ind) continue;
+      sum = sum + tempScore[k];
+    }
+    sum = sum ~/ (counter - 1);
+    tempScore[ind] = sum;
+    finalScore[ind] = finalScore[ind] + sum;
+    //madeIt = true;
+    // score = 0;
+
+    await Firestore.instance
+        .collection('rooms')
+        .document(documentid)
+        .updateData({
+      'tempScore': tempScore,
+      'finalScore': finalScore,
+      'guessersId': guessersId,
+      'userData.$identity.lastGuess': '$denId $round',
+    });
   }
 }

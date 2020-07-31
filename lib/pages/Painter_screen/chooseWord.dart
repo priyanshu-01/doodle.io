@@ -80,42 +80,28 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
                     child: Column(
                       children: <Widget>[
                         FlatButton(
-                          color: wordBack,
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(20.0)),
-                          child: Text(
-                            displayWords[0].toUpperCase(),
-                            style: wordStyle,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              onWordPressed(displayWords[0]);
-                            });
-                          },
-                        ),
+                            color: wordBack,
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(20.0)),
+                            child: Text(
+                              displayWords[0].toUpperCase(),
+                              style: wordStyle,
+                            ),
+                            onPressed: () => onWordPressed(displayWords[0])),
                         FlatButton(
-                          color: wordBack,
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(20.0)),
-                          child: Text(displayWords[1].toUpperCase(),
-                              style: wordStyle),
-                          onPressed: () {
-                            setState(() {
-                              onWordPressed(displayWords[1]);
-                            });
-                          },
-                        ),
+                            color: wordBack,
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(20.0)),
+                            child: Text(displayWords[1].toUpperCase(),
+                                style: wordStyle),
+                            onPressed: () => onWordPressed(displayWords[1])),
                         FlatButton(
                           color: wordBack,
                           shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(20.0)),
                           child: Text(displayWords[2].toUpperCase(),
                               style: wordStyle),
-                          onPressed: () {
-                            setState(() {
-                              onWordPressed(displayWords[2]);
-                            });
-                          },
+                          onPressed: () => onWordPressed(displayWords[2]),
                         ),
                         SizedBox(
                           height: totalLength * 0.03,
@@ -134,12 +120,15 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
   }
 
   void onWordPressed(String choosen) {
-    choosenWord = choosen;
-    topPadding = totalLength * 0.8;
-    curve = Curves.easeInBack;
-    duration = Duration(milliseconds: 500);
-    wordCheck.addWord(choosen);
-    allAttemptedWords = allAttemptedWords + [choosen];
+    audioPlayer.playSound('click');
+    setState(() {
+      choosenWord = choosen;
+      topPadding = totalLength * 0.8;
+      curve = Curves.easeInBack;
+      duration = Duration(milliseconds: 500);
+      wordCheck.addWord(choosen);
+      allAttemptedWords = allAttemptedWords + [choosen];
+    });
   }
 
   void getWords() async {

@@ -8,6 +8,9 @@ import 'package:scribbl/pages/room/room.dart';
 import 'package:scribbl/virtualCurrency/data.dart';
 import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 
+// int roundsLimit = 3;
+int numberOfRounds = 3;
+
 class MakeRoom extends StatefulWidget {
   final Currency currency;
   final String uid;
@@ -77,6 +80,7 @@ class _MakeRoomState extends State<MakeRoom> {
   }
 
   void createRoom() {
+    audioPlayer.playSound('click');
     setState(() {
       processingCreateRoom = true;
     });
@@ -97,8 +101,6 @@ class _MakeRoomState extends State<MakeRoom> {
   }
 }
 
-int roundsLimit = 3;
-
 class DisplayRound extends StatefulWidget {
   @override
   _DisplayRoundState createState() => _DisplayRoundState();
@@ -114,9 +116,9 @@ class _DisplayRoundState extends State<DisplayRound> {
           style: TextStyle(color: Colors.white),
         ),
         StepperSwipe(
-          initialValue: roundsLimit,
+          initialValue: numberOfRounds,
           onChanged: (int val) {
-            roundsLimit = val;
+            numberOfRounds = val;
           },
           direction: Axis.horizontal,
           secondIncrementDuration: Duration(milliseconds: 500),
@@ -142,17 +144,17 @@ class _DisplayRoundState extends State<DisplayRound> {
               size: 45.0,
             ),
             onPressed: () {
-              (roundsLimit == 1)
+              (numberOfRounds == 1)
                   ? null
                   : setState(() {
-                      roundsLimit = roundsLimit - 1;
+                      numberOfRounds = numberOfRounds - 1;
                     });
             },
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
-              '$roundsLimit',
+              '$numberOfRounds',
               style: TextStyle(
                 fontSize: 20.0,
               ),
@@ -164,10 +166,10 @@ class _DisplayRoundState extends State<DisplayRound> {
               size: 45.0,
             ),
             onPressed: () {
-              (roundsLimit == 5)
+              (numberOfRounds == 5)
                   ? null
                   : setState(() {
-                      roundsLimit = roundsLimit + 1;
+                      numberOfRounds = numberOfRounds + 1;
                     });
             },
           ),

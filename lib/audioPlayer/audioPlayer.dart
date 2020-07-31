@@ -23,6 +23,7 @@ class AudioPlayer {
   Future<void> playSound(String soundType) async {
     Future<int> soundId = soundTracks[soundType];
     var sound = await soundId;
-    int streamId = await pool.play(sound);
+    // int streamId =
+    await pool.play(sound);
   }
 }

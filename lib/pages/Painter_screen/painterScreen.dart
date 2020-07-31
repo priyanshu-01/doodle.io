@@ -67,7 +67,7 @@ class _ChooseOrDrawState extends State<ChooseOrDraw> {
         return Painter();
       } else {
         timerRunning2 = false;
-        subs.cancel();
+        if (subs != null) subs.cancel();
         return WordWas();
       }
     } else

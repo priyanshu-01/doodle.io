@@ -85,17 +85,19 @@ class ChatList extends StatelessWidget {
                           SizedBox(
                             width: 8.0,
                           ),
-                          CircleAvatar(
-                            backgroundColor: Colors.black,
-                            radius: 14.0,
-                            child: CircleAvatar(
-                              radius: 13.0,
-                              backgroundColor: Colors.grey[100],
-                              backgroundImage: NetworkImage(playersImage[
-                                  playersId
-                                      .indexOf(i)]), //error by crashlytics+1
-                            ),
-                          )
+                          (playersId.indexOf(i) == -1)
+                              ? Container()
+                              : CircleAvatar(
+                                  backgroundColor: Colors.black,
+                                  radius: 14.0,
+                                  child: CircleAvatar(
+                                    radius: 13.0,
+                                    backgroundColor: Colors.grey[100],
+                                    backgroundImage: NetworkImage(playersImage[
+                                        playersId.indexOf(
+                                            i)]), //error by crashlytics+1
+                                  ),
+                                )
                         ],
                       ),
                     )

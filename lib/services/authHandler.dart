@@ -107,6 +107,8 @@ Widget fetchFutureGoogle() {
           userFirebaseDocument = snapshot.data.documents[0];
           dataDocId = userFirebaseDocument.documentID;
           coins = userFirebaseDocument['coins'];
+          name = userFirebaseDocument['name'];
+          imageUrl = userFirebaseDocument['imageUrl'];
           wordCheck = WordCheck(userFirebaseDocument: userFirebaseDocument);
           gamesPlayed = userFirebaseDocument['gamesPlayed'];
           (gamesPlayed == null) ? gamesPlayed = 0 : null;

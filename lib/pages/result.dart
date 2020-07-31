@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:scribbl/pages/loginPage.dart';
-import 'room/room.dart';
-import 'room/gameScreen.dart';
+// import 'room/room.dart';
+// import 'room/gameScreen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'Select_room/selectRoom.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/authHandler.dart';
+import '../ProviderManager/manager.dart';
 
 class Result extends StatefulWidget {
   @override
@@ -25,7 +26,7 @@ class _ResultState extends State<Result> {
 
   @override
   Widget build(BuildContext context) {
-    return ResultContent();
+    return Scaffold(body: ResultContent());
   }
 }
 
