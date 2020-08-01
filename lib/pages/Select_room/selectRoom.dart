@@ -91,6 +91,7 @@ class _SelectRoomState extends State<SelectRoom> {
       // effectiveLength = MediaQuery.of(context).size.height;
       totalLength = MediaQuery.of(context).size.height;
       myDenCanvasLength = (totalLength - 20) * (2 / 3) * (9 / 11);
+      denCanvasLength = myDenCanvasLength;
       keyboardHeight = totalLength * 0.3;
       guessCanvasLength = ((totalLength - 50 - 20 - keyboardHeight) * (7 / 8));
       // guessCanvasLength = ((totalLength - 50) * 0.6) * (7 / 8);
@@ -107,9 +108,9 @@ class _SelectRoomState extends State<SelectRoom> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      audioPlayer = AudioPlayer();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   audioPlayer = AudioPlayer();
+    // });
 
     identity = widget.uid;
     _connectivity.initialise();
@@ -358,10 +359,10 @@ Future<void> addRoom(String uid) async {
     print('error $e');
   }).then((value) async {
     documentid = value.documentID;
-    await value.get().then((value) {
+    await value.get().then((value) async {
       roomData = value.data;
       readRoomData();
-      addPlayer();
+      await addPlayer();
     });
   });
 }

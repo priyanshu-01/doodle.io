@@ -31,7 +31,7 @@ class ReactionListener {
 
     roomData['userData'].forEach((key, value) {
       if (reactionRecord.containsKey(key) &&
-          // value['lastReaction'] != null &&
+          value['lastReaction'] != null &&
           value['lastReaction'] != reactionRecord[key]) {
         Timer(Duration(milliseconds: 350), () async {
           audioPlayer.playSound('reaction');

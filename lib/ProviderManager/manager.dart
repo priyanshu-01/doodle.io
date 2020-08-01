@@ -54,8 +54,14 @@ class _ManagerState extends State<Manager> {
     chatData = ChatData();
     guessersIdData = GuessersIdData();
     customPainterData = CustomPainterData();
-    game = false;
+    // game = false;
     denChangeTrack = [];
+    if (roomData['userData'].containsKey(identity) &&
+        roomData['userData'][identity]['myStatus'] == 'joined' &&
+        playersId.indexOf(identity) == -1) {
+      addPlayer();
+    } //add player if not added
+    reactionListener.updateReactionRecord();
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   reactionListener.listenReactions(context);
     // });
@@ -236,13 +242,13 @@ void rebuildMinimumWidgets() {
       roomData['counter'] != cacheRoomData['counter'] ||
       !listEquals(roomData['users_id'], cacheRoomData['users_id']) ||
       roomData['host_id'] != cacheRoomData['host_id']) {
-    print('rebuilding room');
+    reactionListener.updateReactionRecord();
     if (roomData['userData'].containsKey(identity) &&
-        roomData['userData']['myStatus'] == 'joined' &&
+        roomData['userData'][identity]['myStatus'] == 'joined' &&
         playersId.indexOf(identity) == -1) {
       addPlayer();
-    } //add player if not added
-    reactionListener.updateReactionRecord();
+    }
+    print('rebuilding room');
     myRoomData.rebuildRoom();
   } else if (roomData['den_id'] != cacheRoomData['den_id'] ||
       roomData['denCanvasLength'] != cacheRoomData['denCanvasLength'] ||

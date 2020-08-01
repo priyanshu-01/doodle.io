@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:scribbl/audioPlayer/audioPlayer.dart';
 import 'package:scribbl/pages/enterName.dart';
 import 'package:scribbl/services/anon.dart';
 import 'package:scribbl/services/authService.dart';
@@ -29,7 +30,7 @@ class AuthHandler extends StatelessWidget {
         stream: FirebaseAuth.instance.onAuthStateChanged,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return SignIn(); //loading page
+            return Loading(); //loading page
           else if (snapshot.hasData && snapshot.data != null) {
             if (snapshot.data.isAnonymous) {
               check = signInMethod.anonymous;
@@ -57,7 +58,7 @@ Widget fetchFutureAnonymous() {
         .getDocuments(),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting)
-        return SignIn();
+        return Loading();
       else {
         if (snapshot.data.documents.length == 0) {
           name = enteredName;
@@ -75,15 +76,7 @@ Widget fetchFutureAnonymous() {
           (gamesPlayed == null) ? gamesPlayed = 0 : null;
           AuthSignIn().activate();
         }
-        currency = Currency(coins: coins);
-        return SelectRoom(
-          currency: currency,
-          email: email,
-          imageUrl: imageUrl,
-          userName: name,
-          name: name,
-          uid: uid,
-        );
+        return LoadingCompleted();
       }
     },
   );
@@ -97,7 +90,7 @@ Widget fetchFutureGoogle() {
         .getDocuments(),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting)
-        return SignIn();
+        return Loading();
       else {
         if (snapshot.data.documents.length == 0) {
           coins = 200;
@@ -114,16 +107,46 @@ Widget fetchFutureGoogle() {
           (gamesPlayed == null) ? gamesPlayed = 0 : null;
           AuthProvider().activate();
         }
-        currency = Currency(coins: coins);
-        return SelectRoom(
-          currency: currency,
-          email: email,
-          imageUrl: imageUrl,
-          userName: name,
-          name: name,
-          uid: uid,
-        );
+        return LoadingCompleted();
       }
     },
   );
+}
+
+class LoadingCompleted extends StatefulWidget {
+  @override
+  _LoadingCompletedState createState() => _LoadingCompletedState();
+}
+
+class _LoadingCompletedState extends State<LoadingCompleted> {
+  bool soundsLoaded = false;
+  @override
+  void initState() {
+    initialiseWorkingData();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!soundsLoaded) {
+      print('loading sounds...');
+      return Loading();
+    } else
+      return SelectRoom(
+          userName: name,
+          currency: currency,
+          uid: uid,
+          imageUrl: imageUrl,
+          name: name,
+          email: email);
+  }
+
+  initialiseWorkingData() {
+    currency = Currency(coins: coins);
+    audioPlayer = AudioPlayer();
+    audioPlayer.initialiseSounds().whenComplete(() => setState(() {
+          print('sound Loaded');
+          soundsLoaded = true;
+        }));
+  }
 }

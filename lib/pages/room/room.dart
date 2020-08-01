@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:scribbl/ProviderManager/data.dart';
+import 'package:scribbl/ProviderManager/manager.dart';
 import 'package:scribbl/virtualCurrency/data.dart';
 import 'gameScreen.dart';
 import '../Select_room/selectRoom.dart';
@@ -67,14 +68,14 @@ class Room extends StatelessWidget {
   }
 }
 
-void addPlayer() {
+Future<void> addPlayer() async {
   players = players + [userNam];
   counter = counter + 1;
   playersId = playersId + [identity];
   tempScore = tempScore + [0];
   finalScore = finalScore + [0];
   playersImage = playersImage + [imageUrl];
-  updatePlayerData('joined');
+  await updatePlayerData('joined');
   flag = true;
 }
 
@@ -130,6 +131,15 @@ Future<void> updatePlayerData(String myStatus) async {
       'denChangeTrack': denChangeTrack,
       'lastReaction': null,
     }
+  }).whenComplete(() async {
+    await Firestore.instance
+        .collection('rooms')
+        .document(documentid)
+        .get()
+        .then((value) {
+      roomData = value.data;
+      readRoomData();
+    });
   });
 }
 

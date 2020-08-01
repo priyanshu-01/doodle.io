@@ -148,9 +148,11 @@ class _EnterRoomIdState extends State<EnterRoomId> {
         documentid = value.documents[0].documentID;
         roomData = value.documents[0].data;
         readRoomData();
-        if (playersId.indexOf(identity) == -1) addPlayer();
-        Navigator.pop(context);
-        Navigator.push(context, createRoute(val, widget.currency));
+        if (playersId.indexOf(identity) == -1)
+          addPlayer().whenComplete(() {
+            Navigator.pop(context);
+            Navigator.push(context, createRoute(val, widget.currency));
+          });
       } else {
         setState(() {
           processingJoinRoom = false;
