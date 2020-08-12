@@ -3,7 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'authHandler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AuthProvider {
+class GoogleAuthentication {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   Future<bool> signInWithGoogle() async {
@@ -33,7 +33,7 @@ class AuthProvider {
     email = '  ';
     uid = '  ';
     coins = 0;
-    AuthProvider().deactivate();
+    GoogleAuthentication().deactivate();
     print("signOutWithGoogle succeeded");
     await _auth.signOut();
   }

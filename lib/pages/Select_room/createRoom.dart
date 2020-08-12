@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scribbl/ProviderManager/manager.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
 import 'package:scribbl/pages/room/room.dart';
 import 'package:scribbl/virtualCurrency/data.dart';
@@ -184,4 +186,44 @@ class _DisplayRoundState extends State<DisplayRound> {
       ),
     );
   }
+}
+
+Future<void> addRoom(String uid) async {
+  await Firestore.instance.collection('rooms').add({
+    'id': id,
+    'game': false,
+    'counter': 0,
+    'guessersId': [],
+    'users': [],
+    'users_id': [],
+    'usersImage': [],
+    'host': userNam,
+    'host_id': uid,
+    'den': userNam,
+    'den_id': uid,
+    'numberOfRounds': numberOfRounds,
+    'round': 1,
+    'word': '*',
+    'wordChosen': false,
+    'tempScore': [],
+    'finalScore': [],
+    'chat': [],
+    'indices': [0],
+    'pointer': 0,
+    'length': 0,
+    'xpos': [],
+    'ypos': [],
+    'allAttemptedWords': [],
+    'colorIndexStack': [0],
+    'userData': {},
+  }).catchError((e) {
+    print('error $e');
+  }).then((value) async {
+    documentid = value.documentID;
+    await value.get().then((value) async {
+      roomData = value.data;
+      readRoomData();
+      await addPlayer();
+    });
+  });
 }

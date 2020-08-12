@@ -3,7 +3,7 @@ import 'authHandler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../pages/enterName.dart';
 
-class AuthSignIn {
+class AnonymousAuthentication {
   Future<void> activate() async {
     await Firestore.instance
         .collection('users anonymous')
@@ -22,7 +22,7 @@ class AuthSignIn {
     await Firestore.instance.collection('users anonymous').add({
       'uid': uid,
       'coins': coins,
-      'name': enteredName,
+      'name': name,
       'active': true,
       'imageUrl': imageUrl,
       'attemptedWords': [],
@@ -39,19 +39,18 @@ class AuthSignIn {
       print(e);
     }
   }
-}
 
-Future<void> signOut() async {
-  try {
-    await AuthSignIn().deactivate();
-    name = '  ';
-    uid = '  ';
-    dataDocId = '  ';
-    enteredName = '';
-    coins = 0;
-    print('signoutAnonymous success');
-    await FirebaseAuth.instance.signOut();
-  } catch (e) {
-    print(e);
+  Future<void> signOutAnonymous() async {
+    try {
+      await AnonymousAuthentication().deactivate();
+      name = '  ';
+      uid = '  ';
+      dataDocId = '  ';
+      coins = 0;
+      print('signoutAnonymous success');
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print(e);
+    }
   }
 }

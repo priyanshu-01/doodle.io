@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:scribbl/OverlayManager/overlayBuilder.dart';
 import 'package:scribbl/ProviderManager/manager.dart';
 import 'package:scribbl/audioPlayer/audioPlayer.dart';
+import 'package:scribbl/pages/Select_room/OverlayWidgets/myProfile.dart';
 import 'package:scribbl/services/authHandler.dart';
 import 'package:scribbl/virtualCurrency/data.dart';
 import 'package:scribbl/virtualCurrency/virtualCurrency.dart';
@@ -22,8 +24,8 @@ import 'package:spring_button/spring_button.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'functions.dart';
 
+GlobalKey circleAvatarKey = GlobalKey();
 AudioPlayer audioPlayer;
-
 ReactionListener reactionListener;
 String userNam;
 String identity;
@@ -35,17 +37,10 @@ double totalLength;
 double keyboardHeight;
 List wordList;
 double myDenCanvasLength;
-// GlobalKey managerKey;
 
 Map<String, Color> color = {
-  //'bg2': Color(0xFF2994b2),
   'bg': Color(0xfffffbe0),
-  //'buttonBg': Color(0xFF2d4059),
-  // 'buttonBg': Color(0xFF120136),
-  //'bg2': Color(0xFFfde9c9),
-// 'buttonBg': Color(0xFFfcbf1e),
   'buttonBg': Colors.yellow[700],
-
   'bg2': Color(0xfffffbe0),
   'buttonText': Color(0xFFea5455),
   'blackShade': Color(0xFF343434)
@@ -88,7 +83,6 @@ class _SelectRoomState extends State<SelectRoom> {
   void performRebuildCalculations() {
     resumed = true;
     if (initialiseDimension) {
-      // effectiveLength = MediaQuery.of(context).size.height;
       totalLength = MediaQuery.of(context).size.height;
       myDenCanvasLength = (totalLength - 20) * (2 / 3) * (9 / 11);
       denCanvasLength = myDenCanvasLength;
@@ -108,17 +102,10 @@ class _SelectRoomState extends State<SelectRoom> {
 
   @override
   void initState() {
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   audioPlayer = AudioPlayer();
-    // });
-
     identity = widget.uid;
     _connectivity.initialise();
     _connectivity.myStream.listen((source) {
-      // setState(
-      //   () =>
       _source = source;
-      //  );
       switch (_source.keys.toList()[0]) {
         case ConnectivityResult.none:
           online = false;
@@ -159,104 +146,132 @@ class _SelectRoomState extends State<SelectRoom> {
             decoration: new BoxDecoration(
               // color: Colors.transparent,
               gradient: RadialGradient(radius: 1.0, colors: [
-                Colors.blue[200],
+                Colors.blue[300],
                 Color(0xFF000080),
               ]),
             ),
             child: Column(
-              children: <Widget>[
+              children: [
                 Flexible(
-                  flex: 2,
+                  flex: 1,
                   child: ShowDrawer(
-                    imageUrl: widget.imageUrl,
+                    imageUrl: imageUrl,
                     scaffoldKey: _scaffoldKey,
                   ),
                 ),
-                Flexible(flex: 1, child: Container()),
                 Flexible(
-                  flex: 16,
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: SpringButton(
-                            SpringButtonType.OnlyScale,
-                            Container(
-                              decoration: BoxDecoration(
-                                  // gradient: gradient,
-                                  color: color['buttonBg'],
-                                  border: Border.all(color: color['buttonBg']),
-                                  borderRadius: BorderRadius.circular(18.0)),
-                              child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 18.0, horizontal: 10.0),
-                                  child: ButtonCreateRoom()),
-                            ),
-                            alignment: Alignment.center,
-                            onTap: () => (!createRoomPressed)
-                                ? onPressedCreateRoom(widget.currency)
-                                : null,
-                            useCache: true,
-                            scaleCoefficient: 0.80,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: SpringButton(
-                            SpringButtonType.OnlyScale,
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: color['buttonBg'],
-                                  // gradient: gradient,
-                                  border: Border.all(color: color['buttonBg']),
-                                  borderRadius: BorderRadius.circular(18.0)),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 18.0, horizontal: 20.0),
-                                child: Text(
-                                  'JOIN ROOM',
-                                  style: GoogleFonts.fredokaOne(
-                                      letterSpacing: 1.4,
-                                      shadows: [
-                                        Shadow(
-                                            // bottomLeft
-                                            offset: Offset(-1.0, -1.0),
-                                            color: Colors.black),
-                                        Shadow(
-                                            // bottomRight
-                                            offset: Offset(1.0, -1.0),
-                                            color: Colors.black),
-                                        Shadow(
-                                            // topRight
-                                            offset: Offset(2.5, 2.5),
-                                            color: Colors.black),
-                                        Shadow(
-                                            // topLeft
-                                            offset: Offset(-1.0, 1.0),
-                                            color: Colors.black),
-                                      ],
-                                      //color: Colors.orange[700],
-                                      color: color['bg2'],
-                                      fontSize: 25.0,
-                                      fontWeight: FontWeight.w800),
+                  flex: 5,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                          flex: 1,
+                          child: Column(
+                            // mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  alignment: Alignment.bottomCenter,
+                                  child: InkWell(
+                                    onTap: () {
+                                      (check == signInMethod.google)
+                                          ? GoogleAuthentication()
+                                              .signOutGoogle()
+                                          : AnonymousAuthentication()
+                                              .signOutAnonymous();
+                                    },
+                                    child: Container(
+                                      child: OverlayButton(label: 'Out'),
+                                    ),
+                                  ),
+                                ),
+                              )
+                              // ShowDrawer(
+                              //   imageUrl: imageUrl,
+                              //   scaffoldKey: _scaffoldKey,
+                              // )
+                            ],
+                          )),
+                      Flexible(
+                        flex: 3,
+                        child: Column(
+                          children: <Widget>[
+                            Expanded(
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    SpringButton(
+                                      SpringButtonType.OnlyScale,
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            // gradient: gradient,
+                                            color: color['buttonBg'],
+                                            border: Border.all(
+                                                color: color['buttonBg']),
+                                            borderRadius:
+                                                BorderRadius.circular(18.0)),
+                                        child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 15.0,
+                                                horizontal: 4.0),
+                                            child: ButtonRoom(
+                                              buttonTitle: 'CREATE ROOM',
+                                            )),
+                                      ),
+                                      alignment: Alignment.center,
+                                      onTap: () => (!createRoomPressed)
+                                          ? onPressedCreateRoom(widget.currency)
+                                          : null,
+                                      useCache: true,
+                                      scaleCoefficient: 0.80,
+                                    ),
+                                    SizedBox(
+                                      height: 30.0,
+                                    ),
+                                    SpringButton(
+                                      SpringButtonType.OnlyScale,
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: color['buttonBg'],
+                                            // gradient: gradient,
+                                            border: Border.all(
+                                                color: color['buttonBg']),
+                                            borderRadius:
+                                                BorderRadius.circular(18.0)),
+                                        child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 15.0,
+                                                horizontal: 18.0),
+                                            child: ButtonRoom(
+                                                buttonTitle: 'JOIN ROOM')),
+                                      ),
+                                      scaleCoefficient: 0.80,
+                                      onTap: () => (!joinRoomPressed)
+                                          ? onPressedJoinRoom(context, currency)
+                                          : null,
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                            scaleCoefficient: 0.80,
-                            onTap: () => (!joinRoomPressed)
-                                ? onPressedJoinRoom(context, currency)
-                                : null,
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Flexible(
+                          flex: 1,
+                          child: Column(
+                            children: [Container()],
+                            // mainAxisAlignment: MainAxisAlignment.start,
+                            // children: [
+                            //   VirtualCurrencyContent(
+                            //     currency: currency,
+                            //   )
+                            // ],
+                          )),
+                    ],
                   ),
                 ),
               ],
@@ -327,54 +342,15 @@ Route createRoute(int id, Currency currency) {
   );
 }
 
-Future<void> addRoom(String uid) async {
-  await Firestore.instance.collection('rooms').add({
-    'id': id,
-    'game': false,
-    'counter': 0,
-    'guessersId': [],
-    'users': [],
-    'users_id': [],
-    'usersImage': [],
-    'host': userNam,
-    'host_id': uid,
-    'den': userNam,
-    'den_id': uid,
-    'numberOfRounds': numberOfRounds,
-    'round': 1,
-    'word': '*',
-    'wordChosen': false,
-    'tempScore': [],
-    'finalScore': [],
-    'chat': [],
-    'indices': [0],
-    'pointer': 0,
-    'length': 0,
-    'xpos': [],
-    'ypos': [],
-    'allAttemptedWords': [],
-    'colorIndexStack': [0],
-    'userData': {},
-  }).catchError((e) {
-    print('error $e');
-  }).then((value) async {
-    documentid = value.documentID;
-    await value.get().then((value) async {
-      roomData = value.data;
-      readRoomData();
-      await addPlayer();
-    });
-  });
-}
-
-class ButtonCreateRoom extends StatelessWidget {
+class ButtonRoom extends StatelessWidget {
+  final String buttonTitle;
+  ButtonRoom({@required this.buttonTitle});
   @override
   Widget build(BuildContext context) {
-    print('noo spinkit ');
     return Text(
-      'CREATE ROOM',
+      '$buttonTitle',
       style: GoogleFonts.fredokaOne(
-          letterSpacing: 1.4,
+          letterSpacing: 1.5,
           shadows: [
             Shadow(
                 // bottomLeft
@@ -386,7 +362,7 @@ class ButtonCreateRoom extends StatelessWidget {
                 color: Colors.black),
             Shadow(
                 // topRight
-                offset: Offset(2.5, 2.5),
+                offset: Offset(1.5, 1.8),
                 color: Colors.black),
             Shadow(
                 // topLeft
@@ -395,8 +371,8 @@ class ButtonCreateRoom extends StatelessWidget {
           ],
           //color: Colors.orange[700],
           color: color['bg2'],
-          fontSize: 25.0,
-          fontWeight: FontWeight.w800),
+          fontSize: 19.0,
+          fontWeight: FontWeight.w600),
     );
   }
 }
@@ -412,25 +388,19 @@ class ShowDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     // var currency = Provider.of<Currency>(context);
     return Row(
+      mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         InkWell(
+          enableFeedback: false,
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-            child: CircleAvatar(
-              radius: 26.0,
-              backgroundColor: color['buttonBg'],
-              child: CircleAvatar(
-                backgroundColor: Colors.grey[100],
-                backgroundImage: NetworkImage(
-                  imageUrl,
-                ),
-                radius: 25.0,
-              ),
-            ),
-          ),
+              padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+              child: SelectRoomAvatar()),
           onTap: () {
-            scaffoldKey.currentState.openDrawer();
+            audioPlayer.playSound('click');
+            overlayBuilder.show(
+                context, MyProfile(overlayBuilder: overlayBuilder));
+            // scaffoldKey.currentState.openDrawer();
           },
         ),
         VirtualCurrencyContent(
@@ -438,6 +408,30 @@ class ShowDrawer extends StatelessWidget {
         )
       ],
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    );
+  }
+}
+
+class SelectRoomAvatar extends StatefulWidget {
+  SelectRoomAvatar() : super(key: circleAvatarKey);
+
+  @override
+  _SelectRoomAvatarState createState() => _SelectRoomAvatarState();
+}
+
+class _SelectRoomAvatarState extends State<SelectRoomAvatar> {
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      radius: 26.0,
+      backgroundColor: Colors.blue[800],
+      child: CircleAvatar(
+        backgroundColor: Colors.grey[100],
+        backgroundImage: NetworkImage(
+          imageUrl,
+        ),
+        radius: 25.0,
+      ),
     );
   }
 }
@@ -484,8 +478,8 @@ class DrawerContent extends StatelessWidget {
           ListTile(
             onTap: () {
               (check == signInMethod.google)
-                  ? AuthProvider().signOutGoogle()
-                  : signOut();
+                  ? GoogleAuthentication().signOutGoogle()
+                  : AnonymousAuthentication().signOutAnonymous();
             },
             title: Text('Sign Out'),
             leading: Icon(Icons.exit_to_app),

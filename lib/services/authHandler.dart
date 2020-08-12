@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:scribbl/OverlayManager/overlayBuilder.dart';
 import 'package:scribbl/audioPlayer/audioPlayer.dart';
+import 'package:scribbl/pages/Select_room/OverlayWidgets/loginOptions.dart';
 import 'package:scribbl/pages/enterName.dart';
 import 'package:scribbl/services/anon.dart';
 import 'package:scribbl/services/authService.dart';
@@ -19,16 +21,32 @@ int coins;
 String dataDocId = '  ';
 DocumentSnapshot userFirebaseDocument;
 int gamesPlayed;
+DocumentSnapshot avatarDocument;
+OverlayBuilder overlayBuilder;
+enum signInMethod { google, anonymous }
+var check = signInMethod.anonymous;
+AsyncSnapshot userAuthenticationSnapshot;
 
 class AuthHandler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    overlayBuilder = OverlayBuilder();
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
     return StreamBuilder(
         stream: FirebaseAuth.instance.onAuthStateChanged,
         builder: (context, snapshot) {
+          // return SelectRoom(
+          //   currency: currency,
+          //   email: email,
+          //   imageUrl: imageUrl,
+          //   name: name,
+          //   uid: uid,
+          //   userName: userNam,
+          // );
+          userAuthenticationSnapshot = snapshot;
           if (snapshot.connectionState == ConnectionState.waiting)
             return Loading(); //loading page
           else if (snapshot.hasData && snapshot.data != null) {
@@ -45,7 +63,13 @@ class AuthHandler extends StatelessWidget {
               return fetchFutureGoogle();
             }
           } else
-            return LoginPage();
+          // LoginPage
+          {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              overlayBuilder.show(context, LoginOptions(), doNotDismiss: true);
+            });
+            return Loading();
+          }
         });
   }
 }
@@ -61,10 +85,10 @@ Widget fetchFutureAnonymous() {
         return Loading();
       else {
         if (snapshot.data.documents.length == 0) {
-          name = enteredName;
+          // name = enteredName;
           coins = 200;
           wordCheck = WordCheck();
-          AuthSignIn().createAnonymousUser();
+          AnonymousAuthentication().createAnonymousUser();
         } else {
           userFirebaseDocument = snapshot.data.documents[0];
           dataDocId = userFirebaseDocument.documentID;
@@ -74,7 +98,7 @@ Widget fetchFutureAnonymous() {
           wordCheck = WordCheck(userFirebaseDocument: userFirebaseDocument);
           gamesPlayed = userFirebaseDocument['gamesPlayed'];
           (gamesPlayed == null) ? gamesPlayed = 0 : null;
-          AuthSignIn().activate();
+          AnonymousAuthentication().activate();
         }
         return LoadingCompleted();
       }
@@ -95,7 +119,7 @@ Widget fetchFutureGoogle() {
         if (snapshot.data.documents.length == 0) {
           coins = 200;
           wordCheck = WordCheck();
-          AuthProvider().createGoogleUser();
+          GoogleAuthentication().createGoogleUser();
         } else {
           userFirebaseDocument = snapshot.data.documents[0];
           dataDocId = userFirebaseDocument.documentID;
@@ -105,7 +129,7 @@ Widget fetchFutureGoogle() {
           wordCheck = WordCheck(userFirebaseDocument: userFirebaseDocument);
           gamesPlayed = userFirebaseDocument['gamesPlayed'];
           (gamesPlayed == null) ? gamesPlayed = 0 : null;
-          AuthProvider().activate();
+          GoogleAuthentication().activate();
         }
         return LoadingCompleted();
       }
@@ -119,7 +143,8 @@ class LoadingCompleted extends StatefulWidget {
 }
 
 class _LoadingCompletedState extends State<LoadingCompleted> {
-  bool soundsLoaded = false;
+  // bool soundsLoaded = false;
+  bool dataInitialised = false;
   @override
   void initState() {
     initialiseWorkingData();
@@ -128,8 +153,10 @@ class _LoadingCompletedState extends State<LoadingCompleted> {
 
   @override
   Widget build(BuildContext context) {
-    if (!soundsLoaded) {
-      print('loading sounds...');
+    if (
+        // !soundsLoaded || avatarDocument == null
+        !dataInitialised) {
+      print('loading...');
       return Loading();
     } else
       return SelectRoom(
@@ -144,9 +171,26 @@ class _LoadingCompletedState extends State<LoadingCompleted> {
   initialiseWorkingData() {
     currency = Currency(coins: coins);
     audioPlayer = AudioPlayer();
-    audioPlayer.initialiseSounds().whenComplete(() => setState(() {
-          print('sound Loaded');
-          soundsLoaded = true;
-        }));
+    audioPlayer.initialiseSounds().whenComplete(() => getAvatars()
+        // setState(() {
+        //       print('sound Loaded');
+        //       soundsLoaded = true;
+        //     })
+
+        );
+  }
+
+  Future<void> getAvatars() async {
+    await Firestore.instance
+        .collection('avatars')
+        .document('images')
+        .get()
+        .then((value) {
+      setState(() {
+        avatarDocument = value;
+        dataInitialised = true;
+        //  imageUrl= av.data['images'][0];
+      });
+    });
   }
 }
