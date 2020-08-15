@@ -1,4 +1,4 @@
-package com.example.scribbl
+package game.doodle.friends
 
 import io.flutter.embedding.android.FlutterActivity
 
