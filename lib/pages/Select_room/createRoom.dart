@@ -93,7 +93,7 @@ class _MakeRoomState extends State<MakeRoom> {
     double d = randomNumber * 100000000;
     id = d.toInt();
     id = id * pow(10, 8 - id.toString().length);
-    print(id);
+    print("generated room id : $id");
     addRoom(widget.uid)
         .whenComplete(() => Timer(Duration(milliseconds: 150), () {
               Navigator.pop(context);
@@ -197,9 +197,9 @@ Future<void> addRoom(String uid) async {
     'users': [],
     'users_id': [],
     'usersImage': [],
-    'host': userNam,
+    'host': myUserName,
     'host_id': uid,
-    'den': userNam,
+    'den': myUserName,
     'den_id': uid,
     'numberOfRounds': numberOfRounds,
     'round': 1,

@@ -451,12 +451,12 @@ class _TextBoxState extends State<TextBox> {
           if (guessersId.length < counter - 2) showPopup(context);
           calculateScore();
           updateGuesserIdAndScore();
-          newMessage = '$identity[$userNam]$message';
+          newMessage = '$identity[$myUserName]$message';
           chat.add(newMessage);
           sendMessage();
         }
       } else {
-        newMessage = '$identity[$userNam]$message';
+        newMessage = '$identity[$myUserName]$message';
         chat.add(newMessage);
         sendMessage();
       }

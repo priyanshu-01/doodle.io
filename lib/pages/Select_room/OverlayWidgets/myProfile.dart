@@ -4,11 +4,11 @@ import 'package:scribbl/gift/gift_contents.dart';
 import 'package:scribbl/pages/Select_room/OverlayWidgets/editProfile.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
 import 'package:scribbl/services/authHandler.dart';
-import 'package:scribbl/OverlayManager/overlayBuilder.dart';
+import 'package:scribbl/OverlayManager/informationOverlayBuilder.dart';
 import 'package:scribbl/virtualCurrency/virtualCurrency.dart';
 
 class MyProfile extends StatefulWidget {
-  final OverlayBuilder overlayBuilder;
+  final InformationOverlayBuilder overlayBuilder;
   MyProfile({@required this.overlayBuilder});
 
   @override

@@ -25,25 +25,6 @@ class MyConnectivity {
     connectivity.onConnectivityChanged.listen((result) {
       _checkStatus(result);
     });
-
-    await Firestore.instance
-        .collection('words')
-        .document('word list')
-        .get()
-        .then((value) {
-      wordList = removeRepeatedWords(value);
-    });
-  }
-
-  List removeRepeatedWords(DocumentSnapshot documentSnapshot) {
-    List allWords = documentSnapshot['list'];
-    List freshWords = [];
-    for (String i in allWords) {
-      if (wordCheck.myAttemptedWords.indexOf(i) == -1) {
-        freshWords.add(i);
-      }
-    }
-    return freshWords;
   }
 
   void _checkStatus(ConnectivityResult result) async {

@@ -28,14 +28,16 @@ class GoogleAuthentication {
   }
 
   Future<void> signOutGoogle() async {
-    name = '  ';
-    imageUrl = '  ';
-    email = '  ';
-    uid = '  ';
-    coins = 0;
+    // name = '  ';
+    // imageUrl = '  ';
+    // email = '  ';
+    // uid = '  ';
+    // coins = 0;
     GoogleAuthentication().deactivate();
     print("signOutWithGoogle succeeded");
     await _auth.signOut();
+    // whenComplete(() => check = signInMethod.anonymous);
+    check = signInMethod.anonymous;
   }
 
   Future<void> createGoogleUser() async {
@@ -48,7 +50,10 @@ class GoogleAuthentication {
       'active': true,
       'attemptedWords': [],
       'gamesPlayed': 0,
+      'originalName': name,
+      'originalImageUrl': imageUrl
     }).then((value) {
+      value.get().then((value) => userFirebaseDocument = value);
       dataDocId = value.documentID;
     });
   }

@@ -43,7 +43,6 @@ class Room extends StatelessWidget {
   Widget build(BuildContext context) {
     Provider.of<RoomData>(context);
     roomID = id;
-    print('returned room');
     if (roomData == null)
       return Container();
     else {
@@ -63,13 +62,11 @@ class Room extends StatelessWidget {
         return GameScreen();
       }
     }
-    //   },
-    // ),
   }
 }
 
 Future<void> addPlayer() async {
-  players = players + [userNam];
+  players = players + [myUserName];
   counter = counter + 1;
   playersId = playersId + [identity];
   tempScore = tempScore + [0];
@@ -124,7 +121,7 @@ Future<void> updatePlayerData(String myStatus) async {
     'finalScore': finalScore,
     'usersImage': playersImage,
     'userData.$identity': {
-      'name': userNam,
+      'name': myUserName,
       'myStatus': myStatus,
       'lastGuess': '',
       'lastMessageIndex': null,
@@ -145,9 +142,9 @@ Future<void> updatePlayerData(String myStatus) async {
 
 Future<void> changeDenWhileLeaving(String source, int myIndex) async {
   record = {
-    'name': userNam,
+    'name': myUserName,
     'beforeChangeDenId': denId,
-    'beforeChangeDenName': userNam,
+    'beforeChangeDenName': myUserName,
     'round': round,
     'myIndex': 'left',
     'indexOfDenner': 'left',

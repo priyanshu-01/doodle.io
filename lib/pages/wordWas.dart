@@ -288,7 +288,7 @@ class _WordWasContentState extends State<WordWasContent>
                                                         300 / 20, //CHANGE LATER
 
                                                     fontWeight: (name ==
-                                                            userNam)
+                                                            myUserName)
                                                         ? FontWeight.w800
                                                         : FontWeight.normal)),
                                             SizedBox(
@@ -307,7 +307,7 @@ class _WordWasContentState extends State<WordWasContent>
                                                           20, //CHANGE LATER
 
                                                       fontWeight: (name ==
-                                                              userNam)
+                                                              myUserName)
                                                           ? FontWeight.w800
                                                           : FontWeight.normal)),
                                             ),

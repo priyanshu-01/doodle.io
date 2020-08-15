@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:scribbl/OverlayManager/overlayBuilder.dart';
+import 'package:scribbl/OverlayManager/informationOverlayBuilder.dart';
+import 'package:scribbl/OverlayManager/necessaryOverlayBuilder.dart';
 import 'package:scribbl/audioPlayer/audioPlayer.dart';
 import 'package:scribbl/pages/Select_room/OverlayWidgets/loginOptions.dart';
 import 'package:scribbl/pages/enterName.dart';
@@ -16,13 +17,14 @@ import '../pages/Painter_screen/wordCheck/wordCheck.dart';
 
 WordCheck wordCheck;
 Currency currency;
-String name = '  ', email = '  ', imageUrl = '  ', uid = '  ';
+String name, email, imageUrl, uid;
 int coins;
-String dataDocId = '  ';
+String dataDocId;
 DocumentSnapshot userFirebaseDocument;
 int gamesPlayed;
 DocumentSnapshot avatarDocument;
-OverlayBuilder overlayBuilder;
+InformationOverlayBuilder informationOverlayBuilder;
+NecessaryOverlayBuilder necessaryOverlayBuilder;
 enum signInMethod { google, anonymous }
 var check = signInMethod.anonymous;
 AsyncSnapshot userAuthenticationSnapshot;
@@ -30,8 +32,6 @@ AsyncSnapshot userAuthenticationSnapshot;
 class AuthHandler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    overlayBuilder = OverlayBuilder();
-
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -42,7 +42,6 @@ class AuthHandler extends StatelessWidget {
           //   currency: currency,
           //   email: email,
           //   imageUrl: imageUrl,
-          //   name: name,
           //   uid: uid,
           //   userName: userNam,
           // );
@@ -50,6 +49,11 @@ class AuthHandler extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Loading(); //loading page
           else if (snapshot.hasData && snapshot.data != null) {
+            if (necessaryOverlayBuilder.overlayEntry != null) {
+              necessaryOverlayBuilder.hide();
+              necessaryOverlayBuilder.overlayEntry = null;
+            }
+
             if (snapshot.data.isAnonymous) {
               check = signInMethod.anonymous;
               uid = snapshot.data.uid;
@@ -66,7 +70,7 @@ class AuthHandler extends StatelessWidget {
           // LoginPage
           {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              overlayBuilder.show(context, LoginOptions(), doNotDismiss: true);
+              necessaryOverlayBuilder.show(context);
             });
             return Loading();
           }
@@ -85,7 +89,6 @@ Widget fetchFutureAnonymous() {
         return Loading();
       else {
         if (snapshot.data.documents.length == 0) {
-          // name = enteredName;
           coins = 200;
           wordCheck = WordCheck();
           AnonymousAuthentication().createAnonymousUser();
@@ -144,53 +147,45 @@ class LoadingCompleted extends StatefulWidget {
 
 class _LoadingCompletedState extends State<LoadingCompleted> {
   // bool soundsLoaded = false;
-  bool dataInitialised = false;
   @override
   void initState() {
-    initialiseWorkingData();
+    currency = Currency(coins: coins);
+    repeatedWords();
     super.initState();
+  }
+
+  Future<void> repeatedWords() async {
+    await Firestore.instance
+        .collection('words')
+        .document('word list')
+        .get()
+        .then((value) {
+      wordList = removeRepeatedWords(value);
+    });
+  }
+
+  List removeRepeatedWords(DocumentSnapshot documentSnapshot) {
+    List allWords = documentSnapshot['list'];
+    List freshWords = [];
+    for (String i in allWords) {
+      if (wordCheck.myAttemptedWords.indexOf(i) == -1) {
+        freshWords.add(i);
+      }
+    }
+    return freshWords;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (
-        // !soundsLoaded || avatarDocument == null
-        !dataInitialised) {
-      print('loading...');
-      return Loading();
-    } else
-      return SelectRoom(
-          userName: name,
-          currency: currency,
-          uid: uid,
-          imageUrl: imageUrl,
-          name: name,
-          email: email);
-  }
+    myUserName = name;
+    myUserName.trim();
+    myUserName = firstName(myUserName);
 
-  initialiseWorkingData() {
-    currency = Currency(coins: coins);
-    audioPlayer = AudioPlayer();
-    audioPlayer.initialiseSounds().whenComplete(() => getAvatars()
-        // setState(() {
-        //       print('sound Loaded');
-        //       soundsLoaded = true;
-        //     })
-
-        );
-  }
-
-  Future<void> getAvatars() async {
-    await Firestore.instance
-        .collection('avatars')
-        .document('images')
-        .get()
-        .then((value) {
-      setState(() {
-        avatarDocument = value;
-        dataInitialised = true;
-        //  imageUrl= av.data['images'][0];
-      });
-    });
+    return SelectRoom(
+        currency: currency,
+        uid: uid,
+        imageUrl: imageUrl,
+        name: name,
+        email: email);
   }
 }

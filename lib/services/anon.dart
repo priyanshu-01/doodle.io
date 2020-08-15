@@ -28,6 +28,7 @@ class AnonymousAuthentication {
       'attemptedWords': [],
       'gamesPlayed': 0,
     }).then((value) {
+      value.get().then((value) => userFirebaseDocument = value);
       dataDocId = value.documentID;
     });
   }
@@ -43,10 +44,10 @@ class AnonymousAuthentication {
   Future<void> signOutAnonymous() async {
     try {
       await AnonymousAuthentication().deactivate();
-      name = '  ';
-      uid = '  ';
-      dataDocId = '  ';
-      coins = 0;
+      // name = '  ';
+      // uid = '  ';
+      // dataDocId = '  ';
+      // coins = 0;
       print('signoutAnonymous success');
       await FirebaseAuth.instance.signOut();
     } catch (e) {

@@ -1,50 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class OverlayBuilder {
+class InformationOverlayBuilder {
   OverlayEntry overlayEntry;
-  bool doNotDismiss;
-  OverlayBuilder() {
-    doNotDismiss = false;
-  }
   OverlayEntry buildOverlay(Widget myOverlayWidget) {
     return OverlayEntry(
       builder: (context) {
         return Scaffold(
-          body: Stack(children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                if (this.doNotDismiss != true) hide();
-              },
-              child: Opacity(
-                opacity: 0.85,
-                child: Container(
-                  color: Colors.black,
-                  constraints: BoxConstraints.expand(),
+          body: WillPopScope(
+            onWillPop: () => popHide(),
+            child: Stack(children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  hide();
+                },
+                child: Opacity(
+                  opacity: 0.85,
+                  child: Container(
+                    color: Colors.black,
+                    constraints: BoxConstraints.expand(),
+                  ),
                 ),
               ),
-            ),
-            Center(
-                child: OverlayWidgetContent(
-              myOverlayWidget: myOverlayWidget,
-            )),
-          ]),
+              Center(
+                  child: OverlayWidgetContent(
+                myOverlayWidget: myOverlayWidget,
+              )),
+            ]),
+          ),
         );
       },
     );
   }
 
-  void show(BuildContext context, Widget myOverlayWidget, {bool doNotDismiss}) {
-    this.doNotDismiss = doNotDismiss;
+  void show(BuildContext context, Widget myOverlayWidget) {
+    // this.doNotDismiss = doNotDismiss;
     overlayEntry = buildOverlay(myOverlayWidget);
     Overlay.of(context).insert(overlayEntry);
   }
 
   void hide() {
-    this.doNotDismiss = false;
+    // this.doNotDismiss = false;
     if (overlayEntry != null) {
       overlayEntry.remove();
+      overlayEntry = null;
     }
+  }
+
+  Future<bool> popHide() async {
+    print('popHide called');
+    hide();
+    return true;
   }
 }
 

@@ -102,7 +102,7 @@ class _ChooseOrDrawState extends State<ChooseOrDraw> {
 
 Future<void> changeDen(String source) async {
   record = {
-    'name': userNam,
+    'name': myUserName,
     'beforeChangeDenId': denId,
     'beforeChangeDenName': players[playersId.indexOf(denId)],
     'round': round,

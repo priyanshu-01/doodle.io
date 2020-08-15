@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:scribbl/OverlayManager/overlayBuilder.dart';
+import 'package:scribbl/OverlayManager/informationOverlayBuilder.dart';
 import 'package:scribbl/ProviderManager/manager.dart';
 import 'package:scribbl/audioPlayer/audioPlayer.dart';
 import 'package:scribbl/pages/Select_room/OverlayWidgets/myProfile.dart';
@@ -12,22 +12,18 @@ import '../../services/authService.dart';
 import 'createRoom.dart';
 import 'roomId.dart';
 import '../room/room.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import '../Guesser_screen/guesserScreen.dart';
 import '../../services/anon.dart';
-import '../loginPage.dart';
 import '../../main.dart';
-import 'package:connectivity/connectivity.dart';
 import '../../reactions/listenReactions.dart';
 import 'package:spring_button/spring_button.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'functions.dart';
 
 GlobalKey circleAvatarKey = GlobalKey();
 AudioPlayer audioPlayer;
 ReactionListener reactionListener;
-String userNam;
+String myUserName;
 String identity;
 int id;
 bool initialiseDimension = true;
@@ -51,8 +47,15 @@ LinearGradient gradient = LinearGradient(
     begin: Alignment.bottomCenter,
     end: Alignment.topCenter);
 
+String firstName(String myUserName) {
+  if (myUserName.indexOf(' ') == -1) {
+    myUserName = '$myUserName ';
+  }
+  myUserName = myUserName.substring(0, myUserName.indexOf(' ') + 1);
+  return myUserName;
+}
+
 class SelectRoom extends StatefulWidget {
-  final String userName;
   final Currency currency;
   final String uid;
   final String name;
@@ -60,7 +63,6 @@ class SelectRoom extends StatefulWidget {
   final String email;
   SelectRoom(
       {Key key,
-      @required this.userName,
       @required this.currency,
       @required this.uid,
       @required this.imageUrl,
@@ -68,18 +70,12 @@ class SelectRoom extends StatefulWidget {
       @required this.email})
       : super(key: key);
   @override
-  _SelectRoomState createState() => _SelectRoomState(userName);
+  _SelectRoomState createState() => _SelectRoomState();
 }
 
 class _SelectRoomState extends State<SelectRoom> {
-  Map _source = {ConnectivityResult.none: false};
-  MyConnectivity _connectivity = MyConnectivity.instance;
   bool createRoomPressed = false;
   bool joinRoomPressed = false;
-  String userName;
-  _SelectRoomState(this.userName);
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
   void performRebuildCalculations() {
     resumed = true;
     if (initialiseDimension) {
@@ -88,44 +84,16 @@ class _SelectRoomState extends State<SelectRoom> {
       denCanvasLength = myDenCanvasLength;
       keyboardHeight = totalLength * 0.3;
       guessCanvasLength = ((totalLength - 50 - 20 - keyboardHeight) * (7 / 8));
-      // guessCanvasLength = ((totalLength - 50) * 0.6) * (7 / 8);
       totalWidth = MediaQuery.of(context).size.width;
       initialiseDimension = false;
     }
-    userNam = userName;
-    if (userNam.indexOf(' ') == -1) {
-      userNam = '$userNam ';
-    }
-    String first = userNam.substring(0, userNam.indexOf(' ') + 1);
-    userNam = first;
   }
 
   @override
   void initState() {
     identity = widget.uid;
-    _connectivity.initialise();
-    _connectivity.myStream.listen((source) {
-      _source = source;
-      switch (_source.keys.toList()[0]) {
-        case ConnectivityResult.none:
-          online = false;
-          break;
-        case ConnectivityResult.mobile:
-          online = true;
-          break;
-        case ConnectivityResult.wifi:
-          online = true;
-      }
-      print('is online: $online');
-    });
 
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _connectivity.disposeStream();
-    super.dispose();
   }
 
   @override
@@ -133,149 +101,125 @@ class _SelectRoomState extends State<SelectRoom> {
     performRebuildCalculations();
     return ChangeNotifierProvider(
       create: (context) => widget.currency,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        key: _scaffoldKey,
-        drawer: DrawerContent(
-          imageUrl: widget.imageUrl,
-          name: widget.name,
-          email: widget.email,
-        ),
-        body: SafeArea(
-          child: Container(
-            decoration: new BoxDecoration(
-              // color: Colors.transparent,
-              gradient: RadialGradient(radius: 1.0, colors: [
-                Colors.blue[300],
-                Color(0xFF000080),
-              ]),
-            ),
-            child: Column(
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: ShowDrawer(
-                    imageUrl: imageUrl,
-                    scaffoldKey: _scaffoldKey,
-                  ),
-                ),
-                Flexible(
-                  flex: 5,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                          flex: 1,
-                          child: Column(
-                            // mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  alignment: Alignment.bottomCenter,
-                                  child: InkWell(
-                                    onTap: () {
-                                      (check == signInMethod.google)
-                                          ? GoogleAuthentication()
-                                              .signOutGoogle()
-                                          : AnonymousAuthentication()
-                                              .signOutAnonymous();
-                                    },
-                                    child: Container(
-                                      child: OverlayButton(label: 'Out'),
-                                    ),
-                                  ),
-                                ),
-                              )
-                              // ShowDrawer(
-                              //   imageUrl: imageUrl,
-                              //   scaffoldKey: _scaffoldKey,
-                              // )
-                            ],
-                          )),
-                      Flexible(
-                        flex: 3,
+      child: SafeArea(
+        child: Container(
+          decoration: new BoxDecoration(
+            gradient: RadialGradient(radius: 1.0, colors: [
+              Colors.blue[300],
+              Color(0xFF000080),
+            ]),
+          ),
+          child: Column(
+            children: [
+              Flexible(
+                flex: 1,
+                child: TopRowWithAvatarAndCoin(),
+              ),
+              Flexible(
+                flex: 5,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                        flex: 1,
                         child: Column(
-                          children: <Widget>[
+                          // mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
                             Expanded(
                               child: Container(
-                                alignment: Alignment.center,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    SpringButton(
-                                      SpringButtonType.OnlyScale,
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            // gradient: gradient,
-                                            color: color['buttonBg'],
-                                            border: Border.all(
-                                                color: color['buttonBg']),
-                                            borderRadius:
-                                                BorderRadius.circular(18.0)),
-                                        child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 15.0,
-                                                horizontal: 4.0),
-                                            child: ButtonRoom(
-                                              buttonTitle: 'CREATE ROOM',
-                                            )),
-                                      ),
-                                      alignment: Alignment.center,
-                                      onTap: () => (!createRoomPressed)
-                                          ? onPressedCreateRoom(widget.currency)
-                                          : null,
-                                      useCache: true,
-                                      scaleCoefficient: 0.80,
-                                    ),
-                                    SizedBox(
-                                      height: 30.0,
-                                    ),
-                                    SpringButton(
-                                      SpringButtonType.OnlyScale,
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            color: color['buttonBg'],
-                                            // gradient: gradient,
-                                            border: Border.all(
-                                                color: color['buttonBg']),
-                                            borderRadius:
-                                                BorderRadius.circular(18.0)),
-                                        child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 15.0,
-                                                horizontal: 18.0),
-                                            child: ButtonRoom(
-                                                buttonTitle: 'JOIN ROOM')),
-                                      ),
-                                      scaleCoefficient: 0.80,
-                                      onTap: () => (!joinRoomPressed)
-                                          ? onPressedJoinRoom(context, currency)
-                                          : null,
-                                    ),
-                                  ],
+                                alignment: Alignment.bottomCenter,
+                                child: InkWell(
+                                  onTap: () {
+                                    (check == signInMethod.google)
+                                        ? GoogleAuthentication().signOutGoogle()
+                                        : AnonymousAuthentication()
+                                            .signOutAnonymous();
+                                  },
+                                  child: Container(
+                                    child: OverlayButton(label: 'Out'),
+                                  ),
                                 ),
                               ),
-                            ),
+                            )
+                            // ShowDrawer(
+                            // )
                           ],
-                        ),
+                        )),
+                    Flexible(
+                      flex: 3,
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  SpringButton(
+                                    SpringButtonType.OnlyScale,
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          // gradient: gradient,
+                                          color: color['buttonBg'],
+                                          border: Border.all(
+                                              color: color['buttonBg']),
+                                          borderRadius:
+                                              BorderRadius.circular(18.0)),
+                                      child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 15.0, horizontal: 4.0),
+                                          child: ButtonToRoom(
+                                            buttonTitle: 'CREATE ROOM',
+                                          )),
+                                    ),
+                                    alignment: Alignment.center,
+                                    onTap: () => (!createRoomPressed)
+                                        ? onPressedCreateRoom(widget.currency)
+                                        : null,
+                                    useCache: true,
+                                    scaleCoefficient: 0.80,
+                                  ),
+                                  SizedBox(
+                                    height: 30.0,
+                                  ),
+                                  SpringButton(
+                                    SpringButtonType.OnlyScale,
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          color: color['buttonBg'],
+                                          // gradient: gradient,
+                                          border: Border.all(
+                                              color: color['buttonBg']),
+                                          borderRadius:
+                                              BorderRadius.circular(18.0)),
+                                      child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 15.0, horizontal: 18.0),
+                                          child: ButtonToRoom(
+                                              buttonTitle: 'JOIN ROOM')),
+                                    ),
+                                    scaleCoefficient: 0.80,
+                                    onTap: () => (!joinRoomPressed)
+                                        ? onPressedJoinRoom(context, currency)
+                                        : null,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      Flexible(
-                          flex: 1,
-                          child: Column(
-                            children: [Container()],
-                            // mainAxisAlignment: MainAxisAlignment.start,
-                            // children: [
-                            //   VirtualCurrencyContent(
-                            //     currency: currency,
-                            //   )
-                            // ],
-                          )),
-                    ],
-                  ),
+                    ),
+                    Flexible(
+                        flex: 1,
+                        child: Column(
+                          children: [Container()],
+                        )),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -299,8 +243,6 @@ class _SelectRoomState extends State<SelectRoom> {
       ).show();
       createRoomPressed = false;
     });
-
-    // Navigator.pop(context);
   }
 
   void onPressedJoinRoom(BuildContext context, Currency currency) {
@@ -342,9 +284,9 @@ Route createRoute(int id, Currency currency) {
   );
 }
 
-class ButtonRoom extends StatelessWidget {
+class ButtonToRoom extends StatelessWidget {
   final String buttonTitle;
-  ButtonRoom({@required this.buttonTitle});
+  ButtonToRoom({@required this.buttonTitle});
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -377,13 +319,7 @@ class ButtonRoom extends StatelessWidget {
   }
 }
 
-class ShowDrawer extends StatelessWidget {
-  final GlobalKey<ScaffoldState> scaffoldKey;
-  final String imageUrl;
-  ShowDrawer({
-    @required this.scaffoldKey,
-    @required this.imageUrl,
-  });
+class TopRowWithAvatarAndCoin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // var currency = Provider.of<Currency>(context);
@@ -398,9 +334,8 @@ class ShowDrawer extends StatelessWidget {
               child: SelectRoomAvatar()),
           onTap: () {
             audioPlayer.playSound('click');
-            overlayBuilder.show(
-                context, MyProfile(overlayBuilder: overlayBuilder));
-            // scaffoldKey.currentState.openDrawer();
+            informationOverlayBuilder.show(
+                context, MyProfile(overlayBuilder: informationOverlayBuilder));
           },
         ),
         VirtualCurrencyContent(
@@ -436,56 +371,56 @@ class _SelectRoomAvatarState extends State<SelectRoomAvatar> {
   }
 }
 
-class DrawerContent extends StatelessWidget {
-  final String name, email, imageUrl;
-  DrawerContent({
-    @required this.name,
-    @required this.imageUrl,
-    @required this.email,
-  });
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      child: Column(
-        children: <Widget>[
-          UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Colors.orange[100]),
-              accountName: Text(
-                name,
-                style: TextStyle(color: Colors.black),
-              ),
-              accountEmail: Text(
-                email,
-                style: TextStyle(color: Colors.black),
-              ),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.grey[100],
-                backgroundImage: NetworkImage(imageUrl),
-              )),
-          SizedBox(
-            height: 10.0,
-          ),
-          ListTile(
-            onTap: () {},
-            title: Text('Earn Coins'),
-            leading: Icon(Icons.monetization_on),
-          ),
-          ListTile(
-            onTap: () {},
-            title: Text('Developer Contact'),
-            leading: Icon(Icons.person_outline),
-          ),
-          ListTile(
-            onTap: () {
-              (check == signInMethod.google)
-                  ? GoogleAuthentication().signOutGoogle()
-                  : AnonymousAuthentication().signOutAnonymous();
-            },
-            title: Text('Sign Out'),
-            leading: Icon(Icons.exit_to_app),
-          ),
-        ],
-      ),
-    );
-  }
-}
+// class DrawerContent extends StatelessWidget {
+//   final String name, email, imageUrl;
+//   DrawerContent({
+//     @required this.name,
+//     @required this.imageUrl,
+//     @required this.email,
+//   });
+//   @override
+//   Widget build(BuildContext context) {
+//     return Drawer(
+//       child: Column(
+//         children: <Widget>[
+//           UserAccountsDrawerHeader(
+//               decoration: BoxDecoration(color: Colors.orange[100]),
+//               accountName: Text(
+//                 name,
+//                 style: TextStyle(color: Colors.black),
+//               ),
+//               accountEmail: Text(
+//                 email,
+//                 style: TextStyle(color: Colors.black),
+//               ),
+//               currentAccountPicture: CircleAvatar(
+//                 backgroundColor: Colors.grey[100],
+//                 backgroundImage: NetworkImage(imageUrl),
+//               )),
+//           SizedBox(
+//             height: 10.0,
+//           ),
+//           ListTile(
+//             onTap: () {},
+//             title: Text('Earn Coins'),
+//             leading: Icon(Icons.monetization_on),
+//           ),
+//           ListTile(
+//             onTap: () {},
+//             title: Text('Developer Contact'),
+//             leading: Icon(Icons.person_outline),
+//           ),
+//           ListTile(
+//             onTap: () {
+//               (check == signInMethod.google)
+//                   ? GoogleAuthentication().signOutGoogle()
+//                   : AnonymousAuthentication().signOutAnonymous();
+//             },
+//             title: Text('Sign Out'),
+//             leading: Icon(Icons.exit_to_app),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

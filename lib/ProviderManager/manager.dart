@@ -139,10 +139,8 @@ class _ManagerState extends State<Manager> {
 
                 ),
           ),
-          onWillPop: () {
-            leaveRoomAlert(context, firestoreRoomDataSubscription);
-            // return;
-          });
+          onWillPop: () =>
+              leaveRoomAlert(context, firestoreRoomDataSubscription));
   }
 
   @override
@@ -151,8 +149,8 @@ class _ManagerState extends State<Manager> {
     super.dispose();
   }
 
-  void leaveRoomAlert(
-      BuildContext context, StreamSubscription firestoreRoomDataSubscription) {
+  Future<bool> leaveRoomAlert(BuildContext context,
+      StreamSubscription firestoreRoomDataSubscription) async {
     Alert(
       content: SizedBox(
         height: 50.0,
@@ -193,6 +191,7 @@ class _ManagerState extends State<Manager> {
         )
       ],
     ).show();
+    return true;
   }
 }
 
