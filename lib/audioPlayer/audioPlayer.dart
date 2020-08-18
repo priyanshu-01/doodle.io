@@ -14,10 +14,11 @@ class AudioPlayer {
   }
   Future<void> initialiseSounds() async {
     soundTracks = {
-      'click': await createSounds('assets/sounds/button_click.mp3'),
+      'click': await createSounds('assets/sounds/buttonClick.mp3'),
       'reaction': await createSounds('assets/sounds/reaction.mp3'),
       'colorChange': await createSounds('assets/sounds/colorChange.mp3'),
       'someoneGuessed': await createSounds('assets/sounds/someoneGuessed.mp3'),
+      'pickAWord': await createSounds('assets/sounds/pickAWord.mp3'),
     };
   }
 
@@ -28,7 +29,6 @@ class AudioPlayer {
 
   Future<void> playSound(String soundType) async {
     int soundId = soundTracks[soundType];
-    // var sound = await soundId;
     // int streamId =
     await pool.play(soundId);
   }

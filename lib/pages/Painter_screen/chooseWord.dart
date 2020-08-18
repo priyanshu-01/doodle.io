@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scribbl/OverlayManager/informationOverlayBuilder.dart';
 import 'package:scribbl/services/authHandler.dart';
 import '../room/room.dart';
 import 'dart:math';
 import 'painterScreen.dart';
 import '../Select_room/selectRoom.dart';
 import 'dart:async';
+
+Color chooseWordBackColor = Colors.blue[700];
+Color chooseWordTextColor = Colors.white;
+TextStyle chooseWordStyle = GoogleFonts.ubuntu(
+    color: chooseWordTextColor,
+    fontSize: 18.0,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 0.8);
 
 class ChooseWordDialog extends StatefulWidget {
   @override
@@ -16,10 +25,6 @@ class ChooseWordDialog extends StatefulWidget {
 class _ChooseWordDialogState extends State<ChooseWordDialog> {
   List displayWords = [' ', ' ', ' '];
 
-  Color wordBack = Colors.black;
-  Color wordText = Colors.white;
-  TextStyle wordStyle;
-
   bool switcher = false;
 
   double topPadding = totalLength * 0.8;
@@ -27,12 +32,8 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
   Duration duration = Duration(milliseconds: 1000);
   @override
   void initState() {
-    wordStyle = GoogleFonts.poppins(
-        color: wordText,
-        fontSize: 18.0,
-        fontWeight: FontWeight.w500,
-        letterSpacing: 1.5);
     getWords();
+    audioPlayer.playSound('pickAWord');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         topPadding = totalLength * 0.1;
@@ -44,8 +45,6 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
   @override
   Widget build(BuildContext context) {
     // wordBack = Color(0xFF504A4B);
-    // wordBack = Colors.black;
-
     // wordText=Color(0xFF1A2F77);
     return Stack(
       children: [
@@ -66,13 +65,24 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Text(
-                  'Pick a word',
-                  style:
-                      GoogleFonts.notoSans(color: Colors.black, fontSize: 25.0),
+                Container(
+                  // decoration: overlayBoxDecoration,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Pick a word',
+                      style:
+                          //  overlayTextStyle
+                          GoogleFonts.fredokaOne(
+                        // color: Colors.brown,
+                        color: Color(0xFF1f1f1f),
+                        fontSize: 25.0,
+                      ),
+                    ),
+                  ),
                 ),
                 SizedBox(
-                  height: totalLength * 0.07,
+                  height: totalLength * 0.045,
                 ),
                 Container(
                     height: 200.0,
@@ -80,27 +90,35 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
                     child: Column(
                       children: <Widget>[
                         FlatButton(
-                            color: wordBack,
+                            color: chooseWordBackColor,
                             shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(20.0)),
+                                borderRadius: new BorderRadius.circular(7.0)),
                             child: Text(
-                              displayWords[0].toUpperCase(),
-                              style: wordStyle,
+                              displayWords[0]
+                              // .toUpperCase()
+                              ,
+                              style: chooseWordStyle,
                             ),
                             onPressed: () => onWordPressed(displayWords[0])),
                         FlatButton(
-                            color: wordBack,
+                            color: chooseWordBackColor,
                             shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(20.0)),
-                            child: Text(displayWords[1].toUpperCase(),
-                                style: wordStyle),
+                                borderRadius: new BorderRadius.circular(7.0)),
+                            child: Text(
+                                displayWords[1]
+                                // .toUpperCase()
+                                ,
+                                style: chooseWordStyle),
                             onPressed: () => onWordPressed(displayWords[1])),
                         FlatButton(
-                          color: wordBack,
+                          color: chooseWordBackColor,
                           shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(20.0)),
-                          child: Text(displayWords[2].toUpperCase(),
-                              style: wordStyle),
+                              borderRadius: new BorderRadius.circular(7.0)),
+                          child: Text(
+                              displayWords[2]
+                              // .toUpperCase()
+                              ,
+                              style: chooseWordStyle),
                           onPressed: () => onWordPressed(displayWords[2]),
                         ),
                         SizedBox(
