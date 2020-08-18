@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scribbl/pages/Select_room/selectRoom.dart';
+import 'package:scribbl/services/authHandler.dart';
 
 class InformationOverlayBuilder {
   OverlayEntry overlayEntry;
@@ -107,20 +109,83 @@ class _OverlayWidgetContentState extends State<OverlayWidgetContent>
 
 class OverlayButton extends StatelessWidget {
   final String label;
-  OverlayButton({@required this.label});
+  final double padding;
+  final double size;
+  OverlayButton({@required this.label, this.padding, this.size});
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: overlayBoxDecoration,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          '$label',
-          style: overlayTextStyle,
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: padding,
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+            child: Text(
+              '$label',
+              style: myCoustomOverlayTextStyle(size: size),
+            ),
+          ),
+          SizedBox(
+            width: padding,
+          )
+        ],
       ),
     );
   }
+}
+
+class InformationCloseButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // color: Colors.red,
+      alignment: Alignment.centerRight,
+      child: InkWell(
+          child: Icon(
+            Icons.close,
+            color: Colors.white,
+            size: 30.0,
+          ),
+          enableFeedback: false,
+          onTap: () {
+            audioPlayer.playSound('click');
+            informationOverlayBuilder.hide();
+          }
+
+          // informationOverlayBuilder.hide(),
+          ),
+    );
+  }
+}
+
+TextStyle myCoustomOverlayTextStyle({double size}) {
+  return overlayTextStyle = GoogleFonts.fredokaOne(
+    color: Colors.white,
+    fontSize: size,
+    shadows: [
+      Shadow(
+          // bottomLeft
+          offset: Offset(-1.0, -1.0),
+          color: Colors.black),
+      Shadow(
+          // bottomRight
+          offset: Offset(1.0, -1.0),
+          color: Colors.black),
+      Shadow(
+          // topRight
+          offset: Offset(1.5, 1.8),
+          color: Colors.black),
+      Shadow(
+          // topLeft
+          offset: Offset(-1.0, 1.0),
+          color: Colors.black),
+    ],
+  );
 }
 
 TextStyle overlayTextStyle = GoogleFonts.fredokaOne(
@@ -147,5 +212,5 @@ TextStyle overlayTextStyle = GoogleFonts.fredokaOne(
 
 BoxDecoration overlayBoxDecoration = BoxDecoration(
   color: Colors.yellow[700],
-  borderRadius: BorderRadius.circular(15.0),
+  borderRadius: BorderRadius.circular(12.0),
 );

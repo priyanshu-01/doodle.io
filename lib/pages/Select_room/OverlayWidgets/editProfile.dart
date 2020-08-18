@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:scribbl/OverlayManager/necessaryOverlayBuilder.dart';
 import 'package:scribbl/pages/Select_room/OverlayWidgets/myProfile.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
@@ -18,105 +19,155 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   TextEditingController myController;
-  List modAvatarDocument;
+  List modAvatarDocumentList;
+  double _height, _radius;
+  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     tempImageUrl = imageUrl;
     tempName = name;
     myController = TextEditingController(text: name);
     // (name != null && name != '') ? name : "Enter Name");
-    modAvatarDocument = avatarDocument.data['images'];
+    modAvatarDocumentList = avatarDocument.data['avatarImages']['boys'] +
+        avatarDocument.data['avatarImages']['girls'];
 
-    if (check == signInMethod.google) {
-      modAvatarDocument =
-          [userFirebaseDocument['originalImageUrl']] + modAvatarDocument;
+    if (checkSignInMethod == signInMethod.google) {
+      modAvatarDocumentList =
+          [userFirebaseDocument['originalImageUrl']] + modAvatarDocumentList;
       // avatarDocument.data['images'] = modAvatarDocument;
     }
+    _height = totalLength * 0.65;
+    if (signInStatus == status.notSignedIn)
+      _radius = _height * 2 / ((8 * 2)) - 4.0;
+    else
+      _radius = _height * 2 / ((9 * 2)) - 4.0;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    double _height = totalLength * 0.55;
     return Container(
       height: _height,
       width: totalWidth * 0.7,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          (signInStatus == status.signedIn)
+              ? Flexible(
+                  flex: 1,
+                  child: InformationCloseButton(),
+                )
+              : Container(),
           Flexible(
             flex: 4,
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: _height * (2 / (7 * 2)),
-                  backgroundImage: NetworkImage(
-                    tempImageUrl,
-                  ),
-                  backgroundColor: Colors.grey[200],
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: CircleAvatar(
+                radius: _radius,
+                backgroundImage: NetworkImage(
+                  tempImageUrl,
                 ),
-              ],
+                backgroundColor: Colors.grey[200],
+              ),
             ),
           ),
           Flexible(
             flex: 5,
-            child: GridView.builder(
-                physics: BouncingScrollPhysics(),
-                itemCount:
-                    // (check == signInMethod.google)
-                    //     ? avatarDocument.data['images'].length + 1:
-                    // avatarDocument.data['images'].length,
-                    modAvatarDocument.length,
-                scrollDirection: Axis.vertical,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 5),
-                itemBuilder: (BuildContext context, int index) {
-                  return InkWell(
-                    enableFeedback: false,
-                    onTap: () {
-                      audioPlayer.playSound('click');
-                      setState(() {
-                        tempImageUrl =
-                            //  avatarDocument.data['images'][index];
-                            modAvatarDocument[index];
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(1.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            border: Border.all(
-                                color: (tempImageUrl ==
-                                        // avatarDocument.data['images'][index]
-                                        modAvatarDocument[index])
-                                    ? Colors.yellow[600]
-                                    : (userAuthenticationSnapshot != null &&
-                                            userAuthenticationSnapshot
-                                                .hasData &&
-                                            userAuthenticationSnapshot.data !=
-                                                null)
-                                        ? Colors.blue[800]
-                                        : Colors.black,
-                                width: 2.0),
-                            color: Colors.blue[800]),
-                        child: Padding(
-                          padding: const EdgeInsets.all(1.0),
-                          child: Image(
-                            image: NetworkImage(
-                                // avatarDocument.data['images'][index]
-                                modAvatarDocument[index]),
+            child: Container(
+              decoration: BoxDecoration(
+                color: (signInStatus == status.signedIn) ? Colors.black : null,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 6.0, vertical: 0.0),
+                child: Scrollbar(
+                  controller: _scrollController,
+                  isAlwaysShown: true,
+                  child: GridView.builder(
+                      controller: _scrollController,
+                      physics: BouncingScrollPhysics(),
+                      itemCount: modAvatarDocumentList.length,
+                      scrollDirection: Axis.vertical,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 5),
+                      itemBuilder: (BuildContext context, int index) {
+                        return InkWell(
+                          enableFeedback: false,
+                          onTap: () {
+                            audioPlayer.playSound('click');
+                            setState(() {
+                              tempImageUrl =
+                                  //  avatarDocument.data['images'][index];
+                                  modAvatarDocumentList[index];
+                            });
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  border: Border.all(
+                                      color: (tempImageUrl ==
+                                              // avatarDocument.data['images'][index]
+                                              modAvatarDocumentList[index])
+                                          ? Colors.yellow[600]
+                                          : Colors.black,
+                                      width: 2.0),
+                                  color: Colors.blue[800]),
+                              child: Padding(
+                                padding: const EdgeInsets.all(1.0),
+                                child: Image(
+                                  image: NetworkImage(
+                                      // avatarDocument.data['images'][index]
+                                      modAvatarDocumentList[index]),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
+                        );
+                      }),
+                ),
+              ),
+            ),
           ),
           Flexible(
             flex: 2,
             child: MyTextField(
               controller: myController,
+            ),
+          ),
+          Flexible(
+            flex: 1,
+            child: Container(
+              // color: Colors.black,
+              alignment: Alignment.center,
+              child: Text(
+                'Note - Your first name represents you',
+                style: GoogleFonts.ubuntu(
+                  color: Colors.white,
+                  fontSize: 10.0,
+                  fontWeight: FontWeight.w700,
+                  shadows: [
+                    Shadow(
+                        // bottomLeft
+                        offset: Offset(-0.8, -0.8),
+                        color: Colors.black),
+                    Shadow(
+                        // bottomRight
+                        offset: Offset(0.8, -0.8),
+                        color: Colors.black),
+                    Shadow(
+                        // topRight
+                        offset: Offset(1.2, 1.6),
+                        color: Colors.black),
+                    Shadow(
+                        // topLeft
+                        offset: Offset(-0.8, 0.8),
+                        color: Colors.black),
+                  ],
+                ),
+              ),
             ),
           ),
           Flexible(
@@ -127,29 +178,26 @@ class _EditProfileState extends State<EditProfile> {
                 InkWell(
                     enableFeedback: false,
                     onTap: () {
-                      tempName = tempName.trim();
-                      imageUrl = tempImageUrl;
-                      name = tempName;
-                      name = name.trim();
-                      myUserName = firstName(name);
-                      audioPlayer.playSound('click');
-                      if (userAuthenticationSnapshot != null &&
-                          userAuthenticationSnapshot.hasData &&
-                          userAuthenticationSnapshot.data != null) {
-                        saveChangesToExistingProfile();
-                        // .whenComplete(() {
-                        circleAvatarKey.currentState.setState(() {});
-                        informationOverlayBuilder.hide();
-                        informationOverlayBuilder.show(
-                            context,
-                            MyProfile(
-                              overlayBuilder: informationOverlayBuilder,
-                            ));
-                        // }
+                      if (tempName != null && tempName != "") {
+                        tempName = tempName.trim();
+                        imageUrl = tempImageUrl;
+                        name = tempName;
+                        name = name.trim();
+                        myUserName = firstName(name);
+                        audioPlayer.playSound('click');
+
+                        if (signInStatus == status.signedIn) {
+                          saveChangesToExistingProfile();
+                          circleAvatarKey.currentState.setState(() {});
+                          informationOverlayBuilder.hide();
+                          informationOverlayBuilder.show(
+                              context,
+                              MyProfile(
+                                overlayBuilder: informationOverlayBuilder,
+                              ));
+                        } else
+                          AnonymousAuthentication().signInAnonymously();
                       }
-                      // );
-                      else
-                        AnonymousAuthentication().signInAnonymously();
                     },
                     child: OverlayButton(
                       label: 'Save',
@@ -159,15 +207,16 @@ class _EditProfileState extends State<EditProfile> {
           ),
           Flexible(
             flex: 1,
-            child: Row(
-              children: [
-                IconButton(
+            child: Container(
+                alignment: Alignment.centerLeft,
+                child: InkWell(
                   enableFeedback: false,
-                  icon: Icon(
+                  child: Icon(
                     Icons.keyboard_backspace,
                     color: Colors.white,
+                    size: 30.0,
                   ),
-                  onPressed: () {
+                  onTap: () {
                     audioPlayer.playSound('click');
                     if (userAuthenticationSnapshot != null &&
                         userAuthenticationSnapshot.hasData &&
@@ -180,9 +229,7 @@ class _EditProfileState extends State<EditProfile> {
                       dialogMenuKey.currentState.setState(() {});
                     }
                   },
-                )
-              ],
-            ),
+                )),
           )
         ],
       ),
@@ -190,8 +237,9 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Future<void> saveChangesToExistingProfile() async {
-    String userLoginType =
-        check.toString().substring(check.toString().indexOf('.') + 1);
+    String userLoginType = checkSignInMethod
+        .toString()
+        .substring(checkSignInMethod.toString().indexOf('.') + 1);
     await Firestore.instance
         .collection('users $userLoginType')
         .document(userFirebaseDocument.documentID) //add id
@@ -212,23 +260,17 @@ class _MyTextFieldState extends State<MyTextField> {
     return TextField(
       controller: widget.controller,
       showCursor: true,
-      // onTap: () {
-      //   if (widget.controller.text != name) {
-      //     setState(() {
-      //       widget.controller.text = name;
-      //     });
-      //   }
-      // },
-      // name,
       style: overlayTextStyle,
+      cursorColor: Colors.yellow,
       onChanged: (editedText) {
         setState(() {
           tempName = editedText;
         });
       },
       textInputAction: TextInputAction.newline,
-
       decoration: new InputDecoration(
+        hintText: 'Enter Name',
+        hintStyle: overlayTextStyle,
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.yellow, width: 5.0),
         ),
