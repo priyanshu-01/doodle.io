@@ -26,7 +26,9 @@ DocumentSnapshot avatarDocument;
 InformationOverlayBuilder informationOverlayBuilder;
 NecessaryOverlayBuilder necessaryOverlayBuilder;
 enum signInMethod { google, anonymous }
-var check = signInMethod.anonymous;
+var checkSignInMethod = signInMethod.anonymous;
+enum status { signedIn, notSignedIn }
+var signInStatus = status.notSignedIn;
 AsyncSnapshot userAuthenticationSnapshot;
 
 class AuthHandler extends StatelessWidget {
@@ -49,17 +51,19 @@ class AuthHandler extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Loading(); //loading page
           else if (snapshot.hasData && snapshot.data != null) {
+            signInStatus = status.signedIn;
+
             if (necessaryOverlayBuilder.overlayEntry != null) {
               necessaryOverlayBuilder.hide();
               necessaryOverlayBuilder.overlayEntry = null;
             }
 
             if (snapshot.data.isAnonymous) {
-              check = signInMethod.anonymous;
+              checkSignInMethod = signInMethod.anonymous;
               uid = snapshot.data.uid;
               return fetchFutureAnonymous();
             } else {
-              check = signInMethod.google;
+              checkSignInMethod = signInMethod.google;
               name = snapshot.data.displayName;
               email = snapshot.data.email;
               imageUrl = snapshot.data.photoUrl;
@@ -69,6 +73,7 @@ class AuthHandler extends StatelessWidget {
           } else
           // LoginPage
           {
+            signInStatus = status.notSignedIn;
             WidgetsBinding.instance.addPostFrameCallback((_) {
               necessaryOverlayBuilder.show(context);
             });

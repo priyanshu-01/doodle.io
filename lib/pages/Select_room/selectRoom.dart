@@ -130,7 +130,7 @@ class _SelectRoomState extends State<SelectRoom> {
                                 alignment: Alignment.bottomCenter,
                                 child: InkWell(
                                   onTap: () {
-                                    (check == signInMethod.google)
+                                    (checkSignInMethod == signInMethod.google)
                                         ? GoogleAuthentication().signOutGoogle()
                                         : AnonymousAuthentication()
                                             .signOutAnonymous();
@@ -329,9 +329,26 @@ class TopRowWithAvatarAndCoin extends StatelessWidget {
       children: <Widget>[
         InkWell(
           enableFeedback: false,
-          child: Padding(
-              padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-              child: SelectRoomAvatar()),
+          child: Stack(
+            // mainAxisSize: MainAxisSize.min,
+            // crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                  child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SelectRoomAvatar(),
+              )),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Icon(
+                  Icons.edit,
+                  color: Colors.yellow[700],
+                  size: 22.0,
+                ),
+              )
+            ],
+          ),
           onTap: () {
             audioPlayer.playSound('click');
             informationOverlayBuilder.show(

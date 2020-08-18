@@ -158,13 +158,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   Future<void> getAvatars() async {
     await Firestore.instance
         .collection('avatars')
-        .document('images')
+        .document('avatarImages')
         .get()
         .then((value) {
       setState(() {
         avatarDocument = value;
         dataInitialised = true;
-        imageUrl = avatarDocument.data['images'][0];
+        imageUrl = avatarDocument.data['avatarImages']['boys'][0];
       });
     });
   }

@@ -15,15 +15,14 @@ List sortedPlayers;
 //   'dev',
 //   'developer ksaalcalichaovo',
 //   'devesdasloper',
-//   // 'dedveloper',
-//   // 'dedveloper',
-//   // 'dedveloper',
+//   'dedveloper',
+//   'dedveloper',
+//   'dedveloper',
+//   'dedveloper',
+//   'dedveloper',
 // ];
 List sortedScore;
-//  = [
-//   450, 0, 450, 450,
-// //  450, 100, 1000
-// ]; //CHANGE LATER
+//  = [450, 0, 450, 450, 450, 100, 1000, 1000, 10]; //CHANGE LATER
 
 class WordWas extends StatefulWidget {
   @override
@@ -113,7 +112,6 @@ class WordHeading extends StatelessWidget {
           style: GoogleFonts.openSans(
             color: Colors.white,
             fontSize: 20.0,
-            // fontWeight: FontWeight.bold,
           ),
         ),
         AutoSizeText(
@@ -122,7 +120,6 @@ class WordHeading extends StatelessWidget {
           style: GoogleFonts.openSans(
             color: Colors.white,
             fontSize: 26.0,
-            // fontWeight: FontWeight.bold,
           ),
           maxLines: 1,
         ),
@@ -153,21 +150,23 @@ class _WordWasContentState extends State<WordWasContent>
     wordContainerColor = Colors.white;
     listContainerBorderColor = Colors.white;
     addItem = 0;
-    listAnimationDurationMilliseconds = playersId.length * 200;
+    listAnimationDurationMilliseconds = playersId.length
+        // sortedPlayers.length
+        *
+        200;
     if (listAnimationDurationMilliseconds > 1000)
       listAnimationDurationMilliseconds = 1000;
-    sort();
+    sort(); //CHANGE LATER
     controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 300),
-      // value: 1.0,
       lowerBound: 0.0,
       upperBound: 1.0,
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        wordContainerColor = Colors.black;
-        listContainerBorderColor = Colors.black;
+        wordContainerColor = Color(0xFF1f1f1f);
+        listContainerBorderColor = Color(0xFF1f1f1f);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _startTimer();
         });
@@ -205,7 +204,6 @@ class _WordWasContentState extends State<WordWasContent>
 
   @override
   Widget build(BuildContext context) {
-    // _startTimer();
     return Container(
       alignment: Alignment.center,
       color: Colors.white,
@@ -215,9 +213,7 @@ class _WordWasContentState extends State<WordWasContent>
         children: <Widget>[
           Flexible(
               flex: 5,
-              child:
-                  // Text('The word was $word')
-                  FractionallySizedBox(
+              child: FractionallySizedBox(
                 widthFactor: 0.75,
                 child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
@@ -232,12 +228,9 @@ class _WordWasContentState extends State<WordWasContent>
           Flexible(
             flex: 14,
             child: FractionallySizedBox(
-              // alignment: Alignment.center,
               widthFactor: 0.75,
               child: AnimatedContainer(
                 duration: Duration(milliseconds: 500),
-                // alignment: Alignment.center,
-                // color: listContainerBorderColor,
                 decoration: BoxDecoration(
                     border: Border.all(
                         width: 1.0, color: listContainerBorderColor)),
@@ -247,11 +240,8 @@ class _WordWasContentState extends State<WordWasContent>
                       key: _listKey,
                       physics: BouncingScrollPhysics(),
                       initialItemCount: 0,
-                      //  itemCount: 10,
                       itemBuilder: (_, int a, Animation animation) {
                         String name = sortedPlayers[a];
-                        //  int score = sortedScore[a]*controller.value;
-
                         int b = a + 1;
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
@@ -262,11 +252,8 @@ class _WordWasContentState extends State<WordWasContent>
                               axis: Axis.vertical,
                               child: Container(
                                 decoration: BoxDecoration(
-                                    // color: Colors.grey[200],
-                                    color: Colors.black,
-                                    border: Border.all(
-                                        // color: Colors.grey[200]
-                                        ),
+                                    color: Color(0xFF1f1f1f),
+                                    border: Border.all(),
                                     borderRadius: BorderRadius.circular(12.0)),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -281,11 +268,10 @@ class _WordWasContentState extends State<WordWasContent>
                                           children: [
                                             Text('$b',
                                                 style: GoogleFonts.notoSans(
-                                                    // color: Colors.black,
                                                     color: Colors.white,
-                                                    // fontSize: totalWidth / 20,
-                                                    fontSize:
-                                                        300 / 20, //CHANGE LATER
+                                                    fontSize: totalWidth / 20,
+                                                    // fontSize:
+                                                    //     300 / 20, //CHANGE LATER
 
                                                     fontWeight: (name ==
                                                             myUserName)
@@ -298,13 +284,11 @@ class _WordWasContentState extends State<WordWasContent>
                                               child: AutoSizeText('$name',
                                                   maxLines: 1,
                                                   style: GoogleFonts.notoSans(
-                                                      // color: Colors.black,
                                                       color: Colors.white,
-                                                      // fontSize: totalWidth /
-                                                      // 20,
+                                                      fontSize: totalWidth / 20,
                                                       //CHANGE LATER
-                                                      fontSize: 300 /
-                                                          20, //CHANGE LATER
+                                                      // fontSize: 300 /
+                                                      //     20, //CHANGE LATER
 
                                                       fontWeight: (name ==
                                                               myUserName)
@@ -323,22 +307,24 @@ class _WordWasContentState extends State<WordWasContent>
                                             sc = sortedScore[a] *
                                                 controller.value;
                                             score = sc.toInt();
-                                            return
-                                                // Temp();
-
-                                                Row(
+                                            return Row(
                                               children: [
                                                 Text('+ $score',
-                                                    style: GoogleFonts.notoSans(
-                                                        color: (score == 0)
-                                                            ? Colors.red
-                                                            : Colors.green,
-                                                        // fontSize: totalWidth /
-                                                        //     20
-                                                        // CHANGE LATER
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        fontSize: 300 / 20)),
+                                                    style: GoogleFonts
+                                                        // .notoSans
+                                                        // .fredokaOne
+                                                        .ubuntu(
+                                                      // letterSpacing: 1.0,
+                                                      color: (score == 0)
+                                                          ? Colors.red
+                                                          : Colors.green,
+                                                      fontSize: totalWidth / 20,
+                                                      // CHANGE LATER
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      // fontSize:
+                                                      //     300 / 20
+                                                    )),
                                               ],
                                             );
                                           },

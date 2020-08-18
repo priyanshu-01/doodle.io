@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:scribbl/OverlayManager/informationOverlayBuilder.dart';
 import 'package:scribbl/pages/Guesser_screen/countDown.dart';
 import 'package:scribbl/pages/Guesser_screen/guesserScreen.dart';
 import 'package:scribbl/pages/Painter_screen/painterCountDown.dart';
@@ -152,44 +153,53 @@ class _ManagerState extends State<Manager> {
   Future<bool> leaveRoomAlert(BuildContext context,
       StreamSubscription firestoreRoomDataSubscription) async {
     Alert(
-      content: SizedBox(
-        height: 50.0,
+      content: Column(
+        children: [
+          SizedBox(
+            height: 30.0,
+          ),
+          InkWell(
+            enableFeedback: false,
+            child: OverlayButton(
+              label: 'Leave',
+              size: 20.0,
+              padding: 16.0,
+            ),
+            onTap: () {
+              audioPlayer.playSound('click');
+              firestoreRoomDataSubscription.cancel();
+              Navigator.pop(context);
+              Navigator.pop(context);
+              removeMe();
+            },
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+          InkWell(
+              enableFeedback: false,
+              child: OverlayButton(
+                label: 'Stay',
+                size: 20.0,
+                padding: 20.0,
+              ),
+              onTap: () {
+                audioPlayer.playSound('click');
+                Navigator.pop(context);
+              })
+        ],
       ),
       context: context,
       type: AlertType.none,
       title: "Leave Room ?",
       style: AlertStyle(
-          backgroundColor: Color(0xFFFFF1E9),
+          titleStyle: myCoustomOverlayTextStyle(size: 25.0),
+          backgroundColor: Colors.blue[700],
           animationType: AnimationType.grow,
           animationDuration: Duration(milliseconds: 200),
           alertBorder: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0))),
-      buttons: [
-        DialogButton(
-          // width: 40.0,
-          radius: BorderRadius.circular(20.0),
-          child: Text(
-            "Leave",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          color: Color(0xFFFF4893),
-          onPressed: () {
-            firestoreRoomDataSubscription.cancel();
-            Navigator.pop(context);
-            Navigator.pop(context);
-            removeMe();
-          },
-        ),
-        DialogButton(
-          radius: BorderRadius.circular(20.0),
-          child: Text(
-            "Stay",
-            style: TextStyle(color: Colors.black, fontSize: 20),
-          ),
-          onPressed: () => Navigator.pop(context),
-          color: Colors.white,
-        )
-      ],
+      buttons: [],
     ).show();
     return true;
   }

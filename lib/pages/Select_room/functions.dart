@@ -1,10 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:scribbl/pages/Select_room/selectRoom.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:scribbl/services/authHandler.dart';
 
 class MyConnectivity {
   MyConnectivity._internal();

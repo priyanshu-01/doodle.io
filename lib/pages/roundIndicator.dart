@@ -33,8 +33,9 @@ class _RoundIndicatorState extends State<RoundIndicator> {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter)
                         : (i == round)
-                            ? LinearGradient(
-                                colors: [Colors.blue[900], Colors.blue[300]])
+                            ? RadialGradient(
+                                radius: 1.5,
+                                colors: [Colors.blue[600], Colors.blue[600]])
                             : null
                     //  LinearGradient(
                     //     colors: [Colors.yellow[300], Colors.yellow[50]],

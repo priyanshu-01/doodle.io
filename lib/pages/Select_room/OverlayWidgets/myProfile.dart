@@ -20,73 +20,124 @@ class _MyProfileState extends State<MyProfile> {
   Widget build(BuildContext context) {
     String coin = commas(currency.remainingCoins);
     return Container(
-        height: totalLength * 0.3,
+        height: totalLength * 0.55,
+        width: totalWidth * 0.7,
         child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
               Flexible(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  flex: 1,
+                  child: Container(
+                      // color: Colors.black,
+                      child: InformationCloseButton())),
+              Flexible(
+                flex: 4,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CircleAvatar(
-                      radius: 27.0,
-                      backgroundColor: Colors.black,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.grey[100],
-                        backgroundImage: NetworkImage(
-                          imageUrl,
-                        ),
-                        radius: 25.0,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15.0,
-                    ),
                     Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          '$name',
-                          style: overlayTextStyle,
+                        CircleAvatar(
+                          radius: totalLength * 0.1,
+                          backgroundColor: Colors.black,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.grey[100],
+                            backgroundImage: NetworkImage(
+                              imageUrl,
+                            ),
+                            radius: totalLength * 0.1 - 2.0,
+                          ),
                         ),
                         SizedBox(
-                          height: 10.0,
+                          height: 8.0,
                         ),
-                        Row(
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                              child: coinImage,
-                              height: 20.0,
+                            Text(
+                              '$name',
+                              style: overlayTextStyle,
                             ),
                             SizedBox(
-                              width: 5.0,
+                              height: 6.0,
                             ),
-                            Text(
-                              coin,
-                              style: overlayTextStyle,
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 15.0,
+                                ),
+                                Container(
+                                  child: coinImage,
+                                  height: 20.0,
+                                ),
+                                SizedBox(
+                                  width: 5.0,
+                                ),
+                                Text(
+                                  coin,
+                                  style: overlayTextStyle,
+                                )
+                              ],
                             )
                           ],
                         )
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
               Flexible(
+                flex: 2,
                 child: Container(
-                  decoration: overlayBoxDecoration,
-                  child: InkWell(
-                      enableFeedback: false,
-                      onTap: () {
-                        audioPlayer.playSound('click');
-                        widget.overlayBuilder.hide();
-                        widget.overlayBuilder.show(context, EditProfile());
-                      },
-                      child: OverlayButton(label: 'Edit Profile')),
+                  // color: Colors.black,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: overlayBoxDecoration,
+                        child: InkWell(
+                          enableFeedback: false,
+                          onTap: () {
+                            audioPlayer.playSound('click');
+                            widget.overlayBuilder.hide();
+                            widget.overlayBuilder.show(context, EditProfile());
+                          },
+                          child:
+                              // OverlayButton(label: 'Edit Profile')
+                              Container(
+                            decoration: overlayBoxDecoration,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0, vertical: 8.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Edit Profile',
+                                    style: overlayTextStyle,
+                                  ),
+                                  SizedBox(
+                                    width: 7.0,
+                                  ),
+                                  Icon(
+                                    Icons.edit,
+                                    color: Colors.black,
+                                    size: 23.0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               )
             ]));

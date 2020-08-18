@@ -37,7 +37,7 @@ class GoogleAuthentication {
     print("signOutWithGoogle succeeded");
     await _auth.signOut();
     // whenComplete(() => check = signInMethod.anonymous);
-    check = signInMethod.anonymous;
+    checkSignInMethod = signInMethod.anonymous;
   }
 
   Future<void> createGoogleUser() async {

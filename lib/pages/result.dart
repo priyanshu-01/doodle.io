@@ -17,7 +17,7 @@ class _ResultState extends State<Result> {
   @override
   void initState() {
     gamesPlayed++;
-    if (check == signInMethod.google)
+    if (checkSignInMethod == signInMethod.google)
       updateUserDataGoogle();
     else
       updateUserDataAnonymous();
