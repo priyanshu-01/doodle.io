@@ -125,7 +125,7 @@ Future<void> changeDen(String source) async {
     tempScore[k] = 0;
   }
 
-  await Firestore.instance.collection('rooms').document(documentid).updateData({
+  await FirebaseFirestore.instance.collection('rooms').doc(documentid).update({
     'den': players[s],
     'den_id': playersId[s],
     'xpos': {},

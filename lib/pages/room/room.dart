@@ -87,9 +87,9 @@ Future<void> removeMe() async {
   updatePlayerData('left').then((value) async {
     if (players.length == 0) {
       // del doc
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('rooms')
-          .document(documentid)
+          .doc(documentid)
           .delete()
           .catchError((e) {
         print(e);
@@ -97,11 +97,11 @@ Future<void> removeMe() async {
       });
     } else {
       if (hostId == identity) {
-        await Firestore.instance
+        await FirebaseFirestore.instance
             .collection('rooms')
-            .document(documentid)
-            .updateData(
-                {'host': players[0], 'host_id': playersId[0]}).whenComplete(() {
+            .doc(documentid)
+            .update({'host': players[0], 'host_id': playersId[0]}).whenComplete(
+                () {
           if (denId == identity)
             changeDenWhileLeaving('room.dart line 433', myIndex);
         });
@@ -113,7 +113,7 @@ Future<void> removeMe() async {
 }
 
 Future<void> updatePlayerData(String myStatus) async {
-  await Firestore.instance.collection('rooms').document(documentid).updateData({
+  await FirebaseFirestore.instance.collection('rooms').doc(documentid).update({
     'users': players,
     'counter': counter,
     'users_id': playersId,
@@ -129,12 +129,12 @@ Future<void> updatePlayerData(String myStatus) async {
       'lastReaction': null,
     }
   }).whenComplete(() async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('rooms')
-        .document(documentid)
+        .doc(documentid)
         .get()
         .then((value) {
-      roomData = value.data;
+      roomData = value.data();
       readRoomData();
     });
   });
@@ -165,7 +165,7 @@ Future<void> changeDenWhileLeaving(String source, int myIndex) async {
     tempScore[k] = 0;
   }
 
-  await Firestore.instance.collection('rooms').document(documentid).updateData({
+  await FirebaseFirestore.instance.collection('rooms').doc(documentid).update({
     'den': players[s],
     'den_id': playersId[s],
     'xpos': {},

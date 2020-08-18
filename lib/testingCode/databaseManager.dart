@@ -18,10 +18,10 @@ class DatabaseManager extends StatelessWidget {
   }
 
   Future<void> updateDatabase() async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('words')
-        .document('word list')
-        .updateData({'list': myPreviousDataList});
+        .doc('word list')
+        .update({'list': myPreviousDataList});
   }
 }
 

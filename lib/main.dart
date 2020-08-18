@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
 import 'package:scribbl/pages/signIn.dart';
@@ -15,6 +16,7 @@ import 'audioPlayer/audioPlayer.dart';
 import 'package:flutter/foundation.dart';
 import 'pages/Select_room/selectRoom.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'testingCode/animatedList.dart';
 import 'testingCode/provider/ProviderWorking.dart';
 import 'testingCode/overlay.dart';
@@ -27,11 +29,12 @@ import 'pages/wordWas.dart';
 
 bool resumed = true;
 DateTime currentBackPressTime;
-void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Crashlytics.instance.enableInDevMode = false;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-
+  // Firebase.initializeApp();
+  await Firebase.initializeApp();
   runZoned(() {
     runApp(new MaterialApp(
       home: MyHomePage(),
@@ -156,15 +159,15 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   Future<void> getAvatars() async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('avatars')
-        .document('avatarImages')
+        .doc('avatarImages')
         .get()
         .then((value) {
       setState(() {
         avatarDocument = value;
         dataInitialised = true;
-        imageUrl = avatarDocument.data['avatarImages']['boys'][0];
+        imageUrl = avatarDocument.data()['avatarImages']['boys'][0];
       });
     });
   }

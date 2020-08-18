@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scribbl/services/authHandler.dart';
@@ -37,7 +36,7 @@ class _EnterNameState extends State<EnterName> {
   }
 
   // Future<void> getAvatars() async {
-  //   avatarDocument = await Firestore.instance
+  //   avatarDocument = await FirebaseFirestore.instance
   //       .collection('avatars')
   //       .document('images')
   //       .get()
@@ -56,7 +55,7 @@ class _EnterNameState extends State<EnterName> {
       screenHeight = MediaQuery.of(context).size.height;
     double x = screenHeight / 12;
     if (avatarDocument != null && imageUrl == '  ')
-      imageUrl = avatarDocument.data['images'][0];
+      imageUrl = avatarDocument.data()['images'][0];
     return Scaffold(
       body: Container(
           constraints: BoxConstraints.expand(),
@@ -66,7 +65,7 @@ class _EnterNameState extends State<EnterName> {
             children: <Widget>[
               (avatarDocument != null)
                   ? CarouselSlider.builder(
-                      itemCount: avatarDocument.data['images'].length,
+                      itemCount: avatarDocument.data()['images'].length,
                       options: CarouselOptions(
                         enlargeCenterPage: true,
                         //aspectRatio: 2.0,
@@ -75,7 +74,7 @@ class _EnterNameState extends State<EnterName> {
                         scrollDirection: Axis.horizontal,
                         initialPage: 0,
                         onPageChanged: (index, reason) {
-                          imageUrl = avatarDocument.data['images'][index];
+                          imageUrl = avatarDocument.data()['images'][index];
                         },
                       ),
                       itemBuilder: (context, index) {
@@ -84,7 +83,7 @@ class _EnterNameState extends State<EnterName> {
                           radius: 1.0 * x,
                           backgroundColor: Colors.grey[100],
                           backgroundImage: NetworkImage(
-                            avatarDocument.data['images'][index],
+                            avatarDocument.data()['images'][index],
                           ),
                         );
                       },

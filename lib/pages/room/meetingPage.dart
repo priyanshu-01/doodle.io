@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scribbl/pages/Select_room/createRoom.dart';
 import 'package:share/share.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../Select_room/selectRoom.dart';
@@ -86,10 +85,10 @@ class StartStatus extends StatelessWidget {
   }
 
   Future<void> startGame() async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('rooms')
-        .document(documentid)
-        .updateData({
+        .doc(documentid)
+        .update({
       'game': game,
     });
   }
@@ -296,8 +295,8 @@ class MeetingPage extends StatelessWidget {
 }
 
 Future<void> updateDennerName() async {
-  await Firestore.instance
+  await FirebaseFirestore.instance
       .collection('rooms')
-      .document(documentid)
-      .updateData({'den': players[playersId.indexOf(denId)]});
+      .doc(documentid)
+      .update({'den': players[playersId.indexOf(denId)]});
 }

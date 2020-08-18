@@ -178,10 +178,10 @@ class _AnimatedGiftState extends State<AnimatedGift>
   }
 
   Future<void> addReaction(int index) async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('rooms')
-        .document(documentid)
-        .updateData({'userData.$identity.lastReaction': '$index $switcher'});
+        .doc(documentid)
+        .update({'userData.$identity.lastReaction': '$index $switcher'});
   }
 }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scribbl/OverlayManager/informationOverlayBuilder.dart';
 import 'package:scribbl/services/authHandler.dart';
 import '../room/room.dart';
 import 'dart:math';
@@ -166,7 +165,7 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
 }
 
 Future<void> updateWord() async {
-  await Firestore.instance.collection('rooms').document(documentid).updateData({
+  await FirebaseFirestore.instance.collection('rooms').doc(documentid).update({
     'word': choosenWord,
     'wordChosen': true,
     'allAttemptedWords': allAttemptedWords,

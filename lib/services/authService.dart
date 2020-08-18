@@ -14,11 +14,11 @@ class GoogleAuthentication {
     GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
 
-    AuthCredential credential = GoogleAuthProvider.getCredential(
+    AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
     );
-    AuthResult authResult = await _auth.signInWithCredential(credential);
+    var authResult = await _auth.signInWithCredential(credential);
 
     if (authResult.user == null) return false;
 
@@ -41,7 +41,7 @@ class GoogleAuthentication {
   }
 
   Future<void> createGoogleUser() async {
-    await Firestore.instance.collection('users google').add({
+    await FirebaseFirestore.instance.collection('users google').add({
       'uid': uid,
       'coins': coins,
       'name': name,
@@ -53,22 +53,22 @@ class GoogleAuthentication {
       'originalName': name,
       'originalImageUrl': imageUrl
     }).then((value) {
-      value.get().then((value) => userFirebaseDocument = value);
-      dataDocId = value.documentID;
+      value.get().then((value) => userFirebaseDocumentMap = value.data());
+      userFirebaseDocumentId = value.id;
     });
   }
 
   Future<void> activate() async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('users google')
-        .document(dataDocId)
-        .updateData({'active': true});
+        .doc(userFirebaseDocumentId)
+        .update({'active': true});
   }
 
   Future<void> deactivate() async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('users google')
-        .document(dataDocId)
-        .updateData({'active': false});
+        .doc(userFirebaseDocumentId)
+        .update({'active': false});
   }
 }

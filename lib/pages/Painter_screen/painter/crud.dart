@@ -8,10 +8,10 @@ class CRUD {
   PainterData painterData;
   CRUD({this.painterData});
   Future<void> updateStroke() async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('rooms')
-        .document(documentid)
-        .updateData({
+        .doc(documentid)
+        .update({
       'xpos': painterData.listX,
       'ypos': painterData.listY,
       'length': painterData.tempInd,
@@ -22,10 +22,10 @@ class CRUD {
   }
 
   Future<void> updatePointer() async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('rooms')
-        .document(documentid)
-        .updateData({'pointer': painterData.p});
+        .doc(documentid)
+        .update({'pointer': painterData.p});
   }
 }
 

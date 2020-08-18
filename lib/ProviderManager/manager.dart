@@ -49,7 +49,7 @@ class _ManagerState extends State<Manager> {
     guesserCountDown = GuesserCountDown();
     painterCountDown = PainterCountDown();
     reactionListener = ReactionListener();
-    //Firestore Builders below
+    //FirebaseFirestore Builders below
     myRoomData = RoomData();
     gameScreenData = GameScreenData();
     chatData = ChatData();
@@ -66,13 +66,13 @@ class _ManagerState extends State<Manager> {
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   reactionListener.listenReactions(context);
     // });
-    firestoreRoomDataSubscription = Firestore.instance
+    firestoreRoomDataSubscription = FirebaseFirestore.instance
         .collection('rooms')
-        .document(documentid)
+        .doc(documentid)
         .snapshots()
         .listen((event) {
       cacheRoomData = roomData;
-      roomData = event.data;
+      roomData = event.data();
       readRoomData();
       if (round > numberOfRounds) {
         docId = documentid;

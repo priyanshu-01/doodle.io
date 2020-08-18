@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scribbl/OverlayManager/informationOverlayBuilder.dart';
 import 'package:scribbl/OverlayManager/necessaryOverlayBuilder.dart';
 import 'package:scribbl/gift/gift_contents.dart';
-import 'package:scribbl/pages/Select_room/OverlayWidgets/editProfile.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
-import 'package:scribbl/services/authHandler.dart';
 import 'package:scribbl/services/authService.dart';
 
 class LoginOptions extends StatefulWidget {

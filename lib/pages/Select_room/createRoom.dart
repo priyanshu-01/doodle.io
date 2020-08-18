@@ -189,7 +189,7 @@ class _DisplayRoundState extends State<DisplayRound> {
 }
 
 Future<void> addRoom(String uid) async {
-  await Firestore.instance.collection('rooms').add({
+  await FirebaseFirestore.instance.collection('rooms').add({
     'id': id,
     'game': false,
     'counter': 0,
@@ -219,9 +219,9 @@ Future<void> addRoom(String uid) async {
   }).catchError((e) {
     print('error $e');
   }).then((value) async {
-    documentid = value.documentID;
+    documentid = value.id;
     await value.get().then((value) async {
-      roomData = value.data;
+      roomData = value.data();
       readRoomData();
       await addPlayer();
     });

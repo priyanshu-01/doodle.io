@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scribbl/pages/Select_room/OverlayWidgets/editProfile.dart';
 import 'package:scribbl/pages/Select_room/OverlayWidgets/loginOptions.dart';
-import 'informationOverlayBuilder.dart';
 
 enum dialogMenu { loginOptions, editProfile }
 var menu = dialogMenu.loginOptions;

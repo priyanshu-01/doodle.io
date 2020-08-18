@@ -137,16 +137,16 @@ class _EnterRoomIdState extends State<EnterRoomId> {
       processingJoinRoom = true;
     });
     // QuerySnapshot qs;
-    var ref = Firestore.instance;
+    var ref = FirebaseFirestore.instance;
     await ref
         .collection("rooms")
         .where('id', isEqualTo: val)
-        .getDocuments()
+        .get()
         .then((value) {
-      if (value.documents.length != 0) {
+      if (value.docs.length != 0) {
         processingJoinRoom = false;
-        documentid = value.documents[0].documentID;
-        roomData = value.documents[0].data;
+        documentid = value.docs[0].id;
+        roomData = value.docs[0].data();
         readRoomData();
         if (playersId.indexOf(identity) == -1) {
           addPlayer().whenComplete(() {

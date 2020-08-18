@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:scribbl/pages/loginPage.dart';
 // import 'room/room.dart';
 // import 'room/gameScreen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,14 +30,14 @@ class _ResultState extends State<Result> {
 }
 
 Future<void> updateUserDataGoogle() async {
-  QuerySnapshot q = await Firestore.instance
+  QuerySnapshot q = await FirebaseFirestore.instance
       .collection('users google')
       .where('uid', isEqualTo: identity)
-      .getDocuments();
-  DocumentSnapshot d = q.documents[0];
-  String i = d.documentID;
+      .get();
+  DocumentSnapshot d = q.docs[0];
+  String i = d.id;
   // int score = finalScore[playersId.indexOf(identity)];
-  await Firestore.instance.collection('users google').document(i).updateData({
+  await FirebaseFirestore.instance.collection('users google').doc(i).update({
     'coins': currency.remainingCoins,
     'attemptedWords': wordCheck.myAttemptedWords,
     'gamesPlayed': gamesPlayed,
@@ -46,17 +45,14 @@ Future<void> updateUserDataGoogle() async {
 }
 
 Future<void> updateUserDataAnonymous() async {
-  QuerySnapshot q = await Firestore.instance
+  QuerySnapshot q = await FirebaseFirestore.instance
       .collection('users anonymous')
       .where('uid', isEqualTo: identity)
-      .getDocuments();
-  DocumentSnapshot d = q.documents[0];
-  String i = d.documentID;
+      .get();
+  DocumentSnapshot d = q.docs[0];
+  String i = d.id;
   // int score = finalScore[playersId.indexOf(identity)];
-  await Firestore.instance
-      .collection('users anonymous')
-      .document(i)
-      .updateData({
+  await FirebaseFirestore.instance.collection('users anonymous').doc(i).update({
     'coins': currency.remainingCoins,
     'attemptedWords': wordCheck.myAttemptedWords,
     'gamesPlayed': gamesPlayed,

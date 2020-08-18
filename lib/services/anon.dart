@@ -1,25 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'authHandler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../pages/enterName.dart';
 
 class AnonymousAuthentication {
   Future<void> activate() async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('users anonymous')
-        .document(dataDocId)
-        .updateData({'active': true});
+        .doc(userFirebaseDocumentId)
+        .update({'active': true});
   }
 
   Future<void> deactivate() async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('users anonymous')
-        .document(dataDocId)
-        .updateData({'active': false});
+        .doc(userFirebaseDocumentId)
+        .update({'active': false});
   }
 
   Future<void> createAnonymousUser() async {
-    await Firestore.instance.collection('users anonymous').add({
+    await FirebaseFirestore.instance.collection('users anonymous').add({
       'uid': uid,
       'coins': coins,
       'name': name,
@@ -28,8 +27,8 @@ class AnonymousAuthentication {
       'attemptedWords': [],
       'gamesPlayed': 0,
     }).then((value) {
-      value.get().then((value) => userFirebaseDocument = value);
-      dataDocId = value.documentID;
+      value.get().then((value) => userFirebaseDocumentMap = value.data());
+      userFirebaseDocumentId = value.id;
     });
   }
 

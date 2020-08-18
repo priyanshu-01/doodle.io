@@ -216,7 +216,7 @@ double checkLeftSideContainerHeight(String position) {
 }
 
 Future<void> sendMessage() async {
-  await Firestore.instance.collection('rooms').document(documentid).updateData(
+  await FirebaseFirestore.instance.collection('rooms').doc(documentid).update(
       {'chat': chat, 'userData.$identity.lastMessageIndex': chat.length - 1});
 }
 
@@ -239,7 +239,7 @@ Future<void> updateScore() async {
   //madeIt = true;
   // score = 0;
 
-  await Firestore.instance.collection('rooms').document(documentid).updateData({
+  await FirebaseFirestore.instance.collection('rooms').doc(documentid).update({
     'tempScore': tempScore,
     'finalScore': finalScore,
     'guessersId': guessersId
@@ -513,10 +513,10 @@ class _TextBoxState extends State<TextBox> {
     //madeIt = true;
     // score = 0;
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('rooms')
-        .document(documentid)
-        .updateData({
+        .doc(documentid)
+        .update({
       'tempScore': tempScore,
       'finalScore': finalScore,
       'guessersId': guessersId,

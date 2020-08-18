@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:scribbl/OverlayManager/necessaryOverlayBuilder.dart';
 import 'package:scribbl/pages/Select_room/OverlayWidgets/myProfile.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
-import 'package:scribbl/pages/enterName.dart';
 import 'package:scribbl/services/anon.dart';
 import 'package:scribbl/services/authHandler.dart';
 import '../../../OverlayManager/informationOverlayBuilder.dart';
@@ -28,12 +27,12 @@ class _EditProfileState extends State<EditProfile> {
     tempName = name;
     myController = TextEditingController(text: name);
     // (name != null && name != '') ? name : "Enter Name");
-    modAvatarDocumentList = avatarDocument.data['avatarImages']['boys'] +
-        avatarDocument.data['avatarImages']['girls'];
+    modAvatarDocumentList = avatarDocument.data()['avatarImages']['boys'] +
+        avatarDocument.data()['avatarImages']['girls'];
 
     if (checkSignInMethod == signInMethod.google) {
       modAvatarDocumentList =
-          [userFirebaseDocument['originalImageUrl']] + modAvatarDocumentList;
+          [userFirebaseDocumentMap['originalImageUrl']] + modAvatarDocumentList;
       // avatarDocument.data['images'] = modAvatarDocument;
     }
     _height = totalLength * 0.65;
@@ -240,10 +239,10 @@ class _EditProfileState extends State<EditProfile> {
     String userLoginType = checkSignInMethod
         .toString()
         .substring(checkSignInMethod.toString().indexOf('.') + 1);
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('users $userLoginType')
-        .document(userFirebaseDocument.documentID) //add id
-        .updateData({'name': name, 'imageUrl': imageUrl}); //add data
+        .doc(userFirebaseDocumentId) //add id
+        .update({'name': name, 'imageUrl': imageUrl}); //add data
   }
 }
 

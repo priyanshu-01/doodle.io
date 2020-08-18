@@ -5,7 +5,6 @@ import 'package:scribbl/gift/menu.dart';
 import '../pages/room/room.dart';
 import 'reaction_view.dart';
 import '../pages/Select_room/selectRoom.dart';
-import '../gift/gift_contents.dart';
 
 class ReactionListener {
   Map reactionRecord;

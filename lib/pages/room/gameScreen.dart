@@ -21,9 +21,9 @@ class GameScreen extends StatelessWidget {
 }
 
 Future<void> delDoc() async {
-  await Firestore.instance
+  await FirebaseFirestore.instance
       .collection('rooms')
-      .document(documentid)
+      .doc(documentid)
       .delete()
       .catchError((e) {
     print(e);
@@ -33,8 +33,8 @@ Future<void> delDoc() async {
 
 Future<void> updateDimension() async {
   if (roomData['denCanvasLength'] != myDenCanvasLength)
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('rooms')
-        .document(documentid)
-        .updateData({'denCanvasLength': myDenCanvasLength});
+        .doc(documentid)
+        .update({'denCanvasLength': myDenCanvasLength});
 }
