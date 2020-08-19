@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scribbl/OverlayManager/necessaryOverlayBuilder.dart';
+import 'package:scribbl/main.dart';
 import 'package:scribbl/pages/Select_room/OverlayWidgets/myProfile.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
 import 'package:scribbl/services/anon.dart';
@@ -176,8 +177,13 @@ class _EditProfileState extends State<EditProfile> {
               children: [
                 InkWell(
                     enableFeedback: false,
-                    onTap: () {
+                    onTap: () async {
                       if (tempName != null && tempName != "") {
+                        await analytics.logEvent(
+                            name: 'edited_profile',
+                            parameters: {
+                              'signInMethod': signInMethod.anonymous.toString()
+                            });
                         tempName = tempName.trim();
                         imageUrl = tempImageUrl;
                         name = tempName;

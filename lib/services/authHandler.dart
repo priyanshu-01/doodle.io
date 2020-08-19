@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scribbl/OverlayManager/informationOverlayBuilder.dart';
 import 'package:scribbl/OverlayManager/necessaryOverlayBuilder.dart';
+import 'package:scribbl/main.dart';
 import 'package:scribbl/services/anon.dart';
 import 'package:scribbl/services/authService.dart';
 import '../pages/Select_room/selectRoom.dart';
@@ -36,6 +37,7 @@ class AuthHandler extends StatelessWidget {
     return StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
+          print('stream triggered');
           // return SelectRoom(
           //   currency: currency,
           //   email: email,
@@ -47,23 +49,33 @@ class AuthHandler extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Loading(); //loading page
           else if (snapshot.hasData && snapshot.data != null) {
+            print('user signed in');
             signInStatus = status.signedIn;
 
             if (necessaryOverlayBuilder.overlayEntry != null) {
-              necessaryOverlayBuilder.hide();
-              necessaryOverlayBuilder.overlayEntry = null;
+              print('necessary overlay hidden');
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                print('yes!!hidden');
+                necessaryOverlayBuilder.hide();
+              });
+
+              // necessaryOverlayBuilder.overlayEntry = null;
             }
 
             if (snapshot.data.isAnonymous) {
               checkSignInMethod = signInMethod.anonymous;
               uid = snapshot.data.uid;
+              // analytics.setUserId(uid);
+              setUserId();
               return fetchFutureAnonymous();
             } else {
               checkSignInMethod = signInMethod.google;
               name = snapshot.data.displayName;
               email = snapshot.data.email;
-              imageUrl = snapshot.data.photoUrl;
+              imageUrl = snapshot.data.photoURL;
               uid = snapshot.data.uid;
+              // analytics.setUserId(uid);
+              setUserId();
               return fetchFutureGoogle();
             }
           } else
@@ -77,6 +89,10 @@ class AuthHandler extends StatelessWidget {
           }
         });
   }
+}
+
+Future<void> setUserId() async {
+  await analytics.setUserId(uid);
 }
 
 Widget fetchFutureAnonymous() {

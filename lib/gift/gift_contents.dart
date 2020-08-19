@@ -7,6 +7,7 @@ import '../pages/Select_room/selectRoom.dart';
 import '../pages/Guesser_screen/guesserScreen.dart';
 import '../pages/room/room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:scribbl/main.dart';
 
 final Image coinImage = const Image(image: AssetImage('assets/icons/coin.png'));
 
@@ -115,9 +116,14 @@ class _AnimatedGiftState extends State<AnimatedGift>
                             crossAxisCount: 3),
                         itemBuilder: (BuildContext context, int index) {
                           return InkWell(
-                            onTap: () {
+                            onTap: () async {
                               if (currency.remainingCoins >=
                                   reactionsMenu[index]['price']) {
+                                await analytics.logSpendVirtualCurrency(
+                                    itemName: reactionsMenu[index]['name'],
+                                    virtualCurrencyName: reactionsMenu[index]
+                                        ['currency'],
+                                    value: reactionsMenu[index]['price']);
                                 switcher = !switcher;
                                 detuctCurrency(index);
                                 addReaction(index);

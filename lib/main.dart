@@ -27,14 +27,16 @@ import 'testingCode/stateTest.dart';
 import 'testingCode/home.dart';
 import 'pages/wordWas.dart';
 
+FirebaseAnalytics analytics = FirebaseAnalytics();
+// FirebaseAnalyticsObserver observer =
+//     FirebaseAnalyticsObserver(analytics: analytics);
 bool resumed = true;
 DateTime currentBackPressTime;
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
   Crashlytics.instance.enableInDevMode = false;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  // Firebase.initializeApp();
-  await Firebase.initializeApp();
+  Firebase.initializeApp();
   runZoned(() {
     runApp(new MaterialApp(
       home: MyHomePage(),
