@@ -122,7 +122,8 @@ class _AnimatedGiftState extends State<AnimatedGift>
                                 await analytics.logSpendVirtualCurrency(
                                     itemName: reactionsMenu[index]['name'],
                                     virtualCurrencyName: reactionsMenu[index]
-                                        ['currency'],
+                                            ['currency']
+                                        .toString(),
                                     value: reactionsMenu[index]['price']);
                                 switcher = !switcher;
                                 detuctCurrency(index);

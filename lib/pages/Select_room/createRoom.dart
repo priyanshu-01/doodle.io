@@ -201,6 +201,7 @@ Future<void> addRoom(String uid) async {
     'host_id': uid,
     'den': myUserName,
     'den_id': uid,
+    'denCanvasLength': myDenCanvasLength,
     'numberOfRounds': numberOfRounds,
     'round': 1,
     'word': '*',

@@ -49,7 +49,7 @@ class GoogleAuthentication {
       'imageUrl': imageUrl,
       'active': true,
       'attemptedWords': [],
-      'gamesPlayed': 0,
+      'gamesPlayed': gamesPlayed,
       'originalName': name,
       'originalImageUrl': imageUrl
     }).then((value) {

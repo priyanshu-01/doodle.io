@@ -151,15 +151,20 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
   void getWords() async {
     int length;
     wordList.removeWhere((e) => allAttemptedWords.contains(e));
-    List word = wordList;
-    length = word.length;
+    length = wordList.length;
     Random random = Random();
     double randomNumber;
     int index;
     for (int i = 0; i < 3; i++) {
       randomNumber = random.nextDouble() * (length - 1);
       index = randomNumber.toInt();
-      displayWords[i] = (word[index]);
+      displayWords[i] = (wordList[index]);
+      if (i == 1) {
+        if (displayWords[0] == displayWords[1]) i--;
+      } else if (i == 2) {
+        if (displayWords[0] == displayWords[2] ||
+            displayWords[1] == displayWords[2]) i--;
+      }
     }
   }
 }

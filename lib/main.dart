@@ -32,11 +32,12 @@ FirebaseAnalytics analytics = FirebaseAnalytics();
 //     FirebaseAnalyticsObserver(analytics: analytics);
 bool resumed = true;
 DateTime currentBackPressTime;
-void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
+// BuildContext necessaryOverlayContext;
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); //must
   Crashlytics.instance.enableInDevMode = false;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  Firebase.initializeApp();
+  await Firebase.initializeApp();
   runZoned(() {
     runApp(new MaterialApp(
       home: MyHomePage(),
@@ -137,13 +138,17 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   Future<bool> onWillPop(BuildContext context) {
+    BuildContext _context;
     DateTime now = DateTime.now();
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime) > Duration(seconds: 2)) {
       if (informationOverlayBuilder.overlayEntry == null) {
         currentBackPressTime = now;
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text('Tap again To exit'),
+        _context = (necessaryOverlayBuilder.overlayEntry == null)
+            ? context
+            : dialogMenuKey.currentContext;
+        Scaffold.of(_context).showSnackBar(SnackBar(
+          content: Text('Press Back again To exit..'),
           backgroundColor: Colors.black,
           duration: Duration(seconds: 2),
         ));

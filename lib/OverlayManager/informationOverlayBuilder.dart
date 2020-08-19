@@ -37,8 +37,10 @@ class InformationOverlayBuilder {
 
   void show(BuildContext context, Widget myOverlayWidget) {
     // this.doNotDismiss = doNotDismiss;
-    overlayEntry = buildOverlay(myOverlayWidget);
-    Overlay.of(context).insert(overlayEntry);
+    if (overlayEntry == null) {
+      overlayEntry = buildOverlay(myOverlayWidget);
+      Overlay.of(context).insert(overlayEntry);
+    }
   }
 
   void hide() {

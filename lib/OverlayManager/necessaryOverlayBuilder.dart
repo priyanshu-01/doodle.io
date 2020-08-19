@@ -35,8 +35,10 @@ class NecessaryOverlayBuilder {
 
   void show(BuildContext context) {
     // this.doNotDismiss = doNotDismiss;
-    overlayEntry = buildOverlay();
-    Overlay.of(context).insert(overlayEntry);
+    if (overlayEntry == null) {
+      overlayEntry = buildOverlay();
+      Overlay.of(context).insert(overlayEntry);
+    }
   }
 
   void hide() {

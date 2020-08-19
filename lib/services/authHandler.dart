@@ -37,7 +37,6 @@ class AuthHandler extends StatelessWidget {
     return StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          print('stream triggered');
           // return SelectRoom(
           //   currency: currency,
           //   email: email,
@@ -49,23 +48,11 @@ class AuthHandler extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Loading(); //loading page
           else if (snapshot.hasData && snapshot.data != null) {
-            print('user signed in');
             signInStatus = status.signedIn;
-
-            if (necessaryOverlayBuilder.overlayEntry != null) {
-              print('necessary overlay hidden');
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                print('yes!!hidden');
-                necessaryOverlayBuilder.hide();
-              });
-
-              // necessaryOverlayBuilder.overlayEntry = null;
-            }
-
+            necessaryOverlayBuilder.hide();
             if (snapshot.data.isAnonymous) {
               checkSignInMethod = signInMethod.anonymous;
               uid = snapshot.data.uid;
-              // analytics.setUserId(uid);
               setUserId();
               return fetchFutureAnonymous();
             } else {
@@ -74,7 +61,6 @@ class AuthHandler extends StatelessWidget {
               email = snapshot.data.email;
               imageUrl = snapshot.data.photoURL;
               uid = snapshot.data.uid;
-              // analytics.setUserId(uid);
               setUserId();
               return fetchFutureGoogle();
             }
@@ -108,6 +94,7 @@ Widget fetchFutureAnonymous() {
         if (snapshot.data.docs.length == 0) {
           coins = 200;
           wordCheck = WordCheck();
+          gamesPlayed = 0;
           AnonymousAuthentication().createAnonymousUser();
         } else {
           userFirebaseDocumentMap = snapshot.data.docs[0].data();
@@ -118,7 +105,7 @@ Widget fetchFutureAnonymous() {
           wordCheck = WordCheck(userFirebaseDocument: userFirebaseDocumentMap);
           gamesPlayed = userFirebaseDocumentMap['gamesPlayed'];
           (gamesPlayed == null) ? gamesPlayed = 0 : null;
-          AnonymousAuthentication().activate();
+          // AnonymousAuthentication().activate();
         }
         return LoadingCompleted();
       }
@@ -137,8 +124,9 @@ Widget fetchFutureGoogle() {
         return Loading();
       else {
         if (snapshot.data.docs.length == 0) {
-          coins = 200;
+          coins = 500;
           wordCheck = WordCheck();
+          gamesPlayed = 0;
           GoogleAuthentication().createGoogleUser();
         } else {
           userFirebaseDocumentMap = snapshot.data.docs[0].data();

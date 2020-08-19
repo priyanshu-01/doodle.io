@@ -25,7 +25,7 @@ class AnonymousAuthentication {
       'active': true,
       'imageUrl': imageUrl,
       'attemptedWords': [],
-      'gamesPlayed': 0,
+      'gamesPlayed': gamesPlayed,
     }).then((value) {
       value.get().then((value) => userFirebaseDocumentMap = value.data());
       userFirebaseDocumentId = value.id;
