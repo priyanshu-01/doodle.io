@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:scribbl/audioPlayer/audioPlayer.dart';
 import 'package:scribbl/pages/Select_room/OverlayWidgets/editProfile.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
-import 'package:scribbl/pages/signIn.dart';
+import 'package:scribbl/pages/loading.dart';
 import 'package:scribbl/services/authHandler.dart';
 
 class DesignLoginOptions extends StatefulWidget {

@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:scribbl/pages/Select_room/selectRoom.dart';
-import 'package:scribbl/pages/signIn.dart';
+import 'package:scribbl/pages/loading.dart';
 import 'package:scribbl/testingCode/designLoginOptions.dart';
+import 'package:scribbl/testingCode/splashScreen.dart';
 import 'OverlayManager/informationOverlayBuilder.dart';
 import 'OverlayManager/necessaryOverlayBuilder.dart';
 import 'pages/Select_room/functions.dart';
@@ -50,6 +51,8 @@ void main() async {
       // home: PushOverlayButton(),
       // home: DatabaseManager(),
       // home: DesignLoginOptions(),
+      // home: Scaffold(body: Loading()),
+      // home: SplashScreen(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
     ));

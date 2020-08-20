@@ -6,7 +6,7 @@ import 'package:scribbl/main.dart';
 import 'package:scribbl/services/anon.dart';
 import 'package:scribbl/services/authService.dart';
 import '../pages/Select_room/selectRoom.dart';
-import '../pages/signIn.dart';
+import '../pages/loading.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../virtualCurrency/data.dart';
