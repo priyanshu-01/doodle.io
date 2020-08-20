@@ -166,7 +166,7 @@ class InformationCloseButton extends StatelessWidget {
 }
 
 TextStyle myCoustomOverlayTextStyle({double size}) {
-  return overlayTextStyle = GoogleFonts.fredokaOne(
+  return GoogleFonts.fredokaOne(
     color: Colors.white,
     fontSize: size,
     shadows: [
