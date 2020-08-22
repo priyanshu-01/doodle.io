@@ -72,11 +72,12 @@ class _WordWasState extends State<WordWas> {
     sub = countDownTimer.listen(null);
     sub.onData((duration) {
       if (current == 5) {
+        changeDenIfNeeded();
         guessersId = [];
         word = '*';
-        print('WordWas 2 .... 5 seconds over');
-      }
-      changeDenIfNeeded();
+        print('WordWas.... 5 seconds over');
+      } else
+        changeDenIfNeeded();
       current = duration.elapsed.inSeconds;
     });
     sub.onDone(() {
@@ -200,6 +201,13 @@ class _WordWasContentState extends State<WordWasContent>
       addItem = 0;
       addItemsToList.cancel();
     });
+  }
+
+  @override
+  void dispose() {
+    if (controller != null) controller.dispose();
+    if (addItemsToList != null) addItemsToList.cancel();
+    super.dispose();
   }
 
   @override

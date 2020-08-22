@@ -128,8 +128,8 @@ Future<void> changeDen(String source) async {
   await FirebaseFirestore.instance.collection('rooms').doc(documentid).update({
     'den': players[s],
     'den_id': playersId[s],
-    'xpos': {},
-    'ypos': {},
+    'xpos': [],
+    'ypos': [],
     'word': '*',
     'length': 0,
     'wordChosen': false,

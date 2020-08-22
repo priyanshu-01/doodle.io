@@ -65,10 +65,11 @@ class Signature extends CustomPainter {
       : super(repaint: animation);
   @override
   void paint(Canvas canvas, Size size) {
-    if (paintObj.color !=
-        colorHolder.colors[roomData['colorIndexStack']
-            [roomData['indices'].indexOf(ind2)]]) {
-      //ind2 index is -1, error
+    if (roomData['indices'].indexOf(ind2) != -1 && //added undertesting fix
+        paintObj.color !=
+            colorHolder.colors[roomData['colorIndexStack']
+                [roomData['indices'].indexOf(ind2)]]) {
+      //ind2 index is -1, error by crashlytics
       paintObj.color = colorHolder.colors[roomData['colorIndexStack']
           [roomData['indices'].indexOf(ind2)]];
     }
