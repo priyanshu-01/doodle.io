@@ -125,22 +125,26 @@ class _SelectRoomState extends State<SelectRoom> {
                         child: Column(
                           // mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Expanded(
-                              child: Container(
-                                alignment: Alignment.bottomCenter,
-                                child: InkWell(
-                                  onTap: () {
-                                    (checkSignInMethod == signInMethod.google)
-                                        ? GoogleAuthentication().signOutGoogle()
-                                        : AnonymousAuthentication()
-                                            .signOutAnonymous();
-                                  },
-                                  child: Container(
-                                    child: OverlayButton(label: 'Out'),
-                                  ),
-                                ),
-                              ),
-                            )
+                            (remoteConfig.getBool('signout_button_enabled'))
+                                ? Expanded(
+                                    child: Container(
+                                      alignment: Alignment.bottomCenter,
+                                      child: InkWell(
+                                        onTap: () {
+                                          (checkSignInMethod ==
+                                                  signInMethod.google)
+                                              ? GoogleAuthentication()
+                                                  .signOutGoogle()
+                                              : AnonymousAuthentication()
+                                                  .signOutAnonymous();
+                                        },
+                                        child: Container(
+                                          child: OverlayButton(label: 'Out'),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Container()
                             // ShowDrawer(
                             // )
                           ],

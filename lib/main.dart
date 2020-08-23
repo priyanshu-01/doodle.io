@@ -18,6 +18,7 @@ import 'package:flutter/foundation.dart';
 import 'pages/Select_room/selectRoom.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'testingCode/animatedList.dart';
 import 'testingCode/provider/ProviderWorking.dart';
 import 'testingCode/overlay.dart';
@@ -29,11 +30,11 @@ import 'testingCode/home.dart';
 import 'pages/wordWas.dart';
 
 FirebaseAnalytics analytics = FirebaseAnalytics();
+RemoteConfig remoteConfig;
 // FirebaseAnalyticsObserver observer =
 //     FirebaseAnalyticsObserver(analytics: analytics);
 bool resumed = true;
 DateTime currentBackPressTime;
-// BuildContext necessaryOverlayContext;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //must
   Crashlytics.instance.enableInDevMode = false;
@@ -165,7 +166,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   initialiseWorkingData() {
     audioPlayer = AudioPlayer();
-    audioPlayer.initialiseSounds().whenComplete(() => getAvatars());
+    audioPlayer.initialiseSounds().whenComplete(() => getAvatars()
+        .whenComplete(() => initRemoteConfig().whenComplete(() => setState(() {
+              dataInitialised = true;
+            }))));
   }
 
   Future<void> getAvatars() async {
@@ -174,11 +178,18 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         .doc('avatarImages')
         .get()
         .then((value) {
-      setState(() {
-        avatarDocument = value;
-        dataInitialised = true;
-        imageUrl = avatarDocument.data()['avatarImages']['boys'][0];
-      });
+      // setState(() {
+      avatarDocument = value;
+      imageUrl = avatarDocument.data()['avatarImages']['boys'][0];
+      // });
     });
   }
+}
+
+Future<void> initRemoteConfig() async {
+  await RemoteConfig.instance.then((value) => remoteConfig = value);
+  await remoteConfig.fetch(expiration: Duration(seconds: 1));
+  await remoteConfig.activateFetched().then((value) {
+    // print('changed :$value');
+  });
 }
