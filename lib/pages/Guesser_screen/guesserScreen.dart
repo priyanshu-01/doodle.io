@@ -281,7 +281,7 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
 
   void timerZero() {
     print('timerZero called');
-    subG.cancel();
+    if (subG != null) subG.cancel();
     guesserCountDown.current = guesserCountDown.initialValue;
     pointsG = [];
     timerRunning = false;

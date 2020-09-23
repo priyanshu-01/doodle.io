@@ -74,20 +74,21 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void initState() {
     informationOverlayBuilder = InformationOverlayBuilder();
     necessaryOverlayBuilder = NecessaryOverlayBuilder();
-    _connectivity.initialise();
-    _connectivity.myStream.listen((source) {
-      _source = source;
-      switch (_source.keys.toList()[0]) {
-        case ConnectivityResult.none:
-          online = false;
-          break;
-        case ConnectivityResult.mobile:
-          online = true;
-          break;
-        case ConnectivityResult.wifi:
-          online = true;
-      }
-    });
+    // _connectivity.initialise();
+    // _connectivity.myStream.listen((source) {
+    //   _source = source;
+    //   switch (_source.keys.toList()[0]) {
+    //     case ConnectivityResult.none:
+    //       online = false;
+    //       break;
+    //     case ConnectivityResult.mobile:
+    //       online = true;
+    //       break;
+    //     case ConnectivityResult.wifi:
+    //       online = true;
+    //   }
+    // }
+    // );
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     initialiseWorkingData();
@@ -95,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    _connectivity.disposeStream();
+    // _connectivity.disposeStream();
     super.dispose();
   }
 
@@ -129,7 +130,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     Screen.keepOn(true);
-
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Builder(

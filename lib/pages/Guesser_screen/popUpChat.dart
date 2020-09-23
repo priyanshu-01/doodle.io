@@ -33,6 +33,7 @@ class _PopUpChatState extends State<PopUpChat> {
 
     int lastIndex = roomData['userData'][identity]['lastMessageIndex'];
     if (lastIndex != null &&
+        lastIndex < chat.length && //undertesting fix on 27/08/20202
         chat[lastIndex].substring(0, chat[lastIndex].indexOf('[')) !=
             identity) {
       chat = chat + [newMessage];

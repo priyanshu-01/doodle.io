@@ -83,7 +83,7 @@ class _EditProfileState extends State<EditProfile> {
                     const EdgeInsets.symmetric(horizontal: 6.0, vertical: 0.0),
                 child: Scrollbar(
                   controller: _scrollController,
-                  isAlwaysShown: true,
+                  // isAlwaysShown: true,
                   child: GridView.builder(
                       controller: _scrollController,
                       physics: BouncingScrollPhysics(),
