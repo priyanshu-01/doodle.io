@@ -21,9 +21,9 @@ String word;
 String hostId;
 String denId;
 List playersId = new List();
-List guessersId = new List();
-List tempScore = new List();
-List finalScore = new List();
+Map guessersId = {};
+Map tempScore = {};
+Map finalScore = {};
 int round = 1;
 double denCanvasLength;
 Map roomData;
@@ -69,8 +69,8 @@ Future<void> addPlayer() async {
   players = players + [myUserName];
   counter = counter + 1;
   playersId = playersId + [identity];
-  tempScore = tempScore + [0];
-  finalScore = finalScore + [0];
+  // tempScore = tempScore + [0];
+  // finalScore = finalScore + [0];
   playersImage = playersImage + [imageUrl];
   await updatePlayerData('joined');
   flag = true;
@@ -81,8 +81,8 @@ Future<void> removeMe() async {
   int myIndex = playersId.indexOf(identity);
   players.removeAt(myIndex);
   playersId.removeAt(myIndex);
-  tempScore.removeAt(myIndex);
-  finalScore.removeAt(myIndex);
+  tempScore[identity] = null;
+  finalScore[identity] = null;
   playersImage.removeAt(myIndex);
   updatePlayerData('left').then((value) async {
     if (players.length == 0) {
@@ -117,8 +117,8 @@ Future<void> updatePlayerData(String myStatus) async {
     'users': players,
     'counter': counter,
     'users_id': playersId,
-    'tempScore': tempScore,
-    'finalScore': finalScore,
+    'tempScore.$identity': null,
+    'finalScore.$identity': null,
     'usersImage': playersImage,
     'userData.$identity': {
       'name': myUserName,

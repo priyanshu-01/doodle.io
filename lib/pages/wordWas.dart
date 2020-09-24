@@ -39,8 +39,8 @@ class _WordWasState extends State<WordWas> {
     startTimer();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (identity == denId) {
-        currency.setCoins = currency.remainingCoins +
-            tempScore[playersId.indexOf(denId)]; //error by crashlytics
+        currency.setCoins =
+            currency.remainingCoins + tempScore[denId]; //error by crashlytics
       } else {
         currency.setCoins = currency.remainingCoins + score;
         score = 0;
@@ -73,7 +73,7 @@ class _WordWasState extends State<WordWas> {
     sub.onData((duration) {
       if (current == 5) {
         changeDenIfNeeded();
-        guessersId = [];
+        guessersId = {};
         word = '*';
         print('WordWas.... 5 seconds over');
       } else
@@ -357,7 +357,7 @@ class _WordWasContentState extends State<WordWasContent>
 
   void sort() {
     sortedPlayers = players.sublist(0);
-    sortedScore = tempScore.sublist(0);
+    sortedScore = getTempScores(tempScore, playersId.sublist(0));
     int temp;
     String temp2;
     for (int x = 0; x < sortedScore.length - 1; x++) {
@@ -373,5 +373,13 @@ class _WordWasContentState extends State<WordWasContent>
         }
       }
     }
+  }
+
+  List getTempScores(Map tempScore, List playersIdList) {
+    List tempScoreList = [];
+    for (var playerId in playersIdList) {
+      tempScoreList.add(tempScore[playerId]);
+    }
+    return tempScoreList;
   }
 }

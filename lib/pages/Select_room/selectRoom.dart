@@ -238,6 +238,7 @@ class _SelectRoomState extends State<SelectRoom> {
           milliseconds: 150,
         ), () {
       Alert(
+        title: "title",
         style: AlertStyle(backgroundColor: Colors.blue),
         // desc: 'Enter Room Id',
         context: context,
@@ -257,6 +258,7 @@ class _SelectRoomState extends State<SelectRoom> {
           milliseconds: 150,
         ), () {
       Alert(
+        title: "title",
         style: AlertStyle(backgroundColor: Colors.blue),
         // desc: 'Enter Room Id',
         context: context,

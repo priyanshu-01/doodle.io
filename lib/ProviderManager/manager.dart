@@ -77,7 +77,7 @@ class _ManagerState extends State<Manager> {
       if (round > numberOfRounds) {
         docId = documentid;
         displayNames = players;
-        displayScores = finalScore;
+        displayScores = getFinalScores(finalScore, playersId.sublist(0));
         setState(() {});
       } else {
         if (cacheRoomData == null)
@@ -88,6 +88,14 @@ class _ManagerState extends State<Manager> {
       }
     });
     super.initState();
+  }
+
+  List getFinalScores(Map finalScore, List playersIdList) {
+    List finalScoreList = [];
+    for (var playerId in playersIdList) {
+      finalScoreList.add(finalScore[playerId]);
+    }
+    return finalScoreList;
   }
 
   @override
@@ -267,7 +275,7 @@ void rebuildMinimumWidgets() {
     gameScreenData.rebuildGameScreen();
   } else if (roomData['userData'][identity]['lastGuess'] !=
           cacheRoomData['userData'][identity]['lastGuess'] ||
-      !listEquals(roomData['guessersId'], cacheRoomData['guessersId'])) {
+      !mapEquals(roomData['guessersId'], cacheRoomData['guessersId'])) {
     print('rebuilding guessers');
     audioPlayer.playSound('someoneGuessed');
     guessersIdData.rebuildGuessersId();

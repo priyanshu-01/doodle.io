@@ -138,10 +138,10 @@ class StackChild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<GuessersIdData>(context);
-    if (roomData['userData'][identity]['lastGuess'] == '$denId $round' &&
-        guessersId.indexOf(identity) == -1) {
-      updateScore();
-    } //update score if not updated
+    // if (roomData['userData'][identity]['lastGuess'] == '$denId $round' &&
+    //     guessersId.indexOf(identity) == -1) {
+    //   updateScore();
+    // } //update score if not updated
     return Container(
       height: position == 'guesser' ? guessCanvasLength : denCanvasLength,
       child: Row(
@@ -159,7 +159,7 @@ class StackChild extends StatelessWidget {
                   for (var playerIdentity in playersId)
                     Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: (guessersId.indexOf(playerIdentity) == -1)
+                        child: (guessersId[playerIdentity] == null)
                             ? (denId == playerIdentity)
                                 ? CircleAvatar(
                                     radius: 20.0,
@@ -220,31 +220,31 @@ Future<void> sendMessage() async {
       {'chat': chat, 'userData.$identity.lastMessageIndex': chat.length - 1});
 }
 
-Future<void> updateScore() async {
-  int place = playersId.indexOf(identity);
-  tempScore[place] = score;
-  int previousScore = finalScore[place];
-  int newScore = previousScore + score;
-  finalScore[place] = newScore;
-  guessersId = guessersId + [identity];
-  int ind = playersId.indexOf(denId);
-  int sum = 0;
-  for (int k = 0; k < tempScore.length; k++) {
-    if (k == ind) continue;
-    sum = sum + tempScore[k];
-  }
-  sum = sum ~/ (counter - 1);
-  tempScore[ind] = sum;
-  finalScore[ind] = finalScore[ind] + sum;
-  //madeIt = true;
-  // score = 0;
+// Future<void> updateScore() async {
+//   int place = playersId.indexOf(identity);
+//   tempScore[place] = score;
+//   int previousScore = finalScore[place];
+//   int newScore = previousScore + score;
+//   finalScore[place] = newScore;
+//   guessersId = guessersId + [identity];
+//   int ind = playersId.indexOf(denId);
+//   int sum = 0;
+//   for (int k = 0; k < tempScore.length; k++) {
+//     if (k == ind) continue;
+//     sum = sum + tempScore[k];
+//   }
+//   sum = sum ~/ (counter - 1);
+//   tempScore[ind] = sum;
+//   finalScore[ind] = finalScore[ind] + sum;
+//   //madeIt = true;
+//   // score = 0;
 
-  await FirebaseFirestore.instance.collection('rooms').doc(documentid).update({
-    'tempScore': tempScore,
-    'finalScore': finalScore,
-    'guessersId': guessersId
-  });
-}
+//   await FirebaseFirestore.instance.collection('rooms').doc(documentid).update({
+//     'tempScore': tempScore,
+//     'finalScore': finalScore,
+//     'guessersId': guessersId
+//   });
+// }
 
 class GuessWaitShow extends StatefulWidget {
   @override
@@ -447,7 +447,7 @@ class _TextBoxState extends State<TextBox> {
       String lowerCase = message.toLowerCase();
       if (lowerCase.indexOf(word) != -1) {
         message = 'd123';
-        if (guessersId.indexOf(identity) == -1) {
+        if (guessersId[identity] == null) {
           if (guessersId.length < counter - 2) showPopup(context);
           calculateScore();
           updateGuesserIdAndScore();
@@ -495,31 +495,33 @@ class _TextBoxState extends State<TextBox> {
   }
 
   Future<void> updateGuesserIdAndScore() async {
-    int place = playersId.indexOf(identity);
-    tempScore[place] = score;
-    int previousScore = finalScore[place];
+    tempScore[identity] = score;
+    (finalScore[identity] == null) ? finalScore[identity] = 0 : null;
+    (finalScore[denId] == null) ? finalScore[denId] = 0 : null;
+
+    int previousScore = finalScore[identity];
     int newScore = previousScore + score;
-    finalScore[place] = newScore;
-    guessersId = guessersId + [identity];
-    int ind = playersId.indexOf(denId);
+    finalScore[identity] = newScore;
+    guessersId[identity] = true;
     int sum = 0;
-    for (int k = 0; k < tempScore.length; k++) {
-      if (k == ind) continue;
-      sum = sum + tempScore[k];
-    }
+    tempScore.forEach((key, value) {
+      if (key != denId) {
+        sum = sum + value;
+      }
+    });
     sum = sum ~/ (counter - 1);
-    tempScore[ind] = sum;
-    finalScore[ind] = finalScore[ind] + sum;
-    //madeIt = true;
-    // score = 0;
+    tempScore[denId] = sum;
+    finalScore[denId] = finalScore[denId] + sum;
 
     await FirebaseFirestore.instance
         .collection('rooms')
         .doc(documentid)
         .update({
-      'tempScore': tempScore,
-      'finalScore': finalScore,
-      'guessersId': guessersId,
+      'tempScore.$identity': tempScore[identity],
+      'tempScore.$denId': tempScore[denId],
+      'finalScore.$identity': finalScore[identity],
+      'finalScore.$denId': finalScore[denId],
+      'guessersId.$identity': true,
       'userData.$identity.lastGuess': '$denId $round',
     });
   }
