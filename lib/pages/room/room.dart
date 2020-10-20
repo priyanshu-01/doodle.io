@@ -161,9 +161,6 @@ Future<void> changeDenWhileLeaving(String source, int myIndex) async {
     round = round + 1;
   } else
     s = s + 1;
-  for (int k = 0; k < tempScore.length; k++) {
-    tempScore[k] = 0;
-  }
 
   await FirebaseFirestore.instance.collection('rooms').doc(documentid).update({
     'den': players[s],
@@ -177,7 +174,7 @@ Future<void> changeDenWhileLeaving(String source, int myIndex) async {
     'colorIndexStack': [0],
     'pointer': 0,
     'guessersId': [],
-    'tempScore': tempScore,
+    'tempScore': {},
     'round': round,
     'userData.$identity.denChangeTrack': denChangeTrack
   });

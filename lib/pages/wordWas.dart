@@ -378,7 +378,8 @@ class _WordWasContentState extends State<WordWasContent>
   List getTempScores(Map tempScore, List playersIdList) {
     List tempScoreList = [];
     for (var playerId in playersIdList) {
-      tempScoreList.add(tempScore[playerId]);
+      tempScoreList
+          .add((tempScore[playerId] != null) ? tempScore[playerId] : 0);
     }
     return tempScoreList;
   }

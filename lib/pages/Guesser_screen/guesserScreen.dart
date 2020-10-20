@@ -220,32 +220,6 @@ Future<void> sendMessage() async {
       {'chat': chat, 'userData.$identity.lastMessageIndex': chat.length - 1});
 }
 
-// Future<void> updateScore() async {
-//   int place = playersId.indexOf(identity);
-//   tempScore[place] = score;
-//   int previousScore = finalScore[place];
-//   int newScore = previousScore + score;
-//   finalScore[place] = newScore;
-//   guessersId = guessersId + [identity];
-//   int ind = playersId.indexOf(denId);
-//   int sum = 0;
-//   for (int k = 0; k < tempScore.length; k++) {
-//     if (k == ind) continue;
-//     sum = sum + tempScore[k];
-//   }
-//   sum = sum ~/ (counter - 1);
-//   tempScore[ind] = sum;
-//   finalScore[ind] = finalScore[ind] + sum;
-//   //madeIt = true;
-//   // score = 0;
-
-//   await FirebaseFirestore.instance.collection('rooms').doc(documentid).update({
-//     'tempScore': tempScore,
-//     'finalScore': finalScore,
-//     'guessersId': guessersId
-//   });
-// }
-
 class GuessWaitShow extends StatefulWidget {
   @override
   _GuessWaitShowState createState() => _GuessWaitShowState();
@@ -412,21 +386,6 @@ class _TextBoxState extends State<TextBox> {
                     color: Colors.white,
                   ),
                 ),
-
-                // child: MaterialButton(
-                //   onPressed: () => null,
-                //   // onSend(),
-                //   color: Colors.blue,
-                //   textColor: Colors.white,
-                //   child: Icon(
-                //     Icons.send,
-                //     size: 26,
-                //   ),
-                //   padding: EdgeInsets.all(10),
-                //   shape: CircleBorder(),
-                //   elevation: 14.0,
-                //   splashColor: Colors.white,
-                // ),
               ),
               scaleCoefficient: 0.4,
               onTap: () => onSend(),
@@ -505,7 +464,7 @@ class _TextBoxState extends State<TextBox> {
     guessersId[identity] = true;
     int sum = 0;
     tempScore.forEach((key, value) {
-      if (key != denId) {
+      if (key != denId && value != null) {
         sum = sum + value;
       }
     });

@@ -93,7 +93,8 @@ class _ManagerState extends State<Manager> {
   List getFinalScores(Map finalScore, List playersIdList) {
     List finalScoreList = [];
     for (var playerId in playersIdList) {
-      finalScoreList.add(finalScore[playerId]);
+      finalScoreList
+          .add((finalScore[playerId] != null) ? finalScore[playerId] : 0);
     }
     return finalScoreList;
   }
