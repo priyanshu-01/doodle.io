@@ -7,6 +7,11 @@ import 'dart:math';
 import 'painterScreen.dart';
 import '../Select_room/selectRoom.dart';
 import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+String onWordChoosen =
+    "https://us-central1-doodle-290309.cloudfunctions.net/onWordChoosen";
 
 Color chooseWordBackColor = Colors.blue[700];
 Color chooseWordTextColor = Colors.white;
@@ -170,10 +175,22 @@ class _ChooseWordDialogState extends State<ChooseWordDialog> {
 }
 
 Future<void> updateWord() async {
-  await FirebaseFirestore.instance.collection('rooms').doc(documentid).update({
+  roomData['word'] = word;
+  FirebaseFirestore.instance.collection('rooms').doc(documentid).update({
     'word': choosenWord,
     'wordChosen': true,
     'allAttemptedWords': allAttemptedWords,
+  });
+
+  await http.post(Uri.encodeFull(onWordChoosen),
+      headers: {'roomdata': json.encode(roomData)}).then((data) {
+    if (data.statusCode == 200) {
+      print(json.decode(data.body));
+    } else {
+      print(data.statusCode);
+    }
+  }).catchError((_) {
+    print('caught error');
   });
 }
 

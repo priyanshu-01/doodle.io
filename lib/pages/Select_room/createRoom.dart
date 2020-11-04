@@ -224,7 +224,15 @@ Future<void> addRoom(String uid) async {
     await value.get().then((value) async {
       roomData = value.data();
       readRoomData();
-      await addPlayer();
+      addDocumentIdToRoomData(documentid);
+      addPlayer();
     });
   });
+}
+
+void addDocumentIdToRoomData(String documentid) {
+  FirebaseFirestore.instance
+      .collection('rooms')
+      .doc(documentid)
+      .update({'docId': documentid});
 }

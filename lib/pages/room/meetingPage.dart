@@ -6,6 +6,12 @@ import 'package:share/share.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../Select_room/selectRoom.dart';
 import 'room.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
+
+String linkChangeTurn =
+    "https://us-central1-doodle-290309.cloudfunctions.net/startGame";
 
 class WaitingForFriends extends StatelessWidget {
   @override
@@ -30,16 +36,23 @@ class WaitingForFriends extends StatelessWidget {
   }
 }
 
-class StartStatus extends StatelessWidget {
+class StartStatus extends StatefulWidget {
+  @override
+  _StartStatusState createState() => _StartStatusState();
+}
+
+class _StartStatusState extends State<StartStatus> {
   @override
   Widget build(BuildContext context) {
     if (identity == hostId)
       return InkWell(
-        onTap: (counter > 1)
+        onTap: (counter > 1 && game == false)
             ? () {
                 audioPlayer.playSound('click');
-                game = true;
-                startGame();
+                setState(() {
+                  game = true;
+                  startGame();
+                });
               }
             : null,
         child: Container(
@@ -50,17 +63,21 @@ class StartStatus extends StatelessWidget {
             borderRadius: BorderRadius.circular(18.0),
             color: (counter > 1) ? Colors.green[700] : Colors.grey[700],
           ),
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 15.0, horizontal: 22.0),
-            child: Text('START',
-                style: GoogleFonts.fredokaOne(
-                    color: Colors.white,
-                    letterSpacing: 1.3,
-                    // Color(0xFFFFF1E9)
-                    fontWeight: FontWeight.w500,
-                    fontSize: 23.0)),
-          ),
+          child: (game == false)
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 22.0),
+                  child: Text('START',
+                      style: GoogleFonts.fredokaOne(
+                          color: Colors.white,
+                          letterSpacing: 1.3,
+                          // Color(0xFFFFF1E9)
+                          fontWeight: FontWeight.w500,
+                          fontSize: 23.0)))
+              : Container(
+                  width: 150.0,
+                  height: 75.0,
+                  child: SpinKitFadingCircle(color: Colors.white)),
         ),
         // Color(0xFFFF4893),
       );
@@ -85,11 +102,15 @@ class StartStatus extends StatelessWidget {
   }
 
   Future<void> startGame() async {
-    await FirebaseFirestore.instance
-        .collection('rooms')
-        .doc(documentid)
-        .update({
-      'game': game,
+    await http.post(Uri.encodeFull(linkChangeTurn),
+        headers: {'roomdata': json.encode(roomData)}).then((data) {
+      if (data.statusCode == 200) {
+        print(json.decode(data.body));
+      } else {
+        print(data.statusCode);
+      }
+    }).catchError((_) {
+      print('caught error');
     });
   }
 }

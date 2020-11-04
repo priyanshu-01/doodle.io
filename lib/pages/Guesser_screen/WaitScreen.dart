@@ -3,10 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../room/room.dart';
 import 'guesserScreen.dart';
-import 'package:quiver/async.dart';
 import '../Select_room/selectRoom.dart';
-import '../../main.dart';
-import '../Painter_screen/painterScreen.dart';
 
 class WaitScreen extends StatefulWidget {
   @override
@@ -15,19 +12,13 @@ class WaitScreen extends StatefulWidget {
 
 class _WaitScreenState extends State<WaitScreen>
     with SingleTickerProviderStateMixin {
-  // String waitDenId;
-  var waitSub;
-  int waitCurrent;
   int end;
   double topPadding;
 
   AnimationController spinKitController;
   void initState() {
     avatarAnimation = animateAvatar.reset;
-    // waitDenId = denId;
     topPadding = totalLength * 0.5;
-    end = 15 + (counter * 2);
-    waitCurrent = 0;
     spinKitController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 750),
@@ -37,42 +28,16 @@ class _WaitScreenState extends State<WaitScreen>
         topPadding = 0.0;
       });
     });
-    startTimer();
     super.initState();
   }
 
   @override
   void dispose() {
-    waitCurrent = 0;
-    waitSub.cancel();
     super.dispose();
-  }
-
-  void startTimer() {
-    CountdownTimer countDownTimer = new CountdownTimer(
-      new Duration(seconds: end),
-      new Duration(seconds: 1),
-    );
-    waitSub = countDownTimer.listen(null);
-    waitSub.onData((duration) {
-      if (waitCurrent >= 13) {
-        changeDenIfNeeded2();
-      }
-      waitCurrent = duration.elapsed.inSeconds;
-    });
-    waitSub.onDone(() {
-      waitSub.cancel();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // if (waitDenId != denId) {
-    //   waitDenId = denId;
-    //   waitCurrent = 0;
-    //   waitSub.cancel();
-    //   startTimer();
-    // }
     return Stack(
       children: [
         Container(
@@ -128,20 +93,5 @@ class _WaitScreenState extends State<WaitScreen>
         ),
       ],
     );
-  }
-
-  void changeDenIfNeeded2() {
-    int distance;
-    int d = playersId.indexOf(denId);
-    int m = playersId.indexOf(identity);
-    if (d <= m) {
-      distance = m - d;
-    } else {
-      distance = counter + m - d;
-    }
-    if (waitCurrent == 13 + (distance * 2) && resumed && online) {
-      changeDen(
-          'WaitScreen.dart line 131 and value of waitCurrent is $waitCurrent');
-    }
   }
 }

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:scribbl/pages/Painter_screen/painterScreen.dart';
 import 'package:scribbl/services/authHandler.dart';
 import 'Guesser_screen/guesserScreen.dart';
 import 'room/room.dart';
 import 'package:quiver/async.dart';
 import 'Select_room/selectRoom.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../main.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 List sortedPlayers;
@@ -30,13 +28,8 @@ class WordWas extends StatefulWidget {
 }
 
 class _WordWasState extends State<WordWas> {
-  int current = 0;
-  int end = 30 + (counter * 2);
-  var sub;
   @override
   void initState() {
-    current = 0;
-    startTimer();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (identity == denId) {
         currency.setCoins =
@@ -51,51 +44,8 @@ class _WordWasState extends State<WordWas> {
   }
 
   @override
-  void dispose() {
-    current = 0;
-    sub.cancel();
-    print('word was is disposed');
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return WordWasContent();
-  }
-
-  void startTimer() {
-    CountdownTimer countDownTimer = new CountdownTimer(
-      new Duration(seconds: end),
-      new Duration(seconds: 1),
-    );
-
-    sub = countDownTimer.listen(null);
-    sub.onData((duration) {
-      if (current == 5) {
-        changeDenIfNeeded();
-        guessersId = {};
-        word = '*';
-        print('WordWas.... 5 seconds over');
-      } else
-        changeDenIfNeeded();
-      current = duration.elapsed.inSeconds;
-    });
-    sub.onDone(() {
-      sub.cancel();
-    });
-  }
-
-  void changeDenIfNeeded() {
-    int distance;
-    int d = playersId.indexOf(denId);
-    int m = playersId.indexOf(identity);
-    if (d <= m) {
-      distance = m - d;
-    } else {
-      distance = counter + m - d;
-    }
-    if (current == 5 + (distance * 3) && resumed && online)
-      changeDen('wordWas.dart line 76 and vlaue of current is $current');
   }
 }
 
