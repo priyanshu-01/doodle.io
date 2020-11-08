@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import '../modified_packages/Alert/rflutter_alert.dart';
 import 'package:scribbl/OverlayManager/informationOverlayBuilder.dart';
 import 'package:scribbl/pages/Guesser_screen/countDown.dart';
 import 'package:scribbl/pages/Guesser_screen/guesserScreen.dart';

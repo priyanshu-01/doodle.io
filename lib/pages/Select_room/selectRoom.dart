@@ -18,7 +18,7 @@ import '../../services/anon.dart';
 import '../../main.dart';
 import '../../reactions/listenReactions.dart';
 import 'package:spring_button/spring_button.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import '../../modified_packages/Alert/rflutter_alert.dart';
 
 GlobalKey circleAvatarKey = GlobalKey();
 AudioPlayer audioPlayer;
@@ -238,7 +238,6 @@ class _SelectRoomState extends State<SelectRoom> {
           milliseconds: 150,
         ), () {
       Alert(
-        title: "title",
         style: AlertStyle(backgroundColor: Colors.blue),
         // desc: 'Enter Room Id',
         context: context,
@@ -258,7 +257,7 @@ class _SelectRoomState extends State<SelectRoom> {
           milliseconds: 150,
         ), () {
       Alert(
-        title: "title",
+        // title: "title",
         style: AlertStyle(backgroundColor: Colors.blue),
         // desc: 'Enter Room Id',
         context: context,
