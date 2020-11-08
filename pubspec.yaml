@@ -17,7 +17,6 @@ dependencies:
   google_fonts: ^0.3.9
   firebase_auth: ^0.18.0
   google_sign_in: ^4.4.3
-  rflutter_alert: ^1.0.2       # MODIFIED
   loading_animations: ^2.1.0
   flutter_spinkit: ^4.1.2+1   #package is modified for use in waitScreen.dart wave
   share: ^0.6.3+6
