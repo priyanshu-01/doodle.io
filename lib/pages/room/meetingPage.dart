@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scribbl/ProviderManager/manager.dart';
 import 'package:share/share.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../Select_room/selectRoom.dart';
@@ -103,7 +104,7 @@ class _StartStatusState extends State<StartStatus> {
 
   Future<void> startGame() async {
     await http.post(Uri.encodeFull(linkChangeTurn),
-        headers: {'roomdata': json.encode(roomData)}).then((data) {
+        headers: {'roomdata': json.encode(truncateMap(roomData))}).then((data) {
       if (data.statusCode == 200) {
         print(json.decode(data.body));
       } else {

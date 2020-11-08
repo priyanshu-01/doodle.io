@@ -23,6 +23,8 @@ import 'chat.dart';
 import '../../ProviderManager/manager.dart';
 import 'popUpChat.dart';
 import 'package:keyboard_utils/widgets.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 bool timerRunning = false;
 final messageHolder = TextEditingController();
@@ -39,6 +41,8 @@ enum animateAvatar { start, done, reset }
 var avatarAnimation;
 int popUpAdder;
 int popUpRemover;
+String changeDenIfAllGuessed =
+    'https://us-central1-doodle-290309.cloudfunctions.net/changeDenIfAllGuessed';
 
 class GuesserScreen extends StatelessWidget {
   @override
@@ -482,6 +486,18 @@ class _TextBoxState extends State<TextBox> {
       'finalScore.$denId': finalScore[denId],
       'guessersId.$identity': true,
       'userData.$identity.lastGuess': '$denId $round',
+    });
+    await http.post(Uri.encodeFull(changeDenIfAllGuessed),
+        headers: {'roomdata': json.encode(truncateMap(roomData))}).then((data) {
+      if (data.statusCode == 200) {
+        print(json.decode(data.body));
+      } else {
+        print('error status code is :');
+        print(data.statusCode);
+      }
+      print('after calling changeDenIfAll guessed , the reult is:');
+    }).catchError((_) {
+      print('caught error');
     });
   }
 }

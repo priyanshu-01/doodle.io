@@ -302,3 +302,24 @@ void rebuildMinimumWidgets() {
     });
   }
 }
+
+Map truncateMap(Map big) {
+  Map newMap = {};
+  List excludedKeys = [
+    'xpos',
+    'ypos',
+    'userData',
+    'colorIndexStack',
+    'indices',
+    'usersImage',
+    'chat',
+    'allAttemptedWords',
+  ];
+
+  big.forEach((key, value) {
+    if (excludedKeys.indexOf(key) == -1)
+      newMap[key] = (value is Map) ? truncateMap(value) : value;
+  });
+
+  return newMap;
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scribbl/ProviderManager/manager.dart';
 import 'package:scribbl/services/authHandler.dart';
 import '../room/room.dart';
 import 'dart:math';
@@ -183,7 +184,7 @@ Future<void> updateWord() async {
   });
 
   await http.post(Uri.encodeFull(onWordChoosen),
-      headers: {'roomdata': json.encode(roomData)}).then((data) {
+      headers: {'roomdata': json.encode(truncateMap(roomData))}).then((data) {
     if (data.statusCode == 200) {
       print(json.decode(data.body));
     } else {
