@@ -94,7 +94,6 @@ class Alert {
                             20, (style.isCloseButton ? 0 : 20), 20, 0),
                         child: Column(
                           children: <Widget>[
-                            _getImage(),
                             SizedBox(
                               height: 15,
                             ),
@@ -153,23 +152,29 @@ class Alert {
             child: Container(
               alignment: FractionalOffset.topRight,
               child: Container(
+                // color: Colors.red,
                 width: 20,
                 height: 20,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                      '$kImagePath/close.png',
-                      package: 'rflutter_alert',
-                    ),
-                  ),
-                ),
+                // decoration: BoxDecoration(
+                // image: DecorationImage(
+                //   image: AssetImage(
+                //     '$kImagePath/close.png',
+                //     package: 'rflutter_alert',
+                //   ),
+                // ),
+
+                // ),
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
                       Navigator.pop(context);
-                      closeFunction();
+                      // closeFunction();
                     },
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -215,39 +220,6 @@ class Alert {
   }
 
 // Returns alert image for icon
-  Widget _getImage() {
-    Widget response = image ?? Container();
-    switch (type) {
-      case AlertType.success:
-        response = Image.asset(
-          '$kImagePath/icon_success.png',
-          package: 'rflutter_alert',
-        );
-        break;
-      case AlertType.error:
-        response = Image.asset(
-          '$kImagePath/icon_error.png',
-          package: 'rflutter_alert',
-        );
-        break;
-      case AlertType.info:
-        response = Image.asset(
-          '$kImagePath/icon_info.png',
-          package: 'rflutter_alert',
-        );
-        break;
-      case AlertType.warning:
-        response = Image.asset(
-          '$kImagePath/icon_warning.png',
-          package: 'rflutter_alert',
-        );
-        break;
-      case AlertType.none:
-        response = Container();
-        break;
-    }
-    return response;
-  }
 
 // Shows alert with selected animation
   _showAnimation(animation, secondaryAnimation, child) {
