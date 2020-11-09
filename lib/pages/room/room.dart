@@ -3,11 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:scribbl/ProviderManager/data.dart';
 import 'package:scribbl/ProviderManager/manager.dart';
+import 'package:scribbl/pages/Guesser_screen/guesserScreen.dart';
 import 'package:scribbl/virtualCurrency/data.dart';
 import 'gameScreen.dart';
 import '../Select_room/selectRoom.dart';
 import '../../services/authHandler.dart';
 import 'meetingPage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 bool game;
 bool wordChosen;
@@ -96,6 +99,8 @@ Future<void> removeMe() async {
         print('its an error');
       });
     } else {
+      if (denId != identity) await callChangeDenIfAllGuessed();
+
       if (hostId == identity) {
         await FirebaseFirestore.instance
             .collection('rooms')
@@ -109,6 +114,21 @@ Future<void> removeMe() async {
         changeDenWhileLeaving('room.dart line 433', myIndex);
       }
     }
+  });
+}
+
+Future<void> callChangeDenIfAllGuessed() async {
+  await http.post(Uri.encodeFull(changeDenIfAllGuessed),
+      headers: {'roomdata': json.encode(truncateMap(roomData))}).then((data) {
+    if (data.statusCode == 200) {
+      print(json.decode(data.body));
+    } else {
+      print('error status code is :');
+      print(data.statusCode);
+    }
+    print('after calling changeDenIfAll guessed , the reult is:');
+  }).catchError((_) {
+    print('caught error');
   });
 }
 
