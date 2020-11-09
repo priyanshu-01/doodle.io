@@ -58,7 +58,8 @@ class _ChooseOrDrawState extends State<ChooseOrDraw> {
 
     if (word != '*') //this is true when it should not be
     {
-      if (painterCountDown.current > 1 && counter - 1 != guessersId.length) {
+      if (painterCountDown.current > 1 &&
+          counter - 1 != effectiveGuessersIdLength()) {
         if (!timerRunning2) {
           print('timer started');
           startTimer();
