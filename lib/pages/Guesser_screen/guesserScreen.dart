@@ -233,7 +233,8 @@ class _GuessWaitShowState extends State<GuessWaitShow> {
     Provider.of<GuessersIdData>(context);
 
     if (word != '*') {
-      if (guesserCountDown.current > 3 && counter - 1 != guessersId.length) {
+      if (guesserCountDown.current > 3 &&
+          counter - 1 != effectiveGuessersIdLength()) {
         if (!timerRunning || tempDenId != denId) {
           tempDenId = denId;
           startTimer();
@@ -484,4 +485,13 @@ class _TextBoxState extends State<TextBox> {
       'userData.$identity.lastGuess': '$denId $round',
     });
   }
+}
+
+int effectiveGuessersIdLength() {
+  int l = 0;
+  guessersId.forEach((key, value) {
+    if (value != null) l++;
+  });
+  print('effective guessers length is $l');
+  return l;
 }
