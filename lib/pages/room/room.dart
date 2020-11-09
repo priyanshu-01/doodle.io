@@ -139,6 +139,7 @@ Future<void> updatePlayerData(String myStatus) async {
     'users_id': playersId,
     'tempScore.$identity': null,
     'finalScore.$identity': null,
+    'guessersId.$identity': null,
     'usersImage': playersImage,
     'userData.$identity': {
       'name': myUserName,
