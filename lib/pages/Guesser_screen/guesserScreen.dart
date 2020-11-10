@@ -405,7 +405,7 @@ class _TextBoxState extends State<TextBox> {
       messageHolder.clear();
       // messageHolder.clearComposing();
       String lowerCase = message.toLowerCase();
-      if (lowerCase.indexOf(word) != -1) {
+      if (lowerCase.indexOf(word) != -1 && lowerCase.indexOf('*') == -1) {
         message = 'd123';
         if (guessersId[identity] == null) {
           if (guessersId.length < counter - 2) showPopup(context);
@@ -416,9 +416,11 @@ class _TextBoxState extends State<TextBox> {
           sendMessage();
         }
       } else {
-        newMessage = '$identity[$myUserName]$message';
-        chat.add(newMessage);
-        sendMessage();
+        if (lowerCase.indexOf(word) == -1) {
+          newMessage = '$identity[$myUserName]$message';
+          chat.add(newMessage);
+          sendMessage();
+        }
       }
     }
     message = '';
