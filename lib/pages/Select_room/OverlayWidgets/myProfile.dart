@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scribbl/gift/gift_contents.dart';
@@ -46,7 +47,7 @@ class _MyProfileState extends State<MyProfile> {
                           backgroundColor: Colors.black,
                           child: CircleAvatar(
                             backgroundColor: Colors.grey[100],
-                            backgroundImage: NetworkImage(
+                            backgroundImage: CachedNetworkImageProvider(
                               imageUrl,
                             ),
                             radius: totalLength * 0.1 - 2.0,
