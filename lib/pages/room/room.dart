@@ -174,7 +174,7 @@ Future<void> changeDenWhileLeaving(String source, int myIndex) async {
     'indices': [0],
     'colorIndexStack': [0],
     'pointer': 0,
-    'guessersId': [],
+    'guessersId': {},
     'tempScore': {},
     'round': round,
     'userData.$identity.denChangeTrack': denChangeTrack
