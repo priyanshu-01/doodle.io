@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -166,29 +167,32 @@ class StackChild extends StatelessWidget {
                                     backgroundColor: Colors.blue,
                                     child: CircleAvatar(
                                       radius: 17.5,
-                                      backgroundImage: NetworkImage(
-                                          playersImage[
-                                              playersId.indexOf(playerIdentity)
-                                              // index
-                                              ]),
+                                      backgroundImage:
+                                          CachedNetworkImageProvider(
+                                              playersImage[playersId
+                                                      .indexOf(playerIdentity)
+                                                  // index
+                                                  ]),
                                       backgroundColor: Colors.grey[100],
                                     ),
                                   )
                                 : CircleAvatar(
                                     radius: 20.0,
                                     backgroundColor: Colors.grey[100],
-                                    backgroundImage: NetworkImage(playersImage[
-                                        // playersId.indexOf(guessersId[index])
-                                        playersId.indexOf(playerIdentity)]),
+                                    backgroundImage:
+                                        CachedNetworkImageProvider(playersImage[
+                                            // playersId.indexOf(guessersId[index])
+                                            playersId.indexOf(playerIdentity)]),
                                   )
                             : CircleAvatar(
                                 radius: 20.0,
                                 backgroundColor: Colors.green[400],
                                 child: CircleAvatar(
                                   radius: 17.5,
-                                  backgroundImage: NetworkImage(playersImage[
-                                      // playersId.indexOf(guessersId[index])
-                                      playersId.indexOf(playerIdentity)]),
+                                  backgroundImage:
+                                      CachedNetworkImageProvider(playersImage[
+                                          // playersId.indexOf(guessersId[index])
+                                          playersId.indexOf(playerIdentity)]),
                                   backgroundColor: Colors.grey[100],
                                 ),
                               )),

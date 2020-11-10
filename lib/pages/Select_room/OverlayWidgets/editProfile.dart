@@ -9,6 +9,7 @@ import 'package:scribbl/pages/Select_room/selectRoom.dart';
 import 'package:scribbl/services/anon.dart';
 import 'package:scribbl/services/authHandler.dart';
 import '../../../OverlayManager/informationOverlayBuilder.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 String tempImageUrl;
 String tempName;
@@ -65,7 +66,7 @@ class _EditProfileState extends State<EditProfile> {
               padding: const EdgeInsets.only(bottom: 8.0),
               child: CircleAvatar(
                 radius: _radius,
-                backgroundImage: NetworkImage(
+                backgroundImage: CachedNetworkImageProvider(
                   tempImageUrl,
                 ),
                 backgroundColor: Colors.grey[200],
@@ -119,9 +120,11 @@ class _EditProfileState extends State<EditProfile> {
                               child: Padding(
                                 padding: const EdgeInsets.all(1.0),
                                 child: Image(
-                                  image: NetworkImage(
-                                      // avatarDocument.data['images'][index]
-                                      modAvatarDocumentList[index]),
+                                  image:
+                                      // NetworkImage(
+                                      CachedNetworkImageProvider(
+                                          // avatarDocument.data['images'][index]
+                                          modAvatarDocumentList[index]),
                                 ),
                               ),
                             ),

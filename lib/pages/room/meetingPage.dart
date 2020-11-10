@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -143,8 +144,8 @@ class JoiningList extends StatelessWidget {
                                   radius: 21.5,
                                   child: CircleAvatar(
                                     backgroundColor: Colors.grey[100],
-                                    backgroundImage:
-                                        NetworkImage(playersImage[a]),
+                                    backgroundImage: CachedNetworkImageProvider(
+                                        playersImage[a]),
                                     radius: 20.0,
                                   ),
                                 )),

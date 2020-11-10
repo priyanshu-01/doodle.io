@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -384,7 +385,7 @@ class _SelectRoomAvatarState extends State<SelectRoomAvatar> {
       backgroundColor: Colors.blue[800],
       child: CircleAvatar(
         backgroundColor: Colors.grey[100],
-        backgroundImage: NetworkImage(
+        backgroundImage: CachedNetworkImageProvider(
           imageUrl,
         ),
         radius: 25.0,
@@ -417,7 +418,7 @@ class _SelectRoomAvatarState extends State<SelectRoomAvatar> {
 //               ),
 //               currentAccountPicture: CircleAvatar(
 //                 backgroundColor: Colors.grey[100],
-//                 backgroundImage: NetworkImage(imageUrl),
+//                 backgroundImage: CachedNetworkImageProvider(imageUrl),
 //               )),
 //           SizedBox(
 //             height: 10.0,
