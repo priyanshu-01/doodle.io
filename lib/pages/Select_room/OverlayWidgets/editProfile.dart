@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scribbl/OverlayManager/necessaryOverlayBuilder.dart';
 import 'package:scribbl/main.dart';
@@ -8,6 +9,7 @@ import 'package:scribbl/pages/Select_room/selectRoom.dart';
 import 'package:scribbl/services/anon.dart';
 import 'package:scribbl/services/authHandler.dart';
 import '../../../OverlayManager/informationOverlayBuilder.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 String tempImageUrl;
 String tempName;
@@ -64,7 +66,7 @@ class _EditProfileState extends State<EditProfile> {
               padding: const EdgeInsets.only(bottom: 8.0),
               child: CircleAvatar(
                 radius: _radius,
-                backgroundImage: NetworkImage(
+                backgroundImage: CachedNetworkImageProvider(
                   tempImageUrl,
                 ),
                 backgroundColor: Colors.grey[200],
@@ -118,9 +120,11 @@ class _EditProfileState extends State<EditProfile> {
                               child: Padding(
                                 padding: const EdgeInsets.all(1.0),
                                 child: Image(
-                                  image: NetworkImage(
-                                      // avatarDocument.data['images'][index]
-                                      modAvatarDocumentList[index]),
+                                  image:
+                                      // NetworkImage(
+                                      CachedNetworkImageProvider(
+                                          // avatarDocument.data['images'][index]
+                                          modAvatarDocumentList[index]),
                                 ),
                               ),
                             ),
@@ -174,40 +178,7 @@ class _EditProfileState extends State<EditProfile> {
             flex: 2,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                InkWell(
-                    enableFeedback: false,
-                    onTap: () async {
-                      if (tempName != null && tempName != "") {
-                        await analytics.logEvent(
-                            name: 'edited_profile',
-                            parameters: {
-                              'signInMethod': signInMethod.anonymous.toString()
-                            });
-                        tempName = tempName.trim();
-                        imageUrl = tempImageUrl;
-                        name = tempName;
-                        name = name.trim();
-                        myUserName = firstName(name);
-                        audioPlayer.playSound('click');
-
-                        if (signInStatus == status.signedIn) {
-                          saveChangesToExistingProfile();
-                          circleAvatarKey.currentState.setState(() {});
-                          informationOverlayBuilder.hide();
-                          informationOverlayBuilder.show(
-                              context,
-                              MyProfile(
-                                overlayBuilder: informationOverlayBuilder,
-                              ));
-                        } else
-                          AnonymousAuthentication().signInAnonymously();
-                      }
-                    },
-                    child: OverlayButton(
-                      label: 'Save',
-                    )),
-              ],
+              children: [PlayButton()],
             ),
           ),
           Flexible(
@@ -240,16 +211,16 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
   }
+}
 
-  Future<void> saveChangesToExistingProfile() async {
-    String userLoginType = checkSignInMethod
-        .toString()
-        .substring(checkSignInMethod.toString().indexOf('.') + 1);
-    await FirebaseFirestore.instance
-        .collection('users $userLoginType')
-        .doc(userFirebaseDocumentId) //add id
-        .update({'name': name, 'imageUrl': imageUrl}); //add data
-  }
+Future<void> saveChangesToExistingProfile() async {
+  String userLoginType = checkSignInMethod
+      .toString()
+      .substring(checkSignInMethod.toString().indexOf('.') + 1);
+  await FirebaseFirestore.instance
+      .collection('users $userLoginType')
+      .doc(userFirebaseDocumentId) //add id
+      .update({'name': name, 'imageUrl': imageUrl}); //add data
 }
 
 class MyTextField extends StatefulWidget {
@@ -282,6 +253,93 @@ class _MyTextFieldState extends State<MyTextField> {
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 5.0),
         ),
+      ),
+    );
+  }
+}
+
+class PlayButton extends StatefulWidget {
+  @override
+  _PlayButtonState createState() => _PlayButtonState();
+}
+
+class _PlayButtonState extends State<PlayButton> {
+  bool _loading = false;
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+        enableFeedback: false,
+        onTap: () async {
+          if (!_loading) {
+            if (tempName != null && tempName != "") {
+              await analytics.logEvent(name: 'edited_profile', parameters: {
+                'signInMethod': signInMethod.anonymous.toString()
+              });
+              tempName = tempName.trim();
+              imageUrl = tempImageUrl;
+              name = tempName;
+              name = name.trim();
+              myUserName = firstName(name);
+              audioPlayer.playSound('click');
+
+              if (signInStatus == status.signedIn) {
+                saveChangesToExistingProfile();
+                circleAvatarKey.currentState.setState(() {});
+                informationOverlayBuilder.hide();
+                informationOverlayBuilder.show(
+                    context,
+                    MyProfile(
+                      overlayBuilder: informationOverlayBuilder,
+                    ));
+              } else {
+                setState(() {
+                  _loading = true;
+                  AnonymousAuthentication()
+                      .signInAnonymously()
+                      .whenComplete(() => _loading = false);
+                });
+              }
+            }
+          }
+        },
+        child: (_loading == false)
+            ? OverlayButton(
+                label: (signInStatus == status.notSignedIn) ? 'Play' : 'Save',
+              )
+            : LoggingIn(
+                padding: 10.0,
+              ));
+  }
+}
+
+class LoggingIn extends StatelessWidget {
+  final String label;
+  final double padding;
+  final double size;
+  LoggingIn({this.label, this.padding, this.size});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: overlayBoxDecoration,
+      height: 40.0,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: padding,
+          ),
+          Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              child: SpinKitThreeBounce(
+                color: Colors.white,
+                size: 20.0,
+                duration: Duration(milliseconds: 600),
+              )),
+          SizedBox(
+            width: padding,
+          )
+        ],
       ),
     );
   }

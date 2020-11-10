@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'guesserScreen.dart';
 import '../Select_room/selectRoom.dart';
@@ -93,21 +94,18 @@ class _AnimatedAvatarState extends State<AnimatedAvatar>
             child: Container(
               child: ScaleTransition(
                 scale: curvedScaleAvatar,
-                child: ClipOval(
-                  child: (playersId.indexOf(denId) != -1)
-                      ? Image.network(
-                          playersImage[playersId.indexOf(denId)],
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        )
-                      : CircleAvatar(
-                          backgroundColor: Colors.brown,
-                        ),
-                ),
+                child: (playersId.indexOf(denId) != -1)
+                    ? CircleAvatar(
+                        backgroundImage: CachedNetworkImageProvider(
+                            playersImage[playersId.indexOf(denId)]),
+                        backgroundColor: Colors.white,
+                      )
+                    : CircleAvatar(
+                        backgroundColor: Colors.brown,
+                      ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

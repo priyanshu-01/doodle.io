@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:scribbl/gift/menu.dart';
 import '../pages/room/room.dart';
@@ -65,7 +66,8 @@ class ReactionListener {
 
   Image senderImage(String id) {
     return Image(
-      image: NetworkImage(playersImage[playersId.indexOf(id)] //catch this
+      image: CachedNetworkImageProvider(
+          playersImage[playersId.indexOf(id)] //catch this
           ),
     );
   }

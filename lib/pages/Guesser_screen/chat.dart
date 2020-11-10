@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -93,8 +94,8 @@ class ChatList extends StatelessWidget {
                                   child: CircleAvatar(
                                     radius: 13.0,
                                     backgroundColor: Colors.grey[100],
-                                    backgroundImage: NetworkImage(playersImage[
-                                        playersId.indexOf(
+                                    backgroundImage: CachedNetworkImageProvider(
+                                        playersImage[playersId.indexOf(
                                             i)]), //error by crashlytics+1
                                   ),
                                 )
@@ -114,7 +115,7 @@ class ChatList extends StatelessWidget {
                                   child: CircleAvatar(
                                     radius: 13.0,
                                     backgroundColor: Colors.grey[100],
-                                    backgroundImage: NetworkImage(
+                                    backgroundImage: CachedNetworkImageProvider(
                                         playersImage[playersId.indexOf(i)]),
                                   ),
                                 ),
